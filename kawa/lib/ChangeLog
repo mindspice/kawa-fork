@@ -1,3 +1,17 @@
+2015-07-07  Andrea Bernardini  <andrebask@gmail.com>
+
+	* normalized_map.scm: New file, tail recursive implementation of
+	map and for/each in scheme. It is used insted of the java version
+	when first class continuations are enabled.
+
+	* Makefile.am: Add the new file normalized_map.scm.
+
+	* prim_syntax (if): The optimization of the 'and' form, that uses a
+	BlockExp and an ExitExp, conflicts with the instrumentation required
+	by first class continuations. Disable the optimization when first
+	class continuations are enabled.
+	(rewrite-if-and): New function.
+
 2015-06-24  Per Bothner  <per@bothner.com>
 
 	* exceptions.scm (guard): Ignore if ExitCalled is caught.

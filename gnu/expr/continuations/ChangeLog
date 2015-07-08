@@ -1,0 +1,15 @@
+2015-07-07  Andrea Bernardini  <andrebask@gmail.com>
+
+	New package.
+
+	* CallCC.java:  New class. Extends Procedure1. Implementation
+	of the call/cc function.
+
+	* Continuation.java:  New class. Extends Procedure1. Representation
+	of the continuation object.
+
+	* Helpers.java:  New class. Support code.
+
+	* TopLevelHandler.java:  New class. Extends Procedure1. Install
+	the excepetion handlers needed to capture and resume continuations.
+

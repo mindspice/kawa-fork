@@ -1,3 +1,21 @@
+2015-07-07  Andrea Bernardini <andrebask@gmail.com>
+
+	* Compilation.java: Move again ANormalize pass before InlineCalls.
+	Add options to enable first class continuations.
+	(typeGenericProc): New field of type ClassType.
+
+	* ANormalize.java: Add custom normalization code for splice and
+	typeswitch operators, do loop, and define-procedure.
+	(visitSetExp): Optimize letrec-like forms.
+
+	* FragmentAndInstrument.java: New Class. New Visitor that performs the
+	fragmentation and instrumentation needed to capture and resume first
+	class continuations.
+
+	* QuoteExp.java (validateApply): Disable inlining for fragments.
+
+	* continuations: New package.
+
 2015-06-24  Per Bothner  <per@bothner.com>
 
 	* LambdaExp.java (reverseChildList, pushChild): New methods.

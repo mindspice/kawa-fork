@@ -550,10 +550,20 @@ public class repl extends Procedure0or1 {
                 gnu.expr.ModuleExp.dumpZipPrefix = "kawa-zip-dump-";
             } else if (arg.equals("--enable-anf")) {
                 Compilation.enableANF = true;
+            } else if (arg.equals("--full-continuations")) {
+                Compilation.enableANF = true;
+                Compilation.defaultCallConvention =
+                    Compilation.CALL_WITH_TAILCALLS;
+                Compilation.fullContinuations = true;
+                Compilation.options.set("full-continuations", true);
             } else if (arg.equals("--debug-print-anf")
                        && Compilation.enableANF) {
                 Compilation.debugPrintANF = true;
-            } else if (arg.equals("--debug-print-expr")) {
+            } else if (arg.equals("--debug-print-instr")
+                       && Compilation.fullContinuations) {
+                Compilation.debugPrintInstr = true;
+            }
+            else if (arg.equals("--debug-print-expr")) {
                 Compilation.debugPrintExpr = true;
             } else if (arg.equals("--debug-print-final-expr")) {
                 Compilation.debugPrintFinalExpr = true;

@@ -73,6 +73,13 @@ GNU_EXPR_JSOURCES = \
   expr/TypeValue.java \
   expr/VarValueTracker.java
 
+GNU_CONTINUATIONS_JSOURCES = \
+  expr/continuations/Helpers.java \
+  expr/continuations/CallCC.java \
+  expr/continuations/Continuation.java \
+  expr/continuations/TopLevelHandler.java \
+  expr/FragmentAndInstrument.java
+
 JAVAX_SCRIPT_EXTRA = \
   expr/AbstractScriptEngineFactory.java \
   expr/KawaScriptBindings.java \
@@ -541,7 +548,7 @@ EXTRA_DIST = \
   text/package.html \
   kawa/reflect/package.html \
   $(GNU_KAWA_ANT_JSOURCES)
-EXTRA_CLEAN = */*.class kawa/*/*.class
+EXTRA_CLEAN = */*.class */*/*.class kawa/*/*.class
 
 PACKAGE_FNAME = gnu
 
@@ -550,6 +557,7 @@ java_sources = \
   $(GNU_TEXT_JSOURCES) \
   $(GNU_MAPPING_JSOURCES) \
   $(GNU_EXPR_JSOURCES) \
+  $(GNU_CONTINUATIONS_JSOURCES) \
   $(GNU_KAWA_IO_JSOURCES) \
   $(GNU_KAWA_UTIL_JSOURCES) \
   $(GNU_KAWA_REFLECT_JSOURCES) \

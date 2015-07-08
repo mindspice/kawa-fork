@@ -1,3 +1,25 @@
+2015-07-07  Andrea Bernardini  <andrebask@gmail.com>
+
+	* lang/Macro.java (typeMacro): New field.
+	(makeHygienic): New field.
+	(makeNonHygienic): New field.
+	(makeSkipScanForm): New field.
+	(setCapturedScope): New field.
+	Initialization code for the new fields.
+
+	* standard/define_syntax.java (typeMacro): Moved to lang/Macro.java.
+	(makeHygienic): Moved to lang/Macro.java.
+	(makeNonHygienic): Moved to lang/Macro.java.
+	(makeSkipScanForm): Moved to lang/Macro.java.
+	(setCapturedScope): Moved to lang/Macro.java
+
+	* repl.java: Add --full-continuations and --debug-print-instr options.
+
+	* standard/define.java (rewriteForm): Use typeGenericProc field declared
+	in Compilation, instead of creating a new ClassType object using
+	getDeclaredMethod.
+	Use GenericProc.add instead of creating a new ClassType object..
+
 2015-06-24  Per Bothner  <per@bothner.com>
 
 	* standard/object.java: Simplify chaining of methods by

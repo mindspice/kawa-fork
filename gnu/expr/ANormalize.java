@@ -5,8 +5,11 @@ import gnu.bytecode.Type;
 import gnu.kawa.functions.GetNamedPart;
 import gnu.kawa.functions.MakeSplice;
 import gnu.kawa.lispexpr.LispLanguage;
+import gnu.kawa.reflect.Invoke;
 import gnu.kawa.reflect.TypeSwitch;
 import java.util.Vector;
+import kawa.lang.Macro;
+import kawa.standard.define;
 
 /**
  * A visitor that performs transformation to Administrative Normal Form.
@@ -82,6 +85,8 @@ import java.util.Vector;
  * as they cannot be evaluated before the test outcome, "normalizeTerm" calls 
  * the visit method with the identity context, restarting the normalization in
  * each branch.
+ *
+ * @author Andrea Bernardini <andrebask@gmail.com>
  */
 public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
   
@@ -130,12 +135,16 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
         if (!isProvided) {
             // set the properties for the newly generated Declaration
           
-            decl.setCanRead();
-            decl.setType(val.getType());
-            if (val.getClass() == LambdaExp.class)
+            if (val.getClass() == LambdaExp.class) {
                 decl.setCanCall();
+                if (let instanceof FluidLetExp)
+                    decl.setProcedureDecl(true);
+                decl.setType(Compilation.typeProcedure);
+            }
+
+            if (val != QuoteExp.undefined_exp)
                 decl.noteValueFromLet(let);
-            decl.numReferences++;
+
         } else {
 
             // if decl has ben provided, we need to update its base,
@@ -148,9 +157,13 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
             }
         }   
 
-        if (val.getClass() == LambdaExp.class) {
-            LambdaExp lexp = (LambdaExp) val;
-            decl.setCanRead(lexp.getCanRead());
+        if (val == QuoteExp.undefined_exp)
+            decl.setFlag(Declaration.MAYBE_UNINITIALIZED_ACCESS);
+        if (val == QuoteExp.undefined_exp
+            || (val instanceof SetExp)) {
+            // in this case the declaration is ignorable
+            decl.setCanRead(false);
+            decl.setCanWrite(false);
         }        
         
         return decl;
@@ -177,8 +190,7 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
             || (exp instanceof ReferenceExp)
             || (MakeSplice.argIfSplice(exp) != null)
             || isGetNamedPart(exp)
-            || isBracketList(exp)
-            || isTypeSwitch(exp);
+            || isBracketList(exp);
     }
 
     /**
@@ -242,6 +254,63 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
         }
     }    
     
+    /**
+     * Custom normalization code for define-procedure.
+     */
+    protected Expression normalizeDefineProc(BeginExp exp) {
+        for (int i = 0; i < exp.exps.length; i++) {
+            if (exp.exps[i] instanceof ApplyExp)
+                exp.exps[i] = normalizeTerm(exp.exps[i]);
+        }
+        return exp;
+    }
+
+    /**
+     * Custom normalization code for the do loop expression.
+     */
+    protected Expression normalizeDoLoop(BeginExp exp) {
+        SetExp sexp = (SetExp) exp.exps[0];
+        sexp.new_value = normalizeTerm(sexp.new_value);
+        return exp;
+    }
+
+    /**
+     * Custom normalization code for the splice operator.
+     */
+    protected Expression normalizeSplice(final ApplyExp exp, final Context context) {
+        Context newContext = new Context() {
+
+            @Override
+            Expression invoke(Expression expr) {
+                exp.args[0] = expr;
+
+                return context.invoke(exp);
+            }
+        };
+
+        return normalizeName(exp.args[0], newContext);
+    }
+
+    /**
+     * Custom normalization code for typeswitch operator.
+     */
+    protected Expression normalizeTypeSwitch(final ApplyExp exp, final Context context) {
+        Context newContext = new Context() {
+
+            @Override
+            Expression invoke(Expression expr) {
+                exp.args[1] = expr;
+                int last = exp.args.length-1;
+                for (int i = 2; i < last; i++)
+                    exp.args[i] = normalizeTerm(exp.args[i]);
+
+                return context.invoke(exp);
+            }
+        };
+
+        return normalizeName(exp.args[1], newContext);
+    }
+
     protected Expression visitQuoteExp(QuoteExp exp, Context context) {
         return context.invoke(exp);
     }
@@ -252,8 +321,7 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
     
     protected Expression visitApplyExp(final ApplyExp exp, final Context context) {
         Expression func = exp.getFunction();
-        
-        // Special cases that we threat as atomic
+        // Special cases that we threat in some special way
         if ((isApplyToArgs(func)
                 && exp.args[0] instanceof QuoteExp
                 && (((QuoteExp)exp.args[0]).getValue() instanceof Type))
@@ -265,17 +333,17 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
             }
             return context.invoke(exp);
             
-        } else if (MakeSplice.argIfSplice(exp) != null
-                   || isTypeSwitch(exp)){
-          
-            exp.args[0] = normalizeTerm(exp.args[0]);
-            return context.invoke(exp);
-            
+        } else if (MakeSplice.argIfSplice(exp) != null){
+            return normalizeSplice(exp, context);
+        } else if (isTypeSwitch(exp)){
+            return normalizeTypeSwitch(exp, context);
         } else if (isSetter(func)) {
             return context.invoke(exp);
+        } else if (isGenericProcAdd(exp)
+                    || isMakeMacro(exp)) {
+            exp.args[1] = normalizeTerm(exp.args[1]);
+            return context.invoke(exp);
         } 
-
-        
         // setting up starting index
         final int startIndex;    
         if (isApplyToArgs(func)) {
@@ -314,7 +382,7 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
                 && func.getName().equals("applyToArgs");
     }    
 
-    private static Expression getApplyFunc(ApplyExp aexp) {
+    protected static Expression getApplyFunc(ApplyExp aexp) {
         return (isApplyToArgs(aexp.getFunction())) 
                ? aexp.args[0] 
                : aexp.getFunction();        
@@ -326,17 +394,36 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
                     == ClassType.make("gnu.kawa.functions.Setter");
     }    
     
-    private static boolean isGetNamedPart(Expression exp) {
+    private static boolean isApplyOf(Expression exp, Object afunc) {
         if (exp instanceof ApplyExp) {
             ApplyExp aexp = (ApplyExp) exp;
-            Expression func = aexp.getFunction();
+            Expression func = getApplyFunc(aexp);
             return ((func instanceof QuoteExp) 
                       && ((QuoteExp) func).getValue() 
-                            == GetNamedPart.getNamedPart);
+                            == afunc);
         } else
             return false;
     }
     
+    private static boolean isApplyOfOneOf(Expression exp, Object... funcs) {
+        if (exp instanceof ApplyExp) {
+            ApplyExp aexp = (ApplyExp) exp;
+            Expression func = getApplyFunc(aexp);
+            if (func instanceof QuoteExp) {
+                Object funcVal = ((QuoteExp) func).getValue();
+                for (int i = 0; i < funcs.length; i++) {
+                    if (funcVal == funcs[i])
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean isGetNamedPart(Expression exp) {
+        return isApplyOf(exp, GetNamedPart.getNamedPart);
+    }
+
     private static boolean isBracketList(Expression exp) {
         if (exp instanceof ApplyExp) {
             ApplyExp aexp = (ApplyExp) exp;
@@ -349,16 +436,41 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
     }    
 
     private static boolean isTypeSwitch(Expression exp) {
-        if (exp instanceof ApplyExp) {
-            ApplyExp aexp = (ApplyExp) exp;
-            Expression func = getApplyFunc(aexp);
-            return ((func instanceof QuoteExp) 
-                      && ((QuoteExp) func).getValue() 
-                            == TypeSwitch.typeSwitch);
-        } else
+        return isApplyOf(exp, TypeSwitch.typeSwitch);
+    }
+
+    protected static boolean isDoLoop(Expression exp) {
+        if (exp instanceof LetExp) {
+            LetExp lexp = (LetExp) exp;
+            Declaration first = lexp.firstDecl();
+            return first.getName() != null
+                   && first.getName().equals("%do%loop");
+        }
+        return false;
+    }
+
+    protected static boolean isDefineProc(Expression exp) {
+        if (exp instanceof LetExp) {
+            LetExp lexp = (LetExp) exp;
+            Declaration first = lexp.firstDecl();
+            if (isApplyOf(first.getInitValue(), Invoke.make)) {
+                ApplyExp aexp = (ApplyExp) first.getInitValue();
+                Object type = ((QuoteExp) aexp.args[0]).getValue();
+                return (type == Compilation.typeGenericProc);
+            }
+        }
             return false;
     }       
     
+    protected static boolean isGenericProcAdd(Expression exp) {
+        return isApplyOf(exp, define.addGeneric);
+    }
+
+    protected static boolean isMakeMacro(Expression exp) {
+        return isApplyOfOneOf(exp, Macro.makeHygienic, Macro.makeNonHygienic,
+                                   Macro.makeSkipScanForm, Macro.setCapturedScope);
+    }
+
     protected Expression visitBeginExp(BeginExp exp, Context context) {
 
         // save compilation options
@@ -406,7 +518,15 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
             return context.invoke(normalizeTerm(exp));
         if (first == null) {
             return visit(exp.body, context);
-        } else {
+        }
+        if (isDoLoop(exp)) {
+            exp.body = normalizeDoLoop((BeginExp) exp.body);
+            return context.invoke(exp);
+        }
+        if (isDefineProc(exp)) {
+            exp.body = normalizeDefineProc((BeginExp) exp.body);
+            return context.invoke(exp);
+        }
 
             exp.decls = exp.decls.nextDecl();
             // create the inner let
@@ -436,7 +556,6 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
             };
             return visit(firstLetVal, newContext);
         }
-    }
 
     protected Expression visitIfExp(final IfExp exp, final Context context) {
         Context newContext = new Context() {
@@ -485,22 +604,29 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
 
         Declaration bin = exp.getBinding();
         
+        int nvals = 0;
         if (bin != null) {
+            nvals = bin.nvalues;
             bin.setCanWrite();
-            
-            // optimizing letrec-like forms
             if (bin.getInitValue() == QuoteExp.undefined_exp) {
-                Expression value = bin.getValue();
-                if (value instanceof LambdaExp
-                    || (value != bin.getInitValue() && value instanceof QuoteExp)) {
-                    bin.setInitValue(normalizeTerm(value));
-                    return context.invoke(QuoteExp.voidExp);
-                }
+                if(! bin.isAlias())
+                    bin.noteValueUnknown();
+                else
+                    bin.setFlag(Declaration.MAYBE_UNINITIALIZED_ACCESS);
             }
-                
         }
         
         if (exp.isDefining()) {      
+            // optimization for non top-level 'define'
+            if (bin.getContext().currentLambda() != comp.currentModule()
+                && bin.getInitValue() == QuoteExp.undefined_exp
+                && nvals < 2) {
+                bin.setInitValue(exp.new_value);
+                bin.nvalues = 0;
+                bin.values = null;
+                bin.noteValueFromLet(bin.getContext());
+                return context.invoke(QuoteExp.voidExp);
+            }
           
             if (!(exp.new_value instanceof ReferenceExp) 
                 && !(exp.new_value instanceof QuoteExp))
@@ -531,7 +657,8 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
     }
     
     protected Expression visitModuleExp(ModuleExp exp, Context context) {
-        if (exp.body instanceof ApplyExp) {
+        if (exp.body instanceof ApplyExp
+            && ((ApplyExp)exp.body).isAppendValues()) {
             ApplyExp body = ((ApplyExp)exp.body);
             for (int i = 0; i < body.args.length; i++) {
               body.args[i] = visit(body.args[i], context);
@@ -586,8 +713,16 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
     }
     
     protected Expression visitExitExp(final ExitExp exp, final Context context) { 
-        exp.result = normalizeTerm(exp.result);
+
+        Context newContext = new Context() {
+            @Override
+            Expression invoke(Expression expr) {
+                exp.result = expr;
         return context.invoke(exp);
+    }
+        };
+
+        return normalizeName(exp.result, newContext);
     }
     
     protected Expression visitClassExp(ClassExp exp, Context context) {

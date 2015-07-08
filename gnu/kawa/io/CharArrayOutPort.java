@@ -19,6 +19,11 @@ public class CharArrayOutPort extends OutPort
     super(null, printPretty, false, path);
   }
 
+  public CharArrayOutPort(boolean printPretty)
+  {
+    super(null, printPretty, CharArrayInPort.stringPath);
+  }
+
   public int length ()
   {
     return bout.bufferFillPointer;

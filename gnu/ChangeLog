@@ -1,3 +1,7 @@
+2015-07-07  Andrea Bernardini  <andrebask@gmail.com>
+
+	* Makefile.am: Add sources for the new package gnu/expr/continuations.
+
 2014-08-31  Per Bothner  <per@bothner.com>
 
 	* Makefile.am: Merge Makefile.am fragments from

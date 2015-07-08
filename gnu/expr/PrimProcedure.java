@@ -316,7 +316,7 @@ public class PrimProcedure extends MethodProc {
 
   public PrimProcedure (String className, String methodName, int numArgs)
   {
-    this(ClassType.make(className).getDeclaredMethod(methodName, numArgs));
+      this(ClassType.make(className).getDeclaredMethod(methodName, numArgs));
   }
 
   public PrimProcedure(java.lang.reflect.Method method, Language language)

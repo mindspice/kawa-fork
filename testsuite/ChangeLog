@@ -1,3 +1,10 @@
+2015-07-07  Andrea Bernardini  <andrebask@gmail.com>
+
+	* cont-test.scm: New file. Tests for first class continuations.
+	* r7rs-tests.scm: Move test macros in test-utils.scm.
+	* test-utils.scm: Add test macros from r7rs-tests.scm.
+	* Makefile.am: Update accordingly.
+
 2015-06-24  William D Clinger <will@ccs.neu.edu>
             Per Bothner  <per@bothner.com>
 

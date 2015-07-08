@@ -131,11 +131,18 @@ public class Compilation implements SourceLocator
   public static boolean debugPrintANF = false;
   public static boolean enableANF = false;
   
+  public static boolean debugPrintInstr = false;
+  public static boolean fullContinuations = false;
+
   public static Options options = new Options();
   public static Options.OptionInfo fullTailCallsVariable =
     options.add("full-tailcalls",
                 Options.BOOLEAN_OPTION, Boolean.TRUE,
 		"support full tailcalls");
+  public static Options.OptionInfo fullContinuationsVariable =
+    options.add("full-continuations",
+                Options.BOOLEAN_OPTION, Boolean.FALSE,
+		"support first class continuations");
   public static Options.OptionInfo mainMethodVariable =
     options.add("main",
                 Options.BOOLEAN_OPTION, Boolean.FALSE,
@@ -175,6 +182,11 @@ public class Compilation implements SourceLocator
     return currentOptions.getBoolean(mainMethodVariable);
   }
   
+  public boolean fullContinuations ()
+  {
+    return currentOptions.getBoolean(fullContinuationsVariable);
+  }
+
   public boolean warnUnreachable ()
   {
     return currentOptions.getBoolean(warnUnreachable);
@@ -197,7 +209,8 @@ public class Compilation implements SourceLocator
   }
   public boolean warnVoidUsed()
   {
-    return (!enableANF) && currentOptions.getBoolean(warnVoidUsed);
+    return (!enableANF) && (!fullContinuations())
+        && currentOptions.getBoolean(warnVoidUsed);
   }
   public boolean warnAsError ()
   {
@@ -428,6 +441,8 @@ public class Compilation implements SourceLocator
   /* Classes, fields, and methods used wgen usingCPStyle". */
   public static ClassType typeCallContext
     = ClassType.make("gnu.mapping.CallContext");
+  public static ClassType typeGenericProc
+    = ClassType.make("gnu.expr.GenericProc");
   public static final ClassType typeConsumer
     = ClassType.make("gnu.lists.Consumer");
   public static Method getCallContextInstanceMethod
@@ -1853,8 +1868,7 @@ public class Compilation implements SourceLocator
 
         if (wantedState >= WALKED && getState() < WALKED)
           {
-            InlineCalls.inlineCalls(mexp, this);
-            if (enableANF)
+            if (enableANF || fullContinuations())
                 ANormalize.aNormalize(mexp, this);
             if (debugPrintANF) {
                 options.set("warn-void-used", Boolean.FALSE);
@@ -1865,6 +1879,17 @@ public class Compilation implements SourceLocator
                 dout.println(']');
                 dout.flush();
             }
+            if (fullContinuations())
+                FragmentAndInstrument.fragmentCode(mexp, this);
+            if (debugPrintInstr) {
+                OutPort dout = OutPort.errDefault();
+                dout.println ("[Instrumented module: "+mexp.getName()
+                             + " to " + mainClass.getName() + ":");
+                mexp.print(dout);
+                dout.println(']');
+                dout.flush();
+            }
+            InlineCalls.inlineCalls(mexp, this);
             ChainLambdas.chainLambdas(mexp, this);
             FindTailCalls.findTailCalls(mexp, this);
             setState(messages.seenErrors() ? ERROR_SEEN : WALKED);

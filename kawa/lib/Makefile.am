@@ -16,6 +16,7 @@ java_SCM_ALWAYS =\
   exceptions.scm \
   kawa/expressions.scm \
   compile_misc.scm compile_map.scm \
+  normalized_map.scm \
   thread.scm \
   characters.scm \
   keywords.scm \

@@ -73,6 +73,9 @@ check-scm: testing.zip
 check-case: testing.zip
 	$(KAWATEST) -f "$(srcdir)/case-test.scm" -e '(test-report)'
 
+check-cont:
+	$(KAWA) $(OPTIONS) --full-continuations $(srcdir)/cont-test.scm
+
 check-r7rs:
 	$(KAWA) $(OPTIONS) --no-warn-void-used -f $(srcdir)/r7rs-tests.scm
 
@@ -467,7 +470,7 @@ MyDate.class MyTimestamp.class: $(srcdir)/MyDate.java $(srcdir)/MyTimestamp.java
 	CLASSPATH="..$(CLASSPATH_SEPARATOR).$(CLASSPATH_SEPARATOR)$$CLASSPATH" $(JAVAC) -g -d . $?
 
 check-pitfalls:
-	$(CPKAWA) -f $(srcdir)/r5rs_pitfall.scm
+	$(CPKAWA) $(OPTIONS) -f $(srcdir)/r5rs_pitfall.scm
 
 MyAnnotType.class: $(srcdir)/MyAnnotType.java
 	CLASSPATH="..$(CLASSPATH_SEPARATOR).$(CLASSPATH_SEPARATOR)$$CLASSPATH" $(JAVAC) -g -d . $?

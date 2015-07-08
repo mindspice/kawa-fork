@@ -161,7 +161,19 @@ public class QuoteExp extends Expression
                                               spliceCount>0);
     if (msg != null)
       return visitor.noteError(msg);
-    Expression inlined = visitor.maybeInline(exp, required, proc);
+
+    Expression inlined;
+    if (! visitor.comp.fullContinuations()) {
+        inlined = visitor.maybeInline(exp, required, proc);
+    } else if (exp.args != null && exp.args.length > 0
+              && exp.args[0] instanceof ReferenceExp
+              && exp.args[0].toString().contains("continue-fragment"))
+        inlined = null;
+    else inlined = visitor.maybeInline(exp, required, proc);
+
+//    Expression inlined = (visitor.comp.fullContinuations())
+//                         ? null
+//                         : visitor.maybeInline(exp, required, proc);
     if (inlined != null)
       return inlined;
     Expression[] args = exp.args;

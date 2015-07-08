@@ -10,39 +10,8 @@
                (scheme r5rs)
                (chibi test)))))
 |#
-(define-syntax skip-if-kawa
-  (syntax-rules ()
-    ((skip-if-kawa message . rest)
-     (begin (test-expect-fail 1)
-            (test-assert message #f)))))
 
-;; Using 3-operand datum->syntax enables line numbers in reporting.
-(define-syntax test
-  (lambda (form)
-    (syntax-case form ()
-      ;; We need to use the rest1 and rest2 variables since the Kawa reader
-      ;; currently only attaches line-numbers to pairs, and the quoted and
-      ;; evaluated sub-forms aren't guaranteed to be lists.
-      ((test expected . rest1)
-       (syntax-case #'rest1 ()
-         ((expr)
-          #`(let ((val expr) (exp expected))
-              (cond ((and (complex? exp) (complex? val)
-                          (inexact? exp) (inexact? val)
-                          (not (nan? exp)) (not (nan? val)))
-                     #,(datum->syntax form
-                                      #'(test-approximate exp val 0.000001)
-                                      #'rest1))
-                    (else
-                     #,(datum->syntax form
-                                      #'(test-equal exp val)
-                                      #'rest1))))))))))
-
-(define-syntax test-values
-  (syntax-rules ()
-    ((_ expect expr)
-     (test (call-with-values (lambda () expect) (lambda results results))
-       (call-with-values (lambda () expr) (lambda results results))))))
+(require "test-utils.scm")
 
 ;; R7RS test suite.  Covers all procedures and syntax in the small
 ;; language except `delete-file'.  Currently assumes full-unicode

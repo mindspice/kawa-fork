@@ -97,17 +97,23 @@
      #`(if test1
          (%if-and-x k then . rest))))))
 
-(define-rewrite-syntax if
-  (lambda (x)
-    (syntax-case x (? :: and)
-      ((_ (and . tests) then else)
+(define (rewrite-if-and tests then else)
+  (if gnu.expr.Compilation:fullContinuations
+      (syntax->expression #`(let ((tmp (and . #,tests)))
+			      (if tmp #,then #,else)))
        (%let ((bl (gnu.expr.BlockExp)))
              (bl:setRunFinallyBlocks #f)
              (bl:setBody
               (gnu.expr.BeginExp
-               (syntax->expression #`(%if-and-x #,bl then . tests))
-               (syntax->expression #`else)))
-             bl))
+               (syntax->expression #`(%if-and-x #,bl #,then . #,tests))
+               (syntax->expression else)))
+             bl)))
+
+(define-rewrite-syntax if
+  (lambda (x)
+    (syntax-case x (? :: and)
+      ((_ (and . tests) then else)
+       (rewrite-if-and #'tests #'then #'else))
       ((_ (? . rest) then)
        #'(if (? . rest) then #!void))
       ((_ (and . rest) then)

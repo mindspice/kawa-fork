@@ -37,21 +37,6 @@ public class define_syntax extends Syntax
     this(name, hygienic ? Macro.HYGIENIC : 0);
   }
 
-  static ClassType typeMacro = ClassType.make("kawa.lang.Macro");
-  static PrimProcedure makeHygienic
-    = new PrimProcedure(typeMacro.getDeclaredMethod("make", 3));
-  static PrimProcedure makeNonHygienic
-    = new PrimProcedure(typeMacro.getDeclaredMethod("makeNonHygienic", 3));
-  static PrimProcedure makeSkipScanForm
-    = new PrimProcedure(typeMacro.getDeclaredMethod("makeSkipScanForm", 3));
-  static PrimProcedure setCapturedScope
-    = new PrimProcedure(typeMacro.getDeclaredMethod("setCapturedScope", 1));
-  static {
-    makeHygienic.setSideEffectFree();
-    makeNonHygienic.setSideEffectFree();
-    makeSkipScanForm.setSideEffectFree();
-  }
-
   public Expression rewriteForm (Pair form, Translator tr)
   {
     return tr.syntaxError("define-syntax not in a body");
@@ -95,7 +80,7 @@ public class define_syntax extends Syntax
       }
 
     Declaration decl = tr.define(name, nameSyntax, defs);
-    decl.setType(typeMacro); 
+    decl.setType(Macro.typeMacro);
     tr.push(decl);
 
     Macro savedMacro = tr.currentMacroDefinition;
@@ -109,14 +94,14 @@ public class define_syntax extends Syntax
     if (rule instanceof LambdaExp)
       ((LambdaExp) rule).setFlag(LambdaExp.NO_FIELD);
     Procedure makeMacroProc =
-        (flags & Macro.SKIP_SCAN_FORM) != 0 ? makeSkipScanForm
-        : (flags & Macro.HYGIENIC) != 0 ? makeHygienic
-        : makeNonHygienic;
+        (flags & Macro.SKIP_SCAN_FORM) != 0 ? Macro.makeSkipScanForm
+        : (flags & Macro.HYGIENIC) != 0 ? Macro.makeHygienic
+        : Macro.makeNonHygienic;
     // A top-level macro needs (in general) to be compiled into the
     // class-file, but for a non-top-level macro it is better to use
     // the quoted macro directly to get the right nesting, as we
     // do for letrec-syntax.
-    if (decl.context instanceof ModuleExp || makeMacroProc != makeHygienic)
+    if (decl.context instanceof ModuleExp || makeMacroProc != Macro.makeHygienic)
       rule = new ApplyExp(makeMacroProc,
                           new QuoteExp(name),
                           rule,
@@ -139,7 +124,7 @@ public class define_syntax extends Syntax
           {
             Expression[] args =
                 { new ReferenceExp(decl), new QuoteExp(defs) };
-            tr.pushForm(new ApplyExp(setCapturedScope, args));
+            tr.pushForm(new ApplyExp(Macro.setCapturedScope, args));
           }
       }
   }

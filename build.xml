@@ -503,6 +503,7 @@
       <exclude name="gnu/expr/KawaScriptBindings.java" unless="has-java6"/>
       <exclude name="gnu/expr/KawaScriptEngine.java" unless="has-java6"/>
       <exclude name="kawa/standard/SchemeScriptEngineFactory.java" unless="has-java6"/>
+      <include name="gnu/expr/continuations/"/>
       <include name="gnu/kawa/functions/"/>
       <include name="gnu/kawa/lispexpr/*.java"/>
       <exclude name="gnu/kawa/lispexpr/MakeXmlElement.java" unless="${enable-xml}"/>

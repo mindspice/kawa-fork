@@ -26,6 +26,9 @@ public class define extends Syntax
 {
   public static final define defineRaw = new define(SchemeCompilation.lambda);
 
+  public static final PrimProcedure
+      addGeneric = new PrimProcedure("gnu.expr.GenericProc", "add", 1);
+    
   Lambda lambda;
 
   String getName (int options)
@@ -163,18 +166,17 @@ public class define extends Syntax
         unknownValue = decl.context instanceof ModuleExp && ! makePrivate && decl.getCanWrite();
         if (makeCompoundProcedure) {
             tr.letStart();
-            ClassType classGenericProc = ClassType.make("gnu.expr.GenericProc");
+            ClassType classGenericProc = Compilation.typeGenericProc;
             Declaration gproc =
                 tr.letVariable(null,
                                classGenericProc,
                                new ApplyExp(Invoke.make,
                                    new Expression[] {
-                                       QuoteExp.getInstance(classGenericProc),
+                                       QuoteExp.getInstance(Compilation.typeGenericProc),
                                        QuoteExp.getInstance(decl.getName()) }));
             gproc.setFlag(Declaration.ALLOCATE_ON_STACK);
             tr.letEnter();
             BeginExp bexp1 = new BeginExp(); // early-init-code goes here
-            Method addMethod = classGenericProc.getDeclaredMethod("add", 1);
             Method setPropMethod =
                 classGenericProc.getDeclaredMethod("setProperty", 2);
             for (;;) {
@@ -202,7 +204,7 @@ public class define extends Syntax
                 } else {
                     Declaration gdecl = arg instanceof LambdaExp ? gproc : decl;
                     Expression addCall =
-                        new ApplyExp(addMethod,
+                        new ApplyExp(addGeneric,
                                      new Expression[] {
                                          new ReferenceExp(gdecl),
                                          arg });

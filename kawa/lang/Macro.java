@@ -1,4 +1,5 @@
 package kawa.lang;
+import gnu.bytecode.ClassType;
 import gnu.expr.*;
 import gnu.mapping.*;
 import gnu.lists.*;
@@ -10,6 +11,22 @@ public class Macro extends Syntax implements Printable, Externalizable
   public Object expander;
 
   Object instance;
+
+  public static ClassType typeMacro = ClassType.make("kawa.lang.Macro");
+  public static PrimProcedure makeHygienic
+    = new PrimProcedure(typeMacro.getDeclaredMethod("make", 3));
+  public static PrimProcedure makeNonHygienic
+    = new PrimProcedure(typeMacro.getDeclaredMethod("makeNonHygienic", 3));
+  public static PrimProcedure makeSkipScanForm
+    = new PrimProcedure(typeMacro.getDeclaredMethod("makeSkipScanForm", 3));
+  public static PrimProcedure setCapturedScope
+    = new PrimProcedure(typeMacro.getDeclaredMethod("setCapturedScope", 1));
+  static {
+    makeHygienic.setSideEffectFree();
+    makeNonHygienic.setSideEffectFree();
+    makeSkipScanForm.setSideEffectFree();
+  }
+
 
   public static final int HYGIENIC = 1;
   /** If this flag is set, then don't expand during the scan-body phase. */
