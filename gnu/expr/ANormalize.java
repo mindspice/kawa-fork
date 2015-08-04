@@ -620,7 +620,8 @@ public class ANormalize extends ExpExpVisitor<ANormalize.Context> {
             // optimization for non top-level 'define'
             if (bin.getContext().currentLambda() != comp.currentModule()
                 && bin.getInitValue() == QuoteExp.undefined_exp
-                && nvals < 2) {
+                && nvals < 2
+                && exp.new_value.getClass() == LambdaExp.class) {
                 bin.setInitValue(exp.new_value);
                 bin.nvalues = 0;
                 bin.values = null;
