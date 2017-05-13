@@ -1,3 +1,9 @@
+2017-05-13  Per Bothner  <per@bothner.com>
+
+	* MakeScene.scm (add): Don't set root.
+	Fixes bug reported by Chris Vine <chris@cvine.freeserve.co.uk>.
+	Bug was introduced Sun Apr 30 19:39:19 2017.
+
 2016-06-26  Per Bothner  <per@bothner.com>
 
 	* MakeScene.scm (MakeScene): Don't create Group until actually needed.
