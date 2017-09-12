@@ -1,6 +1,6 @@
 include $(top_srcdir)/Make-rules
 
-KAWALIB = $(top_builddir)
+KAWALIB = $(top_builddir)$(CLASSPATH_SEPARATOR)$(top_builddir)/lib/asm.jar
 KAWA = ../../../bin/kawa.sh
 EXTRA_CLEAN = tmp* *.log testing.zip */*.class
 mostlyclean-am: mostlyclean-generic

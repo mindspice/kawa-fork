@@ -345,6 +345,7 @@ public class ClassExp extends LambdaExp
                     Type ftype = decl.getType().getImplementationType();
                     decl.getterMethod.setReturnType(ftype);
                     decl.setterMethod.getParameterTypes()[0] = ftype;
+                    decl.setterMethod.getGenericParameterTypes()[0] = ftype;
                 } else {
                     decl.setSimple(false);
                     decl.getField().setType(decl.getType());

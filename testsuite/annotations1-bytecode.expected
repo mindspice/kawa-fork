@@ -1,81 +1,50 @@
-Reading .class from annotations1$MyClass.class.
+// access flags 0x21
+public class annotations1$MyClass {
 
-Access flags: public super
-This class: annotations1$MyClass super: java.lang.Object
-Interfaces (count: 0):
+  OUTERCLASS annotations1 null
 
-Fields (count: 2):
-Field name: x public Signature: gnu.math.IntNum
-Attribute "RuntimeVisibleAnnotations", length:0, number of entries: 1
-  @MyAnnotType
-    svalue => 4324
-    name => "myName"
-    bvalue => 2
-    ivalue => 112
-    blvalue => false
-    chvalue => B
-    etype => enum[java.lang.annotation.ElementType PACKAGE]
-Field name: y public Signature: gnu.math.IntNum
-Attribute "RuntimeVisibleAnnotations", length:0, number of entries: 1
-  @javax.annotation.Resource
-    authenticationType => enum[javax.annotation.Resource$AuthenticationType CONTAINER]
-    type => java.util.ArrayList
+  @LMyAnnotType;(name="MyClassName")
+  // access flags 0x1
+  public INNERCLASS annotations1$MyClass annotations1 MyClass
 
-Methods (count: 2):
+  // access flags 0x1
+  public Lgnu/math/IntNum; x
+  @LMyAnnotType;(svalue=(short)4324, name="myName", bvalue=(byte)2, ivalue=112, blvalue=false, chvalue=(char)66, etype=Ljava/lang/annotation/ElementType;.PACKAGE)
 
-Method name:"toString" public Signature: ()java.lang.String
-Attribute "Code", length:74, max_stack:5, max_locals:1, code_length:28
-  0: iconst_0
-  1: iconst_3
-  2: anewarray <Class java.lang.Object>
-  5: dup
-  6: iconst_0
-  7: ldc <String "MyClass[x:~s y:~s]">
-  9: aastore
- 10: dup
- 11: iconst_1
- 12: aload_0
- 13: getfield <Field annotations1$MyClass.x gnu.math.IntNum>
- 16: aastore
- 17: dup
- 18: iconst_2
- 19: aload_0
- 20: getfield <Field annotations1$MyClass.y gnu.math.IntNum>
- 23: aastore
- 24: invokestatic <Method gnu.kawa.functions.Format.formatToString (int,java.lang.Object[])java.lang.String>
- 27: areturn
-Attribute "LineNumberTable", length:10, count: 2
-  line: 30 at pc: 0
-  line: 35 at pc: 0
-Attribute "LocalVariableTable", length:12, count: 1
-  slot#0: name: this, type: annotations1$MyClass (pc: 0 length: 28)
-Attribute "RuntimeVisibleAnnotations", length:0, number of entries: 1
-  @MyAnnotType
-    names => array length:2
-      0: "x"
-      1: "y"
-    clvalue => java.io.InputStream
+  // access flags 0x1
+  public Lgnu/math/IntNum; y
+  @Ljavax/annotation/Resource;(authenticationType=Ljavax/annotation/Resource$AuthenticationType;.CONTAINER, type=java.util.ArrayList.class)
 
-Method name:"<init>" public Signature: ()void
-Attribute "Code", length:17, max_stack:1, max_locals:1, code_length:5
-  0: aload_0
-  1: invokespecial <Method java.lang.Object.<init> ()void>
-  4: return
+  // access flags 0x1
+  public toString()Ljava/lang/String;
+  @LMyAnnotType;(names={"x", "y"}, clvalue=java.io.InputStream.class)
+    ICONST_0
+    ICONST_3
+    ANEWARRAY java/lang/Object
+    DUP
+    ICONST_0
+    LDC "MyClass[x:~s y:~s]"
+    AASTORE
+    DUP
+    ICONST_1
+    ALOAD 0
+    GETFIELD annotations1$MyClass.x : Lgnu/math/IntNum;
+    AASTORE
+    DUP
+    ICONST_2
+    ALOAD 0
+    GETFIELD annotations1$MyClass.y : Lgnu/math/IntNum;
+    AASTORE
+    INVOKESTATIC gnu/kawa/functions/Format.formatToString (I[Ljava/lang/Object;)Ljava/lang/String;
+    ARETURN
+    MAXSTACK = 5
+    MAXLOCALS = 1
 
-Attributes (count: 4):
-Attribute "InnerClasses", length:10, count: 1
-  public MyClass = annotations1$MyClass; member of annotations1
-Attribute "RuntimeVisibleAnnotations", length:0, number of entries: 1
-  @MyAnnotType
-    name => "MyClassName"
-Attribute "SourceFile", length:2, "annotations1.scm"
-Attribute "SourceDebugExtension", length:77
-SMAP
-annotations1.scm
-Scheme
-*S Scheme
-*F
-1 annotations1.scm
-*L
-30#1,6:30
-*E
+  // access flags 0x1
+  public <init>()V
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+    RETURN
+    MAXSTACK = 1
+    MAXLOCALS = 1
+}

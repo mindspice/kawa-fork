@@ -2,7 +2,7 @@
 
 include $(top_srcdir)/source-list
 
-CLASSPATH = .$(CLASSPATH_SEPARATOR)$(srcdir)$(CLASSPATH_SEPARATOR)@conf_classpath@$$CLASSPATH
+CLASSPATH = .$(CLASSPATH_SEPARATOR)$(top_builddir)/lib/asm.jar$(CLASSPATH_SEPARATOR)$(srcdir)$(CLASSPATH_SEPARATOR)@conf_classpath@$$CLASSPATH
 
 FIXED_SUBDIRS = bin doc testsuite gnu/bytecode \
   gnu \

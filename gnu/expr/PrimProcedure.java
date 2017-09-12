@@ -1054,10 +1054,10 @@ public class PrimProcedure extends MethodProc {
   public static void disassemble (Procedure proc, Writer out)
     throws Exception
   {
-    disassemble(proc, new ClassTypeWriter(null, out, 0));
+    //disassemble(proc, new ClassTypeWriter(null, out, 0));
   }
 
-  public static void disassemble (Procedure proc, ClassTypeWriter cwriter)
+  /*public static void disassemble (Procedure proc, ClassTypeWriter cwriter)
     throws Exception
   {
     if (proc instanceof GenericProc)
@@ -1129,7 +1129,7 @@ public class PrimProcedure extends MethodProc {
         }
       }
     cwriter.flush();
-  }
+  }*/
 
   public static Class getProcedureClass (Object pproc)
   {

@@ -21,19 +21,6 @@ public class Location {
     this.name = name;
   }
 
-  public final void setName(int name_index, ConstantPool constants)
-  {
-    if (name_index <= 0)
-      name = null;
-    else
-      {
-	CpoolUtf8 nameConstant = (CpoolUtf8)
-	  constants.getForced(name_index, ConstantPool.UTF8);
-	name = nameConstant.string;
-      }
-    this.name_index = name_index;
-  }
-
     public Type getType() {
         return type;
     }
@@ -45,11 +32,4 @@ public class Location {
 
     public final String getSignature () { return getType().getRawType().getSignature (); }
 
-  public void setSignature (int signature_index, ConstantPool constants)
-  {
-    CpoolUtf8 sigConstant = (CpoolUtf8)
-      constants.getForced(signature_index, ConstantPool.UTF8);
-    this.signature_index = signature_index;
-    type = Type.signatureToType(sigConstant.string);
-  }
 }

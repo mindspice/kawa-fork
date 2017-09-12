@@ -7,7 +7,6 @@
 (define-alias CodeAttr gnu.bytecode.CodeAttr)
 (define-alias Type gnu.bytecode.Type)
 (define-alias Variable gnu.bytecode.Variable)
-(define-alias ClassTypeWriter gnu.bytecode.ClassTypeWriter)
 (define-alias ArrayClassLoader gnu.bytecode.ArrayClassLoader)
 
 (define-alias System java.lang.System)
@@ -43,7 +42,12 @@
 
 ;; Disassemble this class.
 ;; The output is similar to javap(1).
-(ClassTypeWriter:print c System:out 0)
+(define sw :: java.io.StringWriter (java.io.StringWriter))
+(define pw :: java.io.PrintWriter (java.io.PrintWriter sw))
+((org.objectweb.asm.ClassReader classFile):accept (org.objectweb.asm.util.TraceClassVisitor pw) 0)
+(pw:flush)
+(define s :: java.lang.String (sw:toString))
+(System:out:print (s:substring (+ (s:indexOf "\n") 1)))
 
 ;; Load the generated class into this JVM.
 ;; gnu.bytecode provides ArrayClassLoader, or you can use your own.

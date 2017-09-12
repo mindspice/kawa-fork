@@ -101,25 +101,6 @@ public class LocalVarsAttr extends Attribute
     return 2 + 10 * getCount();
   }
 
-  public void assignConstants (ClassType cl)
-  {
-    super.assignConstants(cl);
-
-    VarEnumerator vars = allVars ();
-    Variable var;
-    while ((var = vars.nextVar ()) != null)
-      {
-	if (var.isSimple () && var.name != null)
-	  {
-	    if (var.name_index == 0)
-	      var.name_index = cl.getConstants().addUtf8(var.getName()).index;
-	    if (var.signature_index == 0)
-	      var.signature_index
-		= cl.getConstants().addUtf8(var.getType().getSignature()).index;
-	  }
-      }
-  }
-
   public void write (DataOutputStream dstr) throws java.io.IOException
   {
     VarEnumerator vars = allVars ();
@@ -138,47 +119,6 @@ public class LocalVarsAttr extends Attribute
 	    dstr.writeShort(var.name_index);
 	    dstr.writeShort(var.signature_index);
 	    dstr.writeShort(var.offset);
-	  }
-      }
-  }
-
-  public void print (ClassTypeWriter dst) 
-  {
-    VarEnumerator vars = allVars ();
-    dst.print("Attribute \"");
-    dst.print(getName());
-    dst.print("\", length:");
-    dst.print(getLength());
-    dst.print(", count: ");
-    dst.println(getCount());
-	    
-    Variable var;
-    for (vars.reset (); (var = vars.nextVar ()) != null; )
-      {
-	if (var.isSimple () && var.name != null)
-	  {
-	    dst.print("  slot#");
-	    dst.print(var.offset);
-	    dst.print(": name: ");
-	    dst.printOptionalIndex(var.name_index);
-	    dst.print(var.getName());
-	    dst.print(", type: ");
-	    dst.printOptionalIndex(var.signature_index);
-	    dst.printSignature(var.getType());
-	    dst.print(" (pc: ");
-	    Scope scope = var.getScope();
-	    int start_pc, end_pc;
-	    if (scope == null || scope.start == null || scope.end == null
-		|| (start_pc = scope.start.position) < 0
-		|| (end_pc = scope.end.position) < 0)
-	      dst.print("unknown");
-	    else
-	      {
-		dst.print(start_pc);
-		dst.print(" length: ");
-		dst.print(end_pc - start_pc);
-	      }
-	    dst.println(')');
 	  }
       }
   }

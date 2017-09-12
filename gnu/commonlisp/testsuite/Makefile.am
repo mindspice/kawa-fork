@@ -18,5 +18,5 @@ check-lambda-test:
 	$(DOTEST) -f "$(srcdir)/lambda.lisp" -e '(test-report)'
 
 check-run-test-scripts:
-	CLASSPATH=$(top_builddir) $(JAVA) gnu.kawa.util.RunTestScript \
+	CLASSPATH=$(top_builddir)$(CLASSPATH_SEPARATOR)$(top_builddir)/lib/asm.jar $(JAVA) gnu.kawa.util.RunTestScript \
 	  `for test in $(SCRIPTS_TO_RUN); do echo $(srcdir)/$$test; done`

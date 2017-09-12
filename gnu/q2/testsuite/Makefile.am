@@ -7,7 +7,7 @@ TEST_Q2_FILES = binary1.q2 comment1.q2 cond1.q2 function1.q2 indent1.q2
 EXTRA_DIST = $(TEST_Q2_FILES)
 
 run-tests:
-	CLASSPATH=$(top_builddir) $(JAVA) gnu.kawa.util.RunTestScript \
+	CLASSPATH=$(top_builddir)$(CLASSPATH_SEPARATOR)$(top_builddir)/lib/asm.jar $(JAVA) gnu.kawa.util.RunTestScript \
 	  `for test in $(TEST_Q2_FILES); do echo $(srcdir)/$$test; done`
 
 check: run-tests

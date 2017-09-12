@@ -1,4 +1,4 @@
-;; Java-options: "-Xmx20m"
+;; Java-options: "-Xmx80m"
 (define-variable n 1)
 (let ((lambda '(begin (define-variable n)
                       ((lambda ()

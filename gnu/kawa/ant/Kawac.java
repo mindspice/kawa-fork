@@ -1091,6 +1091,11 @@ public class Kawac extends MatchingTask {
       cp = new Path(getProject());
     }
     classpath.addExisting(cp);
+
+    FileList fl = new FileList();
+    fl.setFiles(getProject().getBaseDir()+"/lib/asm.jar");
+    classpath.addFilelist(fl);
+
     return classpath;
   }
 
