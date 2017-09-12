@@ -5,7 +5,7 @@ SUFFIXES = .java .class .scm .el .lisp
 KAWALIB = ../lib/kawa.jar
 KAWARTLIB = ../lib/kawart.jar
 KAWA = ../bin/kawa.sh
-CPJAVA = CLASSPATH="..$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" $(JAVA)
+CPJAVA = CLASSPATH="$(top_builddir)/lib/asm.jar$(CLASSPATH_SEPARATOR)..$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" $(JAVA)
 CPKAWA = CLASSPATH="@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" $(KAWA)
 KAWATEST = CLASSPATH=".$(CLASSPATH_SEPARATOR)$$CLASSPATH" $(KAWA) $(OPTIONS) -e '(load "testing.zip")'
 DIFF = diff
@@ -57,7 +57,7 @@ check2:  check-scm check-r7rs check-misc check-mac check-obj check-polytype \
   check-case check-vars
 
 check-run-test-scripts: $(BUILD_BEFORE_SCRIPTS_TO_RUN)
-	CLASSPATH=$(top_builddir):. $(JAVA) gnu.kawa.util.RunTestScript \
+	$(CPJAVA) gnu.kawa.util.RunTestScript \
 	  `for test in $(SCRIPTS_TO_RUN); do echo $(srcdir)/$$test; done`
 
 testing.zip: $(srcdir)/testing.scm
@@ -173,22 +173,22 @@ moduleM0.class: $(srcdir)/moduleM.scm SimpleB.class
 moduleM1.class: moduleM.scm SimpleB.class
 	$(KAWA) -T moduleM1 --main -C $(srcdir)/moduleM.scm
 check-moduleM-immediate: SimpleB.class
-	CLASSPATH=".$(CLASSPATH_SEPARATOR).." $(JAVA) kawa.repl $(srcdir)/moduleM.scm > moduleM-immediate.log
+	$(CPJAVA) kawa.repl $(srcdir)/moduleM.scm > moduleM-immediate.log
 	@if $(DIFF) $(srcdir)/moduleM.expected moduleM-immediate.log; \
 	  then echo '# moduleM-immediate test passes'; \
 	  else echo FAIL moduleM-immediate test; fi
 check-moduleM-run: moduleM0.class
-	CLASSPATH=".$(CLASSPATH_SEPARATOR).." $(JAVA) kawa.repl moduleM0 > moduleM-run.log
+	$(CPJAVA) kawa.repl moduleM0 > moduleM-run.log
 	@if $(DIFF) $(srcdir)/moduleM.expected moduleM-run.log; \
 	  then echo '# moduleM-run test passes'; \
 	  else echo FAIL moduleM-run test; fi
 check-moduleM-main-app: moduleM1.class
-	CLASSPATH=".$(CLASSPATH_SEPARATOR).." $(JAVA) moduleM1 > moduleM-main-app.log
+	$(CPJAVA) moduleM1 > moduleM-main-app.log
 	@if $(DIFF) $(srcdir)/moduleM.expected moduleM-main-app.log; \
 	  then echo '# moduleM-main-app test passes'; \
 	  else echo FAIL moduleM-main-app test; fi
 check-moduleM-main-run: moduleM1.class
-	CLASSPATH=".$(CLASSPATH_SEPARATOR).." $(JAVA) kawa.repl moduleM1 > moduleM-main-run.log
+	$(CPJAVA) kawa.repl moduleM1 > moduleM-main-run.log
 	@if $(DIFF) $(srcdir)/moduleM.expected moduleM-main-run.log; \
 	  then echo '# moduleM-main-run test passes'; \
 	  else echo FAIL moduleM-main-run test; fi
@@ -261,7 +261,7 @@ fannkuch.class: $(srcdir)/fannkuch.scm
 
 check-fannkuch: fannkuch.class
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) fannkuch 7 >fannkuch7.log
+	$(CPJAVA) fannkuch 7 >fannkuch7.log
 	@if $(DIFF) $(srcdir)/fannkuch-output.txt fannkuch7.log; \
 	  then echo '# fannkuch test passes'; \
 	  else echo FAIL fannkuch test; fi
@@ -272,7 +272,7 @@ fannkuchredux.class: $(srcdir)/fannkuchredux.scm
 
 check-fannkuchredux: fannkuchredux.class
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) fannkuchredux 7 >fannkuchredux7.log
+	$(CPJAVA) fannkuchredux 7 >fannkuchredux7.log
 	@if $(DIFF) $(srcdir)/fannkuchredux-output.txt fannkuchredux7.log; \
 	  then echo '# fannkuch-redux test passes'; \
 	  else echo FAIL fannkuch-redux test; fi
@@ -283,14 +283,14 @@ fasta.class: $(srcdir)/fasta.scm
 
 check-fasta: fasta.class
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) fasta 1000 >fasta1000.log
+	$(CPJAVA) fasta 1000 >fasta1000.log
 	@if $(DIFF) $(srcdir)/fasta-output.txt fasta1000.log; \
 	  then echo '# fasta test passes'; \
 	  else echo FAIL fasta test; fi
 
 knucleotide-input.txt: fasta.class
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) fasta 25000 >knucleotide-input.txt
+	$(CPJAVA) fasta 25000 >knucleotide-input.txt
 
 knucleotide1.class: $(srcdir)/knucleotide.scm
 	CLASSPATH="@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
@@ -302,13 +302,13 @@ knucleotide2.class: $(srcdir)/knucleotide-2.scm
 
 check-knucleotide-1: knucleotide1.class knucleotide-input.txt
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) knucleotide1 < knucleotide-input.txt >tmp-knucleotide1.log
+	$(CPJAVA) knucleotide1 < knucleotide-input.txt >tmp-knucleotide1.log
 	@if $(DIFF) $(srcdir)/knucleotide-output.txt tmp-knucleotide1.log; \
 	  then echo '# knucleotide1 test passes'; \
 	  else echo FAIL knucleotide1 test; fi
 check-knucleotide-2: knucleotide2.class knucleotide-input.txt
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) knucleotide2 < knucleotide-input.txt >tmp-knucleotide2.log
+	$(CPJAVA) knucleotide2 < knucleotide-input.txt >tmp-knucleotide2.log
 	@if $(DIFF) $(srcdir)/knucleotide-output.txt tmp-knucleotide2.log; \
 	  then echo '# knucleotide2 test passes'; \
 	  else echo FAIL knucleotide2 test; fi
@@ -330,7 +330,7 @@ nbody.class: $(srcdir)/nbody.scm
 
 check-nbody: nbody.class
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) nbody 1000 >nbody1000.log
+	$(CPJAVA) nbody 1000 >nbody1000.log
 	@if $(DIFF) $(srcdir)/nbody-output.txt nbody1000.log; \
 	  then echo '# nbody test passes'; \
 	  else echo FAIL nbody test; fi
@@ -341,7 +341,7 @@ nsieve.class: $(srcdir)/nsieve.scm
 
 check-nsieve: nsieve.class
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) nsieve 7 >nsieve7.log
+	$(CPJAVA) nsieve 7 >nsieve7.log
 	@if $(DIFF) $(srcdir)/nsieve-output.txt nsieve7.log; \
 	  then echo '# nsieve test passes'; \
 	  else echo FAIL nsieve test; fi
@@ -352,7 +352,7 @@ mandelbrot.class: $(srcdir)/mandelbrot.scm
 
 check-mandelbrot: mandelbrot.class
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) mandelbrot 200 >tmp-mandelbrot-200.bmp
+	$(CPJAVA) mandelbrot 200 >tmp-mandelbrot-200.bmp
 	@if $(DIFF) $(srcdir)/mandelbrot-output.bmp tmp-mandelbrot-200.bmp; \
 	  then echo '# mandelbrot test passes'; \
 	  else echo FAIL mandelbrot test; fi
@@ -363,7 +363,7 @@ regexdna.class: $(srcdir)/regexdna.scm
 
 regexdna-input.txt: fasta.class
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) fasta 10000 >regexdna-input.txt
+	$(CPJAVA) fasta 10000 >regexdna-input.txt
 
 check-regexdna: regexdna.class regexdna-input.txt
 	$(CPJAVA) regexdna < regexdna-input.txt >tmp-regexdna.log
@@ -384,13 +384,13 @@ revcomp2.class: $(srcdir)/revcomp-2.scm
 
 check-revcomp-1: revcomp1.class revcomp-input.txt
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) revcomp1 < revcomp-input.txt >tmp-revcomp1.log
+	$(CPJAVA) revcomp1 < revcomp-input.txt >tmp-revcomp1.log
 	@if $(DIFF) $(srcdir)/revcomp-output.txt tmp-revcomp1.log; \
 	  then echo '# revcomp-1 test passes'; \
 	  else echo FAIL revcomp-1 test; fi
 check-revcomp-2: revcomp2.class revcomp-input.txt
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) revcomp2 < revcomp-input.txt >tmp-revcomp2.log
+	$(CPJAVA) revcomp2 < revcomp-input.txt >tmp-revcomp2.log
 	@if $(DIFF) $(srcdir)/revcomp-output.txt tmp-revcomp2.log; \
 	  then echo '# revcomp-2 test passes'; \
 	  else echo FAIL revcomp-2 test; fi
@@ -402,7 +402,7 @@ spectralnorm.class: $(srcdir)/spectralnorm.scm
 
 check-spectralnorm: spectralnorm.class
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) spectralnorm 100 >tmp-spectralnorm100.log
+	$(CPJAVA) spectralnorm 100 >tmp-spectralnorm100.log
 	@if $(DIFF) $(srcdir)/spectralnorm-output.txt tmp-spectralnorm100.log; \
 	  then echo '# spectralnorm test passes'; \
 	  else echo FAIL spectralnorm test; fi
@@ -413,7 +413,7 @@ threadring.class: $(srcdir)/threadring.scm
 
 check-threadring: threadring.class
 	CLASSPATH="$(KAWARTLIB)$(CLASSPATH_SEPARATOR)@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH" \
-	$(JAVA) threadring 1000 103 >threadring1000.log
+	$(CPJAVA) threadring 1000 103 >threadring1000.log
 	@if $(DIFF) $(srcdir)/threadring-output.txt threadring1000.log; \
 	  then echo '# threadring test passes'; \
 	  else echo FAIL threadring test; fi
@@ -483,7 +483,7 @@ MyAnnotType.class: $(srcdir)/MyAnnotType.java
 annotations1.class: $(srcdir)/annotations1.scm MyAnnotType.class
 	CLASSPATH=".$(CLASSPATH_SEPARATOR)$$CLASSPATH" $(KAWA) -C $<
 tmp-annotations1.bytecode: annotations1.class
-	$(CPJAVA) gnu.bytecode.dump 'annotations1$$MyClass'.class >tmp-annotations1.bytecode
+	$(CPJAVA) org.objectweb.asm.util.Textifier 'annotations1$$MyClass'.class | tail -n +2 - > tmp-annotations1.bytecode
 check-annotations1: tmp-annotations1.bytecode
 	@if $(DIFF) $(srcdir)/annotations1-bytecode.expected tmp-annotations1.bytecode; \
 	  then echo '# annotations1 test passes'; \

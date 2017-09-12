@@ -604,6 +604,10 @@
            deprecation="${deprecation}"
            optimize="${optimize}"
 	   includeantruntime="false">
+      <classpath>
+        <pathelement path="${classpath}"/>
+        <pathelement location="${src.dir}/lib/asm.jar"/>
+      </classpath>
       <include name="gnu/bytecode/"/>
       <include name="gnu/commonlisp/lang/"/>
       <include name="gnu/ecmascript/"/>

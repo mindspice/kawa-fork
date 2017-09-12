@@ -170,44 +170,53 @@ public class CheckedTarget extends StackTarget
 
     Label endLabel = new Label(code);
     endLabel.setTypes(code);
-    if (isInTry)
-      code.emitGoto(endLabel);
-    int fragment_cookie = 0;
-    code.setUnreachable();
-    if (! isInTry)
-      fragment_cookie = code.beginFragment(endLabel);
-    code.addHandler(startTry, endTry, typeClassCastException);
-    // Push arguments:
-    // ClassCastException is already pushed
-    boolean thisIsProc = false;
-    if (proc != null && proc.isClassGenerated()
-        && ! comp.method.getStaticFlag())
-      {
-        if (comp.method.getDeclaringClass() == proc.getCompiledClassType(comp))
-          thisIsProc = true;
-      }
-    int line = comp.getLineNumber();
-    if (line > 0)
-      code.putLineNumber(line);
-    code.emitNew(typeWrongType);
-    code.emitDupX(); // dup_x1
-    code.emitSwap();
-    if (thisIsProc)
-      code.emitPushThis();
-    else
-      code.emitPushString(procname == null && argno != WrongType.ARG_CAST
-			  ? "lambda"
-			  : procname);
-    code.emitPushInt(argno);
-    code.emitLoad(argValue);
-    code.emitInvokeSpecial(thisIsProc ? initWrongTypeProcMethod
-                           : initWrongTypeStringMethod);
+
+    Fragment f = new Fragment() {
+        public void emit()
+        {
+            code.addHandler(startTry, endTry, typeClassCastException);
+            // Push arguments:
+            // ClassCastException is already pushed
+            boolean thisIsProc = false;
+            if (proc != null && proc.isClassGenerated()
+                && ! comp.method.getStaticFlag())
+              {
+                if (comp.method.getDeclaringClass() == proc.getCompiledClassType(comp))
+                  thisIsProc = true;
+              }
+            int line = comp.getLineNumber();
+            if (line > 0)
+              code.putLineNumber(line);
+            code.emitNew(typeWrongType);
+            code.emitDupX(); // dup_x1
+            code.emitSwap();
+            if (thisIsProc)
+              code.emitPushThis();
+            else
+              code.emitPushString(procname == null && argno != WrongType.ARG_CAST
+                      ? "lambda"
+                      : procname);
+            code.emitPushInt(argno);
+            argValue.setFlag(true, Variable.LIVE_FLAG);
+            code.emitLoad(argValue);
+            code.emitInvokeSpecial(thisIsProc ? initWrongTypeProcMethod
+                                   : initWrongTypeStringMethod);
+            code.emitThrow();
+        }
+    };
+    f.argValue = argValue;
     if (tmpScope != null)
-      code.popScope();
-    code.emitThrow();
+        code.popScope();
     if (isInTry)
-      endLabel.define(code);
-    else
-      code.endFragment(fragment_cookie);
+    {
+        code.emitGoto(endLabel);
+        f.emit();
+        endLabel.define(code);
+    } else
+        code.addFragment(f);
   }
+}
+
+abstract class Fragment extends gnu.bytecode.Fragment {
+     gnu.bytecode.Variable argValue;
 }

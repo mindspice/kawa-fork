@@ -436,26 +436,28 @@ public class Declaration extends SourceLocator.Simple
                 endTry.define(code);
                 Label endLabel = new Label(code);
                 endLabel.setTypes(code);
-                if (isInTry)
-                  code.emitGoto(endLabel);
-                else
-                  code.setUnreachable();
-                int fragment_cookie = 0;
-                if (! isInTry)
-                  fragment_cookie = code.beginFragment(endLabel);
-                code.addHandler(startTry, endTry, typeUnboundLocationException);
 
-                code.emitDup(typeUnboundLocationException);
-                code.emitPushString(filename);
-                code.emitPushInt(line);
-                code.emitPushInt(column);
-                code.emitInvokeVirtual(typeUnboundLocationException
-                                       .getDeclaredMethod("setLine", 3));
-                code.emitThrow();
+                Fragment f = new Fragment() {
+                    public void emit()
+                    {
+                        code.addHandler(startTry, endTry, typeUnboundLocationException);
+                        code.emitDup(typeUnboundLocationException);
+                        code.emitPushString(filename);
+                        code.emitPushInt(line);
+                        code.emitPushInt(column);
+                        code.emitInvokeVirtual(
+                            typeUnboundLocationException.getDeclaredMethod("setLine", 3));
+                        code.emitThrow();
+                    }
+                };
+
                 if (isInTry)
-                  endLabel.define(code);
-                else
-                  code.endFragment(fragment_cookie);
+                {
+                    code.emitGoto(endLabel);
+                    f.emit();
+                    endLabel.define(code);
+                } else
+                    code.addFragment(f);
               }
             else
               code.emitInvokeVirtual(getLocationMethod);

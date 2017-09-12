@@ -215,11 +215,38 @@ public class CaseExp extends Expression {
         before_label.setTypes(code);
         Label defaultl = new Label();
 
+        HashMap<Expression, Integer> expToPendingDatumCounts2
+            = new HashMap<Expression, Integer>(expToPendingDatumCounts);
+        for (int h : hashToClauseMap.keySet()) {
+            ArrayList<Object> dwes = hashToClauseMap.get(h);
+            Object datum;
+            for (int i = 0; i < dwes.size(); i = i + 2) {
+                datum = dwes.get(i);
+                Expression exp = (Expression) dwes.get(i + 1);
+                int pendingDatumCount = expToPendingDatumCounts2.get(exp) - 1;
+                Label expLabel = expToLabelMap.get(exp);
+                if (pendingDatumCount == 0) {
+                    sw.addCaseOnly(h, code);
+                } else {
+                    expToPendingDatumCounts2.put(exp, pendingDatumCount);
+                    if (expLabel == null) {
+                        expLabel = new Label(code);
+                        expToLabelMap.put(exp, expLabel);
+                    }
+                    if (integer)
+                        sw.addCaseGotoOnly(h, code, expLabel);
+                    else
+                        sw.addCaseOnly(h, code);
+                }
+            }
+        }
+
         for (int h : hashToClauseMap.keySet()) {
             if (! integer)
                 sw.addCase(h, code);
             ArrayList<Object> dwes = hashToClauseMap.get(h);
             Object datum;
+            boolean oneClause = dwes.size() <= 2;
             for (int i = 0; i < dwes.size(); i = i + 2) {
 
                 datum = dwes.get(i);
@@ -247,7 +274,10 @@ public class CaseExp extends Expression {
                             long val = idatum.longValue();
                             code.emitPushLong(val);
                         }
-                        code.emitIfEq();
+                        if (oneClause)
+                            code.emitGotoIfNE(defaultl);
+                        else
+                            code.emitIfEq();
                     } else if((key.getType() == LangPrimType.charType
                                || key.getType() == LangPrimType.characterType)
                               && datum instanceof Char) {
@@ -255,13 +285,19 @@ public class CaseExp extends Expression {
                         key.compile(comp, Type.intType);
                         int val = ((Char) datum).intValue();
                         code.emitPushInt(val);
-                        code.emitIfEq();
+                        if (oneClause)
+                            code.emitGotoIfNE(defaultl);
+                        else
+                            code.emitIfEq();
                     } else {
                         // general case, comparing to objects using IsEqv
                         key.compile(comp, Type.objectType);
                         comp.compileConstant(datum, Target.pushObject);
                         code.emitInvokeStatic(isEqvMethod);
-                        code.emitIfIntNotZero();
+                        if (oneClause)
+                            code.emitGotoIfIntEqZero(defaultl);
+                        else
+                            code.emitIfIntNotZero();
                     }
                 }
 
@@ -289,22 +325,18 @@ public class CaseExp extends Expression {
                     // It's not the last time we use the exp. Compile a goto
                     // to where exp will be compiled.
                     expToPendingDatumCounts.put(exp, pendingDatumCount);
-                    if (expLabel == null) {
-                        expLabel = new Label(code);
-                        expToLabelMap.put(exp, expLabel);
-                    }
                     if (integer)
                         sw.addCaseGoto(h, code, expLabel);
                     else
                         code.emitGoto(expLabel);
                 }
                 comp.callContextVar = callContextSave;
-                if (!integer) code.emitFi();
+                if (!integer && !oneClause) code.emitFi();
             }
             // if this point is reached and we are handling 
             // the general case, all the comparisons failed 
             // and we must jump to the default case
-            if (!integer)
+            if (!integer && !oneClause)
                 code.emitGoto(defaultl);
         }
 

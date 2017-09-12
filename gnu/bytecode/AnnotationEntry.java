@@ -220,28 +220,6 @@ implements java.lang.reflect.InvocationHandler
     return sbuf.toString();
   }
 
-  public void print (int indentation, ClassTypeWriter dst)
-  {
-    dst.printOptionalIndex(annotationTypeIndex);
-    dst.print('@');
-    String cname = annotationType != null ? annotationType.getSignature()
-      : ((CpoolUtf8) dst.ctype.constants.getPoolEntry(annotationTypeIndex)).getString();
-    Type.printSignature(cname, 0, cname.length(), dst);
-    int count = elementsValue.size();
-    indentation += 2;
-    for (Map.Entry<String,Value> e : elementsValue.entrySet())
-      {
-        dst.println();
-        String key = e.getKey();
-        Value val = e.getValue();
-        dst.printSpaces(indentation);
-        dst.printOptionalIndex(val.nindex);
-        dst.print(key);
-        dst.print(" => ");
-        val.print(indentation, dst);
-      }
-  }
-
   public Object invoke (Object proxy, java.lang.reflect.Method method, Object[] args)
   {
     String mname = method.getName();
@@ -274,12 +252,6 @@ implements java.lang.reflect.InvocationHandler
 
     Object value;
     Object valuex;
-
-    /** Indexes in ConstantPool of corresponding name. */
-    int nindex;
-    /** Indexes in ConstantPool, if non-zero. */
-    int index1;
-    int index2;
 
     public Value (char kind, Type type, Object value)
     {
@@ -364,95 +336,5 @@ implements java.lang.reflect.InvocationHandler
         }
     }
     /* #endif */
-
-    public void print (int indentation, ClassTypeWriter out)
-    {
-    if ((out.flags & ClassTypeWriter.PRINT_EXTRAS) != 0)
-      {
-        out.print("(kind:");
-        if (kind >= 'A' && kind <= 'z')
-          out.print(kind);
-        else
-          out.print((int) kind);
-        out.print(") ");
-      }
-    int expected = 0;
-    switch (kind)
-      {
-      case 'B':
-      case 'I':
-      case 'S':
-      case 'C':
-      case 'Z':
-      case 'J':
-      case 'D':
-      case 'F':
-      case 's': // String
-        out.printOptionalIndex(out.getCpoolEntry(index1));
-        if (value instanceof String)
-          out.printQuotedString((String) value);
-        else
-          out.print(value.toString());
-        break;
-      case 'e': // enum constant
-        String[] sarr = decodeEnumEntry(value);
-        String cname = sarr[0];
-        String ename = sarr[1];
-        out.print("enum[");
-        if ((out.flags & ClassTypeWriter.PRINT_EXTRAS) != 0)
-          out.print("type:");
-        out.printOptionalIndex(index1);
-        Type.printSignature(cname, 0, cname.length(), out);
-        if ((out.flags & ClassTypeWriter.PRINT_EXTRAS) != 0)
-          out.print(" value:");
-        else
-          out.print(' ');
-        out.printOptionalIndex(index2);
-        out.print(ename);
-        out.print("]");
-        break;
-      case 'c': // class
-        out.printOptionalIndex(index1);
-        cname = value instanceof String ? (String) value
-          : ((ClassType) value).getSignature();
-        Type.printSignature(cname, 0, cname.length(), out);
-        break;
-      case '@': // annotation type
-        ((AnnotationEntry) value).print(indentation + 2, out);
-        break;
-      case '[': // array
-        List<AnnotationEntry.Value> vals = (List<AnnotationEntry.Value>) value;
-        int sz = vals.size();
-        out.print("array length:");
-        out.print(sz);
-        for (int i = 0; i < sz;  i++)
-          {
-            out.println();
-            out.printSpaces(indentation + 2);
-            out.print(i);
-            out.print(": ");
-            vals.get(i).print(indentation + 2, out);
-          }
-        break;
-      }
-    }
   }
-
-    /** Return [type descriptor, field name]. */
-    static String[] decodeEnumEntry(Object value) {
-        if (value instanceof Field) {
-            Field fld = (Field) value;
-            return new String[]{
-                fld.getDeclaringClass().getSignature(),
-                fld.getName()};
-        }
-        else if (value instanceof Enum) {
-            Enum evalue = (Enum) value;
-            return new String[]{
-                ClassType.nameToSignature(evalue.getDeclaringClass().getName()),
-                evalue.name()};
-        }
-        else
-            return (String[]) value;
-    }
 }

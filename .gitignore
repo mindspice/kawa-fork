@@ -40,6 +40,7 @@ doc/version.texi
 doc/web
 kawa/Version.java
 lib/*.jar
+!lib/asm.jar
 testsuite/scribble.html
 testsuite/testing.zip
 testsuite/tmp*
