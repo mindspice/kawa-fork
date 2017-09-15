@@ -1,3 +1,7 @@
+2017-09-15  Per Bothner  <per@bothner.com>
+
+	* Makefile.am (EXTRA_DIST): Add missing file.
+
 2017-09-03  Timo Myyrä <timo.myyra@wickedbsd.net>
 
 	* system-test.scm: Fixme GitLb issue #17

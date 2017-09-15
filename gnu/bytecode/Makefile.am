@@ -13,6 +13,7 @@ ExceptionsAttr.java \
 ExitableBlock.java \
 Field.java \
 Filter.java \
+Fragment.java \
 IfState.java \
 Label.java \
 LocalVarsAttr.java \
@@ -24,6 +25,7 @@ ParameterizedType.java \
 PrimType.java \
 RuntimeAnnotationsAttr.java \
 Scope.java \
+SourceDebugExtAttr.java \
 SourceFileAttr.java \
 SpecialObjectType.java \
 SwitchState.java \

@@ -797,4 +797,4 @@ EXTRA_DIST = testing.scm test-utils.scm \
   threadring.scm threadring-output.txt \
   libx.scm moduleM.scm moduleM.expected life-grid.scm life-grid.expected \
   $(SCRIPTS_TO_RUN) $(AUX_FOR_SCRIPTS_TO_RUN) $(LARCENY_TEST_FILES) \
-  $(WEBTEST_FILES)
+  $(WEBTEST_FILES) ListCodeSize.java

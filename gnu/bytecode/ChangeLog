@@ -1,3 +1,7 @@
+2017-09-15  Per Bothner  <per@bothner.com>
+
+	* Makefile.am (java_sources): Add two missing files.
+
 2017-08-26  Per Bothner  <per@bothner.com>
 
 	* Scope.java (vars): Make private.
