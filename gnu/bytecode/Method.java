@@ -170,7 +170,7 @@ public class Method implements AttrContainer, Member
         local.allocateLocal(code);
     }
 
-    org.objectweb.asm.commons.CodeSizeEvaluator mv;
+    org.objectweb.asm.MethodVisitor mv;
 
     synchronized void mvVisit()
     {
@@ -187,8 +187,8 @@ public class Method implements AttrContainer, Member
             String generic_sig = makeGenericSignature(generic_arg_types, return_type);
             if (generic_sig.equals(getSignature()))
                 generic_sig = null;
-            mv = new org.objectweb.asm.commons.CodeSizeEvaluator(classfile.cw
-                .visitMethod(getModifiers(), getName(), getSignature(), generic_sig, s_exceptions));
+            mv = classfile.cw.visitMethod(getModifiers(), getName(), getSignature(), generic_sig,
+                s_exceptions);
         }
     }
 

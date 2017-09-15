@@ -1484,7 +1484,7 @@ public class ClassType extends ObjectType implements AttrContainer, Externalizab
                     {
                         fragment.emit();
                     }
-                    m.code.emit();
+                    m.code.flushGoto();
                     m.mv.visitMaxs(100, 100);
                 }
                 for (AnnotationEntry ae : getAnnotationEntries(m, true))

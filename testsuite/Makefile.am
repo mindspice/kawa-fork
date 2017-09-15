@@ -555,9 +555,12 @@ InliningTest.class: $(srcdir)/inlining-test.scm
 .scm.class:
 	$(CPKAWA) -C $<
 
-LIST_CODE_SIZE = $(CPJAVA) gnu.bytecode.ListCodeSize
+LIST_CODE_SIZE = $(CPJAVA) ListCodeSize
 
-inlining.log: InliningTest.class cycle1.class cycle2.class \
+ListCodeSize.class:
+	CLASSPATH="..$(CLASSPATH_SEPARATOR)../lib/asm.jar" $(JAVAC) $(srcdir)/ListCodeSize.java -d .
+
+inlining.log: ListCodeSize.class InliningTest.class cycle1.class cycle2.class \
   binarytrees.class fannkuch.class fannkuchredux.class fasta.class mandelbrot.class nbody.class pidigits.class regexdna.class revcomp1.class revcomp2.class spectralnorm.class map1.class values2.class reflect-fname.class Makefile
 	$(LIST_CODE_SIZE) InliningTest.class \
 	setCar getCar getHome setHome isPair isEmpty castToPair newPair tohex \

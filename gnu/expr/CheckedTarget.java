@@ -146,11 +146,11 @@ public class CheckedTarget extends StackTarget
       }
     else
       tmpScope = null;
-    int startPC = code.getPC();
+    int startPC = code.getInsnCount();
     startTry.define(code);
     emitCoerceFromObject(type, comp);
 
-    int endPC = code.getPC();
+    int endPC = code.getInsnCount();
     // If no cast was needed, no code has been generated.
     // Thus endPC is equal to startPC and we can stop safely.
     // Also, toStringType can never raise an exception, so we don't need
