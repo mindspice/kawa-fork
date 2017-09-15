@@ -1,7 +1,6 @@
-package gnu.bytecode;
-
 import java.io.*;
 
+import gnu.bytecode.*;
 import org.objectweb.asm.*;
 import org.objectweb.asm.commons.CodeSizeEvaluator;
 
