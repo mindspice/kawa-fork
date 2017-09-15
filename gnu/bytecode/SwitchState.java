@@ -137,7 +137,7 @@ public class SwitchState
                 }
             } else
             {
-                code.emit();
+                code.flushGoto();
                 long rangeDim = (long) maxValue - (long) minValue;
                 if (2 * numCases >= rangeDim)
                 {
@@ -153,8 +153,7 @@ public class SwitchState
                         if (i == maxValue)
                             break;
                     }
-                    code.getMethod().mv.visitTableSwitchInsn(minValue, maxValue,
-                        defaultLabel.asmLabel, asmLabels);
+                    code.emitTableSwitchInsn(minValue, maxValue, defaultLabel.asmLabel, asmLabels);
                 } else
                 {
                     int[] actualValues = new int[numCases];
@@ -165,8 +164,7 @@ public class SwitchState
                         asmLabels[i] = labels[i].asmLabel;
                         code.fixupAdd(labels[i]);
                     }
-                    code.getMethod().mv.visitLookupSwitchInsn(defaultLabel.asmLabel, actualValues,
-                        asmLabels);
+                    code.emitLookupSwitchInsn(defaultLabel.asmLabel, actualValues, asmLabels);
                 }
                 code.popType();
             }

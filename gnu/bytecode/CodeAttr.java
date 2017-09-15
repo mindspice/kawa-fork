@@ -4,6 +4,7 @@
 package gnu.bytecode;
 
 import org.objectweb.asm.Handle;
+import org.objectweb.asm.MethodVisitor;
 
 import static org.objectweb.asm.Opcodes.*;
 
@@ -26,17 +27,93 @@ public class CodeAttr extends Attribute implements AttrContainer
     Attribute attributes;
     Label prevGoto;
     java.util.ArrayDeque<Label> afterGoto = new java.util.ArrayDeque<Label>();
+    MethodVisitor mvisitor;
+    int insnCount = 0;
 
-    void emit()
+    void flushGoto()
     {
         if (prevGoto != null)
         {
             if (!afterGoto.contains(prevGoto))
-                getMethod().mv.visitJumpInsn(GOTO, prevGoto.asmLabel);
+                emitJumpInsn(GOTO, prevGoto.asmLabel);
             while (!afterGoto.isEmpty())
-                getMethod().mv.visitLabel(afterGoto.poll().asmLabel);
+                mvisitor.visitLabel(afterGoto.poll().asmLabel);
             prevGoto = null;
         }
+    }
+
+    void emitFieldInsn(int opcode, String owner, String name, String desc)
+    {
+        insnCount++;
+        mvisitor.visitFieldInsn(opcode, owner, name, desc);
+    }
+
+    void emitIincInsn(int var, int increment)
+    {
+        insnCount++;
+        mvisitor.visitIincInsn(var, increment);
+    }
+
+    void emitInsn(int opcode)
+    {
+        insnCount++;
+        mvisitor.visitInsn(opcode);
+    }
+
+    void emitIntInsn(int opcode, int operand)
+    {
+        insnCount++;
+        mvisitor.visitIntInsn(opcode, operand);
+    }
+
+    void emitJumpInsn(int opcode, org.objectweb.asm.Label label)
+    {
+        insnCount++;
+        mvisitor.visitJumpInsn(opcode, label);
+    }
+
+    void emitLdcInsn(Object cst)
+    {
+        insnCount++;
+        mvisitor.visitLdcInsn(cst);
+    }
+
+    void emitLookupSwitchInsn(org.objectweb.asm.Label dflt, int[] keys,
+        org.objectweb.asm.Label[] labels)
+    {
+        insnCount++;
+        mvisitor.visitLookupSwitchInsn(dflt, keys, labels);
+    }
+
+    void emitMethodInsn(int opcode, String owner, String name, String desc, boolean itf)
+    {
+        insnCount++;
+        mvisitor.visitMethodInsn(opcode, owner, name, desc, itf);
+    }
+
+    void emitMultiANewArrayInsn(String desc, int dims)
+    {
+        insnCount++;
+        mvisitor.visitMultiANewArrayInsn(desc, dims);
+    }
+
+    void emitTableSwitchInsn(int min, int max, org.objectweb.asm.Label asmLabel,
+        org.objectweb.asm.Label... asmLabels)
+    {
+        insnCount++;
+        mvisitor.visitTableSwitchInsn(min, max, asmLabel, asmLabels);
+    }
+
+    void emitTypeInsn(int opcode, String type)
+    {
+        insnCount++;
+        mvisitor.visitTypeInsn(opcode, type);
+    }
+
+    void emitVarInsn(int opcode, int var)
+    {
+        insnCount++;
+        mvisitor.visitVarInsn(opcode, var);
     }
 
     public final Attribute getAttributes()
@@ -103,9 +180,9 @@ public class CodeAttr extends Attribute implements AttrContainer
         return SP;
     }
 
-    public int getPC()
+    public int getInsnCount()
     {
-        return getMethod().mv.getMaxSize();
+        return insnCount;
     }
 
     /*
@@ -161,6 +238,7 @@ public class CodeAttr extends Attribute implements AttrContainer
         meth.code = this;
         if (meth.getDeclaringClass().getClassfileMajorVersion() >= 50)
             flags |= GENERATE_STACK_MAP_TABLE | DONT_USE_JSR;
+        mvisitor = meth.mv;
     }
 
     /** Get opcode that implements NOT (x OPCODE y). */
@@ -186,8 +264,8 @@ public class CodeAttr extends Attribute implements AttrContainer
         if (sourceDbgExt != null)
             linenumber = sourceDbgExt.fixLine(linenumber);
         org.objectweb.asm.Label l = new org.objectweb.asm.Label();
-        getMethod().mv.visitLabel(l);
-        getMethod().mv.visitLineNumber(linenumber, l);
+        mvisitor.visitLabel(l);
+        mvisitor.visitLineNumber(linenumber, l);
         prev_linenumber = linenumber;
     }
 
@@ -328,24 +406,24 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public void emitPop(int nvalues)
     {
-        emit();
+        flushGoto();
         for (; nvalues > 0; --nvalues)
         {
             Type type = popType();
             if (type.size > 4)
-                getMethod().mv.visitInsn(POP2);
+                emitInsn(POP2);
             else if (nvalues > 1)
             { // optimization: can we pop 2 4-byte words
               // using a pop2
                 Type type2 = popType();
                 if (type2.size > 4)
                 {
-                    getMethod().mv.visitInsn(POP);
+                    emitInsn(POP);
                 }
-                getMethod().mv.visitInsn(POP2);
+                emitInsn(POP2);
                 --nvalues;
             } else
-                getMethod().mv.visitInsn(POP);
+                emitInsn(POP);
         }
     }
 
@@ -354,7 +432,7 @@ public class CodeAttr extends Attribute implements AttrContainer
         if (prevGoto != null)
             afterGoto.add(l);
         else
-            getMethod().mv.visitLabel(l.asmLabel);
+            mvisitor.visitLabel(l.asmLabel);
     }
 
     /**
@@ -370,7 +448,7 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     public void emitSwap()
     {
-        emit();
+        flushGoto();
         Type type1 = popType();
         Type type2 = popType();
 
@@ -385,7 +463,7 @@ public class CodeAttr extends Attribute implements AttrContainer
         } else
         {
             pushType(type1);
-            getMethod().mv.visitInsn(SWAP);
+            emitInsn(SWAP);
             pushType(type2);
         }
     }
@@ -393,9 +471,9 @@ public class CodeAttr extends Attribute implements AttrContainer
     /** Emit code to duplicate the top element of the stack. */
     public void emitDup()
     {
-        emit();
+        flushGoto();
         Type type = topType();
-        getMethod().mv.visitInsn(type.size <= 4 ? DUP : DUP2); // dup or dup2
+        emitInsn(type.size <= 4 ? DUP : DUP2); // dup or dup2
         pushType(type);
     }
 
@@ -405,14 +483,14 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public void emitDupX()
     {
-        emit();
+        flushGoto();
         Type type = popType();
         Type skipedType = popType();
 
         if (skipedType.size <= 4)
-            getMethod().mv.visitInsn(type.size <= 4 ? DUP_X1 : DUP2_X1);
+            emitInsn(type.size <= 4 ? DUP_X1 : DUP2_X1);
         else
-            getMethod().mv.visitInsn(type.size <= 4 ? DUP_X2 : DUP2_X2);
+            emitInsn(type.size <= 4 ? DUP_X2 : DUP2_X2);
 
         pushType(type);
         pushType(skipedType);
@@ -430,7 +508,7 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public void emitDup(int size, int offset)
     {
-        emit();
+        flushGoto();
         if (size == 0)
             return;
         // copied1 and (optionally copied2) are the types of the duplicated
@@ -476,7 +554,7 @@ public class CodeAttr extends Attribute implements AttrContainer
         } else
             throw new Error("emitDup:  invalid offset");
 
-        getMethod().mv.visitInsn(kind);
+        emitInsn(kind);
         if (copied2 != null)
             pushType(copied2);
         pushType(copied1);
@@ -542,7 +620,7 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     public Scope popScope()
     {
-        emit();
+        flushGoto();
         Label end = getLabel();
         for (;;)
         {
@@ -551,7 +629,7 @@ public class CodeAttr extends Attribute implements AttrContainer
             while (v != null)
             {
                 if (v.getName() != null)
-                    getMethod().mv.visitLocalVariable(v.getName(), v.getSignature(),
+                    mvisitor.visitLocalVariable(v.getName(), v.getSignature(),
                         v.getType().getGenericSignature(), scope.start.asmLabel, end.asmLabel,
                         v.offset);
                 if (v == scope.last_var)
@@ -654,52 +732,52 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     public final void emitPushInt(int i)
     {
-        emit();
+        flushGoto();
         if (i >= -1 && i <= 5)
-            getMethod().mv.visitInsn(i + 3); // iconst_m1 .. iconst_5
+            emitInsn(i + 3); // iconst_m1 .. iconst_5
         else if (i >= -128 && i < 128)
         {
-            getMethod().mv.visitIntInsn(BIPUSH, i);
+            emitIntInsn(BIPUSH, i);
         } else if (i >= -32768 && i < 32768)
         {
-            getMethod().mv.visitIntInsn(SIPUSH, i);
+            emitIntInsn(SIPUSH, i);
         } else
         {
-            getMethod().mv.visitLdcInsn(i);
+            emitLdcInsn(i);
         }
         pushType(Type.intType);
     }
 
     public void emitPushLong(long i)
     {
-        emit();
+        flushGoto();
         if (i == 0 || i == 1)
         {
-            getMethod().mv.visitInsn(9 + (int) i); // lconst_0 .. lconst_1
+            emitInsn(9 + (int) i); // lconst_0 .. lconst_1
         } else if ((long) (int) i == i)
         {
             emitPushInt((int) i);
             popType();
-            getMethod().mv.visitInsn(I2L);
+            emitInsn(I2L);
         } else
         {
-            getMethod().mv.visitLdcInsn(i);
+            emitLdcInsn(i);
         }
         pushType(Type.longType);
     }
 
     public void emitPushFloat(float x)
     {
-        emit();
+        flushGoto();
         int xi = (int) x;
         if ((float) xi == x && xi >= -128 && xi < 128)
         {
             if (xi >= 0 && xi <= 2)
             {
-                getMethod().mv.visitInsn(11 + xi); // fconst_0 .. fconst_2
+                emitInsn(11 + xi); // fconst_0 .. fconst_2
                 if (xi == 0 && Float.floatToIntBits(x) != 0) // x == -0.0
                 {
-                    getMethod().mv.visitInsn(FNEG);
+                    emitInsn(FNEG);
                 }
             } else
             {
@@ -707,27 +785,27 @@ public class CodeAttr extends Attribute implements AttrContainer
                 // Probably faster, at least on modern CPUs.
                 emitPushInt(xi);
                 popType();
-                getMethod().mv.visitInsn(I2F);
+                emitInsn(I2F);
             }
         } else
         {
-            getMethod().mv.visitLdcInsn(x);
+            emitLdcInsn(x);
         }
         pushType(Type.floatType);
     }
 
     public void emitPushDouble(double x)
     {
-        emit();
+        flushGoto();
         int xi = (int) x;
         if ((double) xi == x && xi >= -128 && xi < 128)
         {
             if (xi == 0 || xi == 1)
             {
-                getMethod().mv.visitInsn(14 + xi); // dconst_0 or dconst_1
+                emitInsn(14 + xi); // dconst_0 or dconst_1
                 if (xi == 0 && Double.doubleToLongBits(x) != 0L) // x == -0.0
                 {
-                    getMethod().mv.visitInsn(DNEG);
+                    emitInsn(DNEG);
                 }
             } else
             {
@@ -735,11 +813,11 @@ public class CodeAttr extends Attribute implements AttrContainer
                 // Probably faster, at least on modern CPUs.
                 emitPushInt(xi);
                 popType();
-                getMethod().mv.visitInsn(I2D);
+                emitInsn(I2D);
             }
         } else
         {
-            getMethod().mv.visitLdcInsn(x);
+            emitLdcInsn(x);
         }
         pushType(Type.doubleType);
     }
@@ -781,7 +859,7 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public final void emitPushString(String str)
     {
-        emit();
+        flushGoto();
         if (str == null)
             emitPushNull();
         else
@@ -790,7 +868,7 @@ public class CodeAttr extends Attribute implements AttrContainer
             String segments = calculateSplit(str);
             int numSegments = segments.length();
             if (numSegments <= 1)
-                getMethod().mv.visitLdcInsn(str);
+                emitLdcInsn(str);
             else
             {
                 if (numSegments == 2)
@@ -835,8 +913,8 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public final void emitPushClass(ObjectType ctype)
     {
-        emit();
-        getMethod().mv.visitLdcInsn(org.objectweb.asm.Type.getObjectType(ctype.getInternalName()));
+        flushGoto();
+        emitLdcInsn(org.objectweb.asm.Type.getObjectType(ctype.getInternalName()));
         pushType(Type.javalangClassType);
     }
 
@@ -846,7 +924,7 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public final void emitPushMethodHandle(Method method)
     {
-        emit();
+        flushGoto();
         pushType(Type.javalanginvokeMethodHandleType);
 
         int kind;
@@ -860,8 +938,8 @@ public class CodeAttr extends Attribute implements AttrContainer
             kind = H_INVOKESPECIAL; // REF_invokeSpecial
         else
             kind = H_INVOKEVIRTUAL; // REF_invokeVirtual
-        getMethod().mv.visitLdcInsn(new Handle(kind, method.getDeclaringClass().getInternalName(),
-            method.getName(), method.getSignature(), method.getDeclaringClass().isInterface()));
+        emitLdcInsn(new Handle(kind, method.getDeclaringClass().getInternalName(), method.getName(),
+            method.getSignature(), method.getDeclaringClass().isInterface()));
     }
 
     public void emitPushNull()
@@ -871,8 +949,8 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     public void emitPushNull(ObjectType type)
     {
-        emit();
-        getMethod().mv.visitInsn(ACONST_NULL);
+        flushGoto();
+        emitInsn(ACONST_NULL);
         pushType(type);
     }
 
@@ -986,17 +1064,17 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     void emitNewArray(int type_code)
     {
-        emit();
-        getMethod().mv.visitIntInsn(NEWARRAY, type_code);
+        flushGoto();
+        emitIntInsn(NEWARRAY, type_code);
     }
 
     public final void emitArrayLength()
     {
-        emit();
+        flushGoto();
         if (!(popType() instanceof ArrayType))
             throw new Error("non-array type in emitArrayLength");
 
-        getMethod().mv.visitInsn(ARRAYLENGTH);
+        emitInsn(ARRAYLENGTH);
         pushType(Type.intType);
     }
 
@@ -1036,14 +1114,14 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     private void emitTypedOp(int op, Type type)
     {
-        emit();
-        getMethod().mv.visitInsn(op + adjustTypedOp(type));
+        flushGoto();
+        emitInsn(op + adjustTypedOp(type));
     }
 
     private void emitTypedOp(int op, char sig)
     {
-        emit();
-        getMethod().mv.visitInsn(op + adjustTypedOp(sig));
+        flushGoto();
+        emitInsn(op + adjustTypedOp(sig));
     }
 
     /**
@@ -1108,10 +1186,10 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public void emitNew(ClassType type)
     {
-        emit();
+        flushGoto();
         Label label = new Label(this);
         label.defineRaw(this);
-        getMethod().mv.visitTypeInsn(NEW, type.getInternalName());
+        emitTypeInsn(NEW, type.getInternalName());
         pushType(new UninitializedType(type, label));
     }
 
@@ -1126,7 +1204,7 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public void emitNewArray(Type element_type, int dims)
     {
-        emit();
+        flushGoto();
         if (popType().promote() != Type.intType)
             throw new Error("non-int dim. spec. in emitNewArray");
 
@@ -1164,8 +1242,7 @@ public class CodeAttr extends Attribute implements AttrContainer
             emitNewArray(code);
         } else if (element_type instanceof ArrayType && dims > 1) // untested
         {
-            getMethod().mv.visitMultiANewArrayInsn(new ArrayType(element_type).getInternalName(),
-                dims);
+            emitMultiANewArrayInsn(new ArrayType(element_type).getInternalName(), dims);
             if (dims < 1 || dims > 255)
                 throw new Error("dims out of range in emitNewArray");
             while (--dims > 0) // first dim already popped
@@ -1173,7 +1250,7 @@ public class CodeAttr extends Attribute implements AttrContainer
                     throw new Error("non-int dim. spec. in emitNewArray");
         } else if (element_type instanceof ObjectType)
         {
-            getMethod().mv.visitTypeInsn(ANEWARRAY, ((ObjectType) element_type).getInternalName());
+            emitTypeInsn(ANEWARRAY, ((ObjectType) element_type).getInternalName());
         } else
             throw new Error("unimplemented type in emitNewArray");
 
@@ -1322,10 +1399,10 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     public void emitPrimop(int opcode, int arg_count, Type retType)
     {
-        emit();
+        flushGoto();
         while (--arg_count >= 0)
             popType();
-        getMethod().mv.visitInsn(opcode);
+        emitInsn(opcode);
         pushType(retType);
     }
 
@@ -1337,7 +1414,7 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public final void emitLoad(Variable var)
     {
-        emit();
+        flushGoto();
         if (var.dead())
             throw new Error("attempting to push dead variable");
         int offset = var.offset;
@@ -1346,7 +1423,7 @@ public class CodeAttr extends Attribute implements AttrContainer
                 + var.isSimple() + ", offset: " + offset);
         Type type = var.getType().promote();
         int kind = adjustTypedOp(type);
-        getMethod().mv.visitVarInsn(21 + kind, offset);
+        emitVarInsn(21 + kind, offset);
         pushType(var.getType());
     }
 
@@ -1354,7 +1431,7 @@ public class CodeAttr extends Attribute implements AttrContainer
     {
         if (!reachableHere())
             return;
-        emit();
+        flushGoto();
         int offset = var.offset;
         if (offset < 0 || !var.isSimple())
             throw new Error("attempting to store in unassigned " + var + " simple:" + var.isSimple()
@@ -1363,7 +1440,7 @@ public class CodeAttr extends Attribute implements AttrContainer
         noteVarType(offset, type);
         popType();
         int kind = adjustTypedOp(type);
-        getMethod().mv.visitVarInsn(54 + kind, offset);
+        emitVarInsn(54 + kind, offset);
     }
 
     /**
@@ -1373,7 +1450,7 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public void emitInc(Variable var, short inc)
     {
-        emit();
+        flushGoto();
         if (var.dead())
             throw new Error("attempting to increment dead variable");
         int offset = var.offset;
@@ -1387,14 +1464,14 @@ public class CodeAttr extends Attribute implements AttrContainer
         if (var.getType().getImplementationType().promote() != Type.intType)
             throw new Error("attempting to increment non-int variable");
 
-        getMethod().mv.visitIincInsn(var.offset, inc);
+        emitIincInsn(var.offset, inc);
     }
 
     private final void emitFieldop(Field field, int opcode)
     {
-        emit();
-        getMethod().mv.visitFieldInsn(opcode, field.getDeclaringClass().getInternalName(),
-            field.getName(), field.getSignature());
+        flushGoto();
+        emitFieldInsn(opcode, field.getDeclaringClass().getInternalName(), field.getName(),
+            field.getSignature());
     }
 
     /**
@@ -1447,7 +1524,7 @@ public class CodeAttr extends Attribute implements AttrContainer
     {
         if (!reachableHere())
             return;
-        emit();
+        flushGoto();
         int arg_count = method.arg_types.length;
         boolean is_invokestatic = opcode == 184;
         boolean is_init = opcode == 183 && "<init>".equals(method.getName());
@@ -1457,8 +1534,8 @@ public class CodeAttr extends Attribute implements AttrContainer
                 "emitInvokeXxx static flag mis-match method.flags=" + method.access_flags);
         if (!is_invokestatic && !is_init)
             arg_count++;
-        getMethod().mv.visitMethodInsn(opcode, method.getDeclaringClass().getInternalName(),
-            method.getName(), method.getSignature(), method.getDeclaringClass().isInterface());
+        emitMethodInsn(opcode, method.getDeclaringClass().getInternalName(), method.getName(),
+            method.getSignature(), method.getDeclaringClass().isInterface());
         while (--arg_count >= 0)
         {
             Type t = popType();
@@ -1543,10 +1620,10 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     final void emitTransfer(Label label, int opcode)
     {
-        emit();
+        flushGoto();
         label.setTypes(this);
         fixupAdd(label);
-        getMethod().mv.visitJumpInsn(opcode, label.asmLabel);
+        emitJumpInsn(opcode, label.asmLabel);
     }
 
     /**
@@ -1557,21 +1634,21 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public final void emitGoto(Label label)
     {
-        emit();
+        flushGoto();
         label.setTypes(this);
         fixupAdd(label);
         setUnreachable();
         if (label.defined())
-            getMethod().mv.visitJumpInsn(GOTO, label.asmLabel);
+            emitJumpInsn(GOTO, label.asmLabel);
         else
             prevGoto = label;
     }
 
     public final void emitJsr(Label label)
     {
-        emit();
+        flushGoto();
         fixupAdd(label);
-        getMethod().mv.visitJumpInsn(JSR, label.asmLabel);
+        emitJumpInsn(JSR, label.asmLabel);
     }
 
     ExitableBlock currentExitableBlock;
@@ -1647,7 +1724,7 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     public final void emitGotoIfCompare2(Label label, int logop)
     {
-        emit();
+        flushGoto();
         Type type2 = popType().promote();
         Type type1 = popType().promote();
         char sig1 = type1.getSignature().charAt(0);
@@ -1658,11 +1735,11 @@ public class CodeAttr extends Attribute implements AttrContainer
         if (sig1 == 'I' && sig2 == 'I')
             logop += 6; // iflt -> if_icmplt etc.
         else if (sig1 == 'J' && sig2 == 'J')
-            getMethod().mv.visitInsn(LCMP);
+            emitInsn(LCMP);
         else if (sig1 == 'F' && sig2 == 'F')
-            getMethod().mv.visitInsn(cmpg ? FCMPL : FCMPG);
+            emitInsn(cmpg ? FCMPL : FCMPG);
         else if (sig1 == 'D' && sig2 == 'D')
-            getMethod().mv.visitInsn(cmpg ? DCMPL : DCMPG);
+            emitInsn(cmpg ? DCMPL : DCMPG);
         else if ((sig1 == 'L' || sig1 == '[') && (sig2 == 'L' || sig2 == '[') && logop <= 154)
             logop += 12; // ifeq->if_acmpeq, ifne->if_acmpne
         else
@@ -1861,8 +1938,8 @@ public class CodeAttr extends Attribute implements AttrContainer
      */
     public void emitRet(Variable var)
     {
-        emit();
-        getMethod().mv.visitVarInsn(RET, var.offset);
+        flushGoto();
+        emitVarInsn(RET, var.offset);
     }
 
     public final void emitThen()
@@ -1940,13 +2017,13 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     public final void fixUnsigned(Type stackType)
     {
-        emit();
+        flushGoto();
         if (stackType instanceof PrimType && ((PrimType) stackType).isUnsigned())
         {
             char sig1 = stackType.getSignature().charAt(0);
             if (sig1 == 'S')
             {
-                getMethod().mv.visitInsn(I2C);
+                emitInsn(I2C);
             } else if (sig1 == 'B')
             {
                 emitPushInt(255);
@@ -1957,7 +2034,7 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     public final void emitConvert(PrimType from, PrimType to)
     {
-        emit();
+        flushGoto();
         String to_sig = to.getSignature();
         String from_sig = from.getSignature();
         int op = -1;
@@ -2068,17 +2145,17 @@ public class CodeAttr extends Attribute implements AttrContainer
         if (op < 0)
             throw new Error("unsupported CodeAttr.emitConvert");
         popType();
-        getMethod().mv.visitInsn(op);
+        emitInsn(op);
         pushType(to);
     }
 
     private void emitCheckcast(Type type, int opcode)
     {
-        emit();
+        flushGoto();
         popType();
         if (!(type instanceof ObjectType))
             throw new Error("unimplemented type " + type + " in emitCheckcast/emitInstanceof");
-        getMethod().mv.visitTypeInsn(opcode, ((ObjectType) type).getInternalName());
+        emitTypeInsn(opcode, ((ObjectType) type).getInternalName());
     }
 
     public static boolean castNeeded(Type top, Type required)
@@ -2120,24 +2197,24 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     public final void emitThrow()
     {
-        emit();
+        flushGoto();
         popType();
-        getMethod().mv.visitInsn(ATHROW);
+        emitInsn(ATHROW);
         setUnreachable();
     }
 
     public final void emitMonitorEnter()
     {
-        emit();
+        flushGoto();
         popType();
-        getMethod().mv.visitInsn(MONITORENTER);
+        emitInsn(MONITORENTER);
     }
 
     public final void emitMonitorExit()
     {
-        emit();
+        flushGoto();
         popType();
-        getMethod().mv.visitInsn(MONITOREXIT);
+        emitInsn(MONITOREXIT);
     }
 
     /**
@@ -2156,10 +2233,10 @@ public class CodeAttr extends Attribute implements AttrContainer
     {
         if (!reachableHere())
             return;
-        emit();
+        flushGoto();
         if (getMethod().getReturnType().size == 0)
         {
-            getMethod().mv.visitInsn(RETURN);
+            emitInsn(RETURN);
         } else
             emitTypedOp(172, popType().promote());
         setUnreachable();
@@ -2181,7 +2258,7 @@ public class CodeAttr extends Attribute implements AttrContainer
         setTypes(handler);
         setReachable(true);
         handler.defineRaw(this);
-        getMethod().mv.visitTryCatchBlock(start_try.asmLabel, end_try.asmLabel, handler.asmLabel,
+        mvisitor.visitTryCatchBlock(start_try.asmLabel, end_try.asmLabel, handler.asmLabel,
             handler_class.getInternalName());
     }
 
