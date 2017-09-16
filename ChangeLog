@@ -1,3 +1,10 @@
+2017-09-15  Per Bothner  <per@bothner.com>
+
+	* configure.ac: Support new --with-asm flag.
+	* config.classpath: Add asm.jar to conf_classpath and run_classpath.
+	* Makefile.am: Handle asm.jar like we do other third-party libraries.
+	* bin/kawa.sh.in: Remove special ASMLIB handling.
+
 2017-08-29  Kay Zheng <l04m33@gmail.com>
 
 	* Makefile.am: Use JAVACFLAGS two more places.

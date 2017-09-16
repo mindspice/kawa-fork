@@ -2,7 +2,7 @@
 
 include $(top_srcdir)/source-list
 
-CLASSPATH = .$(CLASSPATH_SEPARATOR)$(top_builddir)/lib/asm.jar$(CLASSPATH_SEPARATOR)$(srcdir)$(CLASSPATH_SEPARATOR)@conf_classpath@$$CLASSPATH
+CLASSPATH = .$(CLASSPATH_SEPARATOR)$(srcdir)$(CLASSPATH_SEPARATOR)@conf_classpath@$$CLASSPATH
 
 FIXED_SUBDIRS = bin doc testsuite gnu/bytecode \
   gnu \
@@ -118,7 +118,7 @@ dist-kawa.jar: dist
 	  && tar xzf ../$(distdir).tar.gz \
 	  && rm -f ./patch-source-list \
 	  && ./kawa-$(VERSION)/configure --with-java-source=$(DEFAULT_JAVA_VERSION) \
-	    --with-domterm="@WITH_DOMTERM_ARG@" \
+	    --with-asm="@ASM_JAR_PATH@" --with-domterm="@WITH_DOMTERM_ARG@" \
 	    --with-jline$(JLINE_VERSION_MAJOR)="@WITH_JLINE_PATH@" \
 	    --with-servlet=@WITH_SERVLET_ARG@ --with-javafx=@WITH_JAVAFX_ARG@ \
 	  && CLASSPATH=@conf_classpath@.$(CLASSPATH_SEPARATOR)$$CLASSPATH $(MAKE) all JAVAC="$(JAVAC) -source $(DEFAULT_JAVA_VERSION) -target $(DEFAULT_JAVA_VERSION)" \
@@ -134,6 +134,7 @@ kawa-$(ZIP_VERSION).zip: dist-kawa.jar doc/kawa-manual.epub bin/kawa.bat
 	cd kawa-$(VERSION)/lib; \
 	  $(LN_S) ../../dist-kawa.jar kawa.jar; \
 	  $(LN_S) $(DOMTERM_JAR) domterm.jar; \
+	  $(LN_S) @ASM_JAR_PATH@ asm.jar; \
 	  $(LN_S) @WITH_SERVLET_ARG@ servlet.jar; \
 	  $(LN_S) @WITH_SERVLET_ARG@ servlet.jar; \
 	  $(LN_S) @WITH_JLINE_PATH@ jline.jar
@@ -275,6 +276,9 @@ install-jar:
 	  $(DESTDIR)$(datadir)/kawa/bin $(DESTDIR)$(datadir)/kawa/lib
 	$(INSTALL_DATA) lib/kawa.jar \
 	  $(DESTDIR)$(datadir)/kawa/lib/$(KAWAJAR)
+	-rm -f $(DESTDIR)$(datadir)/kawa/lib/asm.jar
+	cd $(DESTDIR)$(datadir)/kawa/lib && \
+	  $(LN_S) @ASM_JAR_PATH@ asm.jar
 if WITH_DOMTERM
 	-rm -f $(DESTDIR)$(datadir)/kawa/lib/domterm.jar
 	cd $(DESTDIR)$(datadir)/kawa/lib && \
@@ -320,7 +324,12 @@ kawa/Version.java: $(srcdir)/kawa/Version.java.in $(srcdir)/configure.ac
 	sed -e 's|VERSION|@VERSION@'"$$GIT_REVISION|" <$(srcdir)/kawa/Version.java.in >$@
 
 all-recursive:  kawa/Version.java selected-java-source $(GENERATED_SIMPLEVECTOR_FILES)
-all: lib/kawa.jar lib/kawart.jar $(JLINE_LINK) $(DOMTERM_LINK) $(SERVLET_LINK)
+all: lib/kawa.jar lib/kawart.jar $(ASM_LINK) $(JLINE_LINK) $(DOMTERM_LINK) $(SERVLET_LINK)
+
+ASM_LINK = lib/asm.jar
+lib/asm.jar:
+	mkdir -p lib
+	$(LN_S) @ASM_JAR_PATH@ lib/asm.jar
 
 if WITH_JLINE3
 JLINE_LINK = lib/jline.jar

@@ -24,9 +24,8 @@ test -t 0 || no_console="--no-console"
 @ENABLE_KAWA_FRONTEND_TRUE@  exec $thisdir/kawa "$@"
 
 KAWALIB=${KAWALIB-"`@CYGPATH_W@ $kawadir/lib/kawa.jar`"}
-ASMLIB="`@CYGPATH_W@ $kawadir/lib/asm.jar`"
 # MSYS: KAWALIB=${KAWALIB-"`cd $kawadir/lib/; pwd -W`@CLASSPATH_SEPARATOR@kawa.jar`"}
-CLASSPATH="${KAWALIB}@CLASSPATH_SEPARATOR@${ASMLIB}@CLASSPATH_SEPARATOR@@run_classpath@${CLASSPATH}"
+CLASSPATH="${KAWALIB}@CLASSPATH_SEPARATOR@@run_classpath@${CLASSPATH}"
 export CLASSPATH
 
 if test -n "$JAVA_HOME"; then

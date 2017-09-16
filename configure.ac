@@ -23,6 +23,9 @@ AC_ARG_WITH(servlet,
   AS_HELP_STRING(--with-servlet@<:@=servlet-api.jar@:>@,Build support for generating servlets))
 WITH_SERVLET_ARG="${with_servlet}"
 
+AC_ARG_WITH(asm,
+  AS_HELP_STRING(--with-asm@<:@=asm.jar@:>@,Location of ASM jar))
+
 AC_ARG_WITH(android,
   AS_HELP_STRING(--with-android@<:@=android.jar@:>@,Build for the Android platform))
 
@@ -215,6 +218,7 @@ case ${with_sax2} in
 esac
 
 XQTS_PATH=${with_XQTS:-XQTS}
+ASM_JAR_PATH=${with_asm}
 AC_SUBST(XQTS_PATH)
 AC_SUBST(DOCBOOK_STYLESHEETS_PATH)
 AC_SUBST(SAX2_PREPROCESS)
@@ -227,6 +231,7 @@ AC_SUBST(WITH_SERVLET_ARG)
 AC_SUBST(WITH_JAVAFX_ARG)
 AC_SUBST(WITH_JLINE3)
 AC_SUBST(WITH_JLINE_PATH)
+AC_SUBST(ASM_JAR_PATH)
 AC_SUBST(WITH_DOMTERM_ARG)
 
 AC_SUBST(JAVA)
