@@ -59,6 +59,7 @@
      For now use "ant clean" if anything changes.
   -->
   <property name="preprocess.overwrite" value="false"/>
+  <property name="asm.jar.path" value="${src.dir}/lib/asm-5.2.jar"/>
 
   <target name="all" depends="select-java-auto, classes, jar, kawa.sh, kawa.bat"/>
 
@@ -278,8 +279,14 @@
              classname="gnu.kawa.ant.XCopy"
              classpath="${build.tools}"/>
     <taskdef name="kawac"
-             classname="gnu.kawa.ant.Kawac"
-             classpath="${build.tools}"/>
+             classname="gnu.kawa.ant.Kawac">
+      <classpath>
+        <pathelement path="${classpath}"/>
+        <pathelement path="${build.tools}"/>
+        <pathelement location="${asm.jar.path}"/>
+      </classpath>
+    </taskdef>
+
 
     <!-- 
        This doesn't really help us because user data 
@@ -606,7 +613,7 @@
 	   includeantruntime="false">
       <classpath>
         <pathelement path="${classpath}"/>
-        <pathelement location="${src.dir}/lib/asm.jar"/>
+        <pathelement location="${asm.jar.path}"/>
       </classpath>
       <include name="gnu/bytecode/"/>
       <include name="gnu/commonlisp/lang/"/>

@@ -1,3 +1,9 @@
+2017-09-16  Per Bothner  <per@bothner.com>
+
+	* build.properties (asm.jar.path): New property.
+	* build.xml: Use it.
+	* gnu/kawa/ant/Kawac.java: Update to use asm.jar.path.
+
 2017-09-15  Per Bothner  <per@bothner.com>
 
 	* configure.ac: Support new --with-asm flag.
