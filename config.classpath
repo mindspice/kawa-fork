@@ -60,9 +60,9 @@ esac
 case "${with_asm}" in
   "yes"|"")
     for f in \
+        `(cd ${srcdir}; pwd)|sed -e 's|/bin$||'`/lib/asm-5.2.jar \
         /usr/share/java/asm.jar \
-        /usr/share/java/objectweb-asm/asm.jar \
-        `(cd ${srcdir}; pwd)|sed -e 's|/bin$||'`/lib/asm-dist.jar
+        /usr/share/java/objectweb-asm/asm.jar
     do
         if test -f $f
         then

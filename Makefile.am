@@ -199,7 +199,7 @@ EXTRA_DIST = debian/control debian/rules debian/changelog debian/dirs \
   bin/kawa.sh.in bin/qexo.in
 
 MOSTLYCLEANFILES = tmp* *.o bin/*.o *.stamp */*.class */*/*.class */*/*/*.class classes.list classes-rt.list
-CLEANFILES = *.jar lib/*.jar *.zip bin/kawa bin/qexo kawa/Version.java $(META_ScriptEngineFactory)
+CLEANFILES = *.jar $(LIB_LINKS) lib/kawa*.jar *.zip bin/kawa bin/qexo kawa/Version.java $(META_ScriptEngineFactory)
 DISTCLEANFILES = selected-java-source bin/kawa.sh bin/kawa.bat
 MAINTAINERCLEANFILES = \
   $(GENERATED_SIMPLEVECTOR_FILES) $(srcdir)/patch-source-list
@@ -324,7 +324,9 @@ kawa/Version.java: $(srcdir)/kawa/Version.java.in $(srcdir)/configure.ac
 	sed -e 's|VERSION|@VERSION@'"$$GIT_REVISION|" <$(srcdir)/kawa/Version.java.in >$@
 
 all-recursive:  kawa/Version.java selected-java-source $(GENERATED_SIMPLEVECTOR_FILES)
-all: lib/kawa.jar lib/kawart.jar $(ASM_LINK) $(JLINE_LINK) $(DOMTERM_LINK) $(SERVLET_LINK)
+all: lib/kawa.jar lib/kawart.jar $(LIB_LINKS)
+
+LIB_LINKS = $(ASM_LINK) $(JLINE_LINK) $(DOMTERM_LINK) $(SERVLET_LINK)
 
 ASM_LINK = lib/asm.jar
 lib/asm.jar:
