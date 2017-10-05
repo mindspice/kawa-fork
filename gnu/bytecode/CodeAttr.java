@@ -1976,7 +1976,6 @@ public class CodeAttr extends Attribute implements AttrContainer
         if_stack = if_stack.previous;
     }
 
->>>>>>> master
     /** Convenience for compiling {@code if P1 && P2 then S1 else S2}.
      * Compile that as:
      * <pre>
