@@ -589,6 +589,8 @@ improvements in the Common Lips support, and other changes.
 Andrea Bernardini optimized the implementation of @code{case}, and
 implemented full continuation support (in experimental @code{callcc} branch.
 
+Tom Bousso for re-implementing @code{gnu.bytecode} on top of ASM.
+
 Julien Rousseau and Marius Kjeldahl contributed to Android support.
 
 Peter Lane for many documentation improvements.
