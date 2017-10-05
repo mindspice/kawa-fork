@@ -1,3 +1,13 @@
+2017-09-27  Per Bothner  <per@bothner.com>
+
+	* LangObjType.java (getConstructor): Add parameter type for regex.
+	This lets '(regex "foo")' work.
+
+2017-09-24  Per Bothner  <per@bothner.com>
+
+	* LangPrimType.java: Implement new interface HasOwningField.
+	This lets use compile code referencing 'boolean' at runtime.
+
 2017-08-23  Per Bothner  <per@bothner.com>
 
 	* LispReader.java (isTerminatingChar): New protected method.

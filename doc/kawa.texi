@@ -540,7 +540,8 @@ support and other contributions.
 @uref{http://google.com/,Google} through their
 @uref{http://code.google.com/soc/,Summer of Code} project
 sponsored Charles Turner during Summer 2011 and 2012,
-and sponsored Andrea Bernardini Summer 2014.
+Andrea Bernardini Summer 2014 and 2015,
+and Tom Bousso Summer 2017.
 
 Thomas Kirk and AT&T provided financial support, and useful bug reports.
 
@@ -563,6 +564,9 @@ Bruce R. Lewis implemented @ref{KRL,,KRL} and made other contributions.
 
 Geoff Berry: Handle Exceptions attribute.  Other improvements.
 
+Tom Bousso re-implemented @code{gnu.bytecode} to make use
+of @uref{asm.ow2.org,ASM}; plus other changes,
+
 Shad Gregory improved JEmacs.
 
 Al Petrofsky improved gnu.math printing and added some IntNum methods.
@@ -582,11 +586,14 @@ Anthony Green for Fedora packaging.
 Charles Turner for pretty-printer improvements,
 improvements in the Common Lips support, and other changes.
 
-Andrea Bernardini optimized the implementation of @code{case}.
+Andrea Bernardini optimized the implementation of @code{case}, and
+implemented full continuation support (in experimental @code{callcc} branch.
 
 Julien Rousseau and Marius Kjeldahl contributed to Android support.
 
 Peter Lane for many documentation improvements.
+
+William D Clinger for test-cases.
 
 @subsubheading Small fixes and improvements
 
@@ -597,6 +604,7 @@ Alexander Bunkenburg;
 Harold Carr;
 Emmanuel Castro;
 Álvaro Castro-Castilla;
+Sudarshan S Chawathe;
 Heather Downs;
 Francisco Vides Fernández;
 Nic Ferrier;
@@ -613,8 +621,10 @@ Mike Kenne;
 Brian Jones;
 Gerardo Jorvilleur;
 Simon Josefsson (JEmacs menu);
+Shiro Kawai;
 Thomas Kirk;
 Jay Krell;
+Timo Myyrä;
 Edouard Parmelan;
 Walter C. Pelissero;
 Rafael Jesus Alcantara Perez;
@@ -622,15 +632,18 @@ Lynn Quam;
 Marcus Otto;
 Terje Pedersen (some XQuery functions);
 Matthias Radestock;
+Jim Rees;
 Ola Rinta-Koski;
 Andreas Schlapbach;
 Robert D. Skeels;
 Benny Tsai;
 Vladimir Tsichevski;
 Matthieu Vachon;
+Vasantha Ganesh;
 Phil Walker;
 Knut Wannheden;
-Chris Wegrzyn.
+Chris Wegrzyn,
+Kay Zheng,
 
 @subsubheading Bug reports and test cases
 
@@ -658,7 +671,9 @@ Mirko Luedde;
 Leonardo Valeri Manera;
 Kjetil S. Matheussen;
 Alex Mitchell;
-Alex Moiseenko
+Alex Moiseenko;
+Marc Nieper-Wißkirchen;
+Okumura Yuki;
 Edouard Parmelan;
 Walter C. Pelissero;
 Stephen L. Peters;
@@ -3451,7 +3466,7 @@ implementations that did not have the @code{java.lang.Console} class.
 See the @ref{REPL Console} section.
 @item @code{console:prompt1=@var{prompt1}}
 @itemx @code{console:prompt2=@var{prompt2}}
-Initialize @ref{input-prompt1,@code{input-promp1} and @code{input-prompt2}}, respectively.
+Initialize @ref{input-prompt1,@code{input-prompt1} and @code{input-prompt2}}, respectively.
 @end table
 See also the @code{--output-format} flag.
 
@@ -5144,6 +5159,8 @@ Note you can't use colon notation to invoke instance methods
 of a @code{Class}, because it will match a previous rule.
 For example if you want to invoke the @code{getDeclaredMethod}
 method of the @code{java.util.List} , you can't write @code{(java.util.List:getDeclaredMethod} because that will look for a static method in @code{java.util.List}.
+Instead, use the @code{invoke} or @code{invoke-sttic} method.  For example:
+@code{(invoke java.util.List 'getDeclaredMethod)}.
 @end itemize
 
 If the colon form is on the left-hand-side of an assignment (@code{set!}),
@@ -7592,7 +7609,7 @@ matches all the elements pf @code{A}.
 We call @samp{a::integer} the @dfn{repeated pattern} - it matches an
 individual element of @code{A}.
 @cindex repeat variable
-Any variable define in a repeated pattern is a @dfn{repeat variable}.
+Any variable defined in a repeated pattern is a @dfn{repeat variable}.
 In the example, that would be @code{a}.
 @item
 @cindex repeat expression
@@ -7619,7 +7636,7 @@ exactly their use in @code{syntax-rules} patterns and templates.
 
 It is an error to use a repeat variable outside of repeat context:
 @example
-#|kawa:5|# a
+#|kawa:5|# @kbd{a}
 /dev/stdin:2:1: using repeat variable 'a' while not in repeat context
 @end example
 
@@ -17137,7 +17154,7 @@ arguments @code{console:prompt1=@var{prompt1}} and
 @code{console:prompt2=@var{prompt2}}, respectively.  If these are
 not specified, languages-specific defaults are used.
 For example for Scheme the default value of @code{input-prompt1}
-is @code{"#|kawa:%N|# "} and @code{input-prompt2} is @code{"#|$P.%N| "}.
+is @code{"#|kawa:%N|# "} and @code{input-prompt2} is @code{"#|%P.%N| "}.
 These have the form of Scheme comments, to make it easier to cut-and-paste.
 
 If @code{input-prompt1} (respectively @code{input-prompt2}) does not contain
@@ -17894,19 +17911,13 @@ run-time object, as well as an associated type (the set of values
 of that class, plus its sub-classes, plus @code{null}).
 
 Kawa, like Java, has first-class types, that is types exist as
-objects you can pass around at run-time.  For each Java type,
-there is a corresponding Kawa type (but not necessarily vice
-versa).  It would be nice if we could represent run-time
-type values using @code{java.lang.Class} objects, but unfortunately
-that does not work very well.  One reason is that we need
-to be able to refer to types and classes that do not exist yet,
-because we are in the processing of compiling them.  Another
-reason is that we want to be able to distinguish between different
-types that are implemented using the same Java class.
+objects you can pass around at run-time.  The most used types
+correspond to Java classes and primitive types,
+but Kawa also has other non-Java types.
 
-Various Kawa constructs require or allow a type to be specified.
-Those specifications consist of @dfn{type expressions}, and a type expression
-is evaluated to yield a type value.  The current Kawa compiler
+Type specifiers have a @dfn{type expressions}, and a type expression
+is conceptually an expression that is evaluated to yield a type value.
+The current Kawa compiler
 is rather simple-minded, and in many places only allows simple
 types that the compiler can evaluate at compile-time.
 More specifically, it only allows simple @dfn{type names}
@@ -17916,6 +17927,21 @@ that map to primitive Java types or Java classes.
 @stxdef{type} @stxref{expression}
 @stxdef{opt-type-specifier} [@stxlit{::} @stxref{type}]
 @end display
+
+Various Kawa constructs require or allow a type to be specified.
+You can use a type specifier most places where you
+@ref{Variables and Patterns,define a variable or match a pattern}.
+Types specifiers can appear in other placess, such as procedure return
+type specifiers.  For example in this procedure definition,
+@code{::vector} is an argument type specifier
+(and @code{vec::vector} is a pattern),
+while @code{::boolean} is a return type specifier.
+@example
+(define (vector-even? vec::vector)::boolean
+  (not (odd? (vector-length vec))))
+(vector-even? #(3 4 5)) @result{} #f
+(vector-even? (list 3 4 5 6)) @result{} @i{error}
+@end example
 
 @menu
 * Standard Types::
@@ -24242,8 +24268,8 @@ Some examples:
 A math program can display equations and graphs as the
 output of an expression.
 @item
-An expression can evaluate to a "picture" which would
-be @uref{http://per.bothner.com/blog/2007/ReplPane/,displayed inline}.
+An expression can evaluate to a``@ref{Composable pictures,picture}''
+which would be displayed inline.
 @item
 An HTML/XML obj can be insert into the output in visual
 form if the console understands HTML.  (There is a prototype

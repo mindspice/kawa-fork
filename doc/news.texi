@@ -7,7 +7,7 @@ changes}.
 @c @subheading In Git repository (master branch) since last release
 @c @anchor{#in-git-repository-since-last-release}
 
-@subheading Kawa 3.0 (August 2017)
+@subheading Kawa 3.0 (October 2, 2017)
 
 @itemize
 @item
@@ -15,6 +15,8 @@ Binary release are now built for Java 8.
 The repository source code is now set up for Java 8.
 (Building for Java 6 or 7 is still supported.
 Java 5 might also work, but has not been tested recently.)
+@item
+Tested and updated for Java 9.
 @item
 Most places where you could declare a new identifier
 binding have been generalized to accept @ref{Variables and Patterns,patterns},
@@ -29,8 +31,8 @@ the @var{expression} against the @var{pattern}.
 It is like @code{define-constant} but generalized to patterns.
 
 @item
-The conditional match form @code{(! @var{pattern} @var{expression})}
-is similar to @code{?} but can only be
+The conditional match form @code{(? @var{pattern} @var{expression})}
+is similar to @code{!} but can only be
 used @ref{Conditionals,in conditional context}.
 If the match fails, the conidtion is true.
 
@@ -171,6 +173,9 @@ objects to be retained (leak) where it didn't before.
 @item
 New command-line flag @code{--warn-uninitialized}
 (by default on) to control warning about using uninitialized variables.
+@item
+The pre-defined @ref{Character sets,character sets} are now based
+on Java 9's Unicode 8 support.
 @end itemize
 
 @subheading Kawa 2.4 (April 30, 2017)
