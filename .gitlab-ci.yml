@@ -1,4 +1,4 @@
-image: fedora:latest
+image: debian:latest
 
 stages:
     - build_and_test
@@ -6,12 +6,12 @@ stages:
 build_script:
     stage: build_and_test
     script:
-        - dnf update -y
-        - dnf install automake -y
-        - dnf install make -y
-        - dnf install texinfo -y
-        - dnf install java-1.8.0-openjdk-devel -y
-        - dnf install gcc -y
+        - apt-get -y update
+        - apt-get -y install automake
+        - apt-get -y install make
+        - apt-get -y install texinfo
+        - apt-get -y install openjdk-8-jdk
+        - apt-get -y install gcc
         - ./autogen.sh
         - ./configure
         - make
