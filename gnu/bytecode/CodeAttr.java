@@ -26,7 +26,8 @@ public class CodeAttr extends Attribute implements AttrContainer
 {
     Attribute attributes;
     Label prevGoto;
-    java.util.ArrayDeque<Label> afterGoto = new java.util.ArrayDeque<Label>();
+    java.util.ArrayDeque<Label> afterGotoLabels = new java.util.ArrayDeque<Label>();
+    java.util.ArrayDeque<Integer> afterGotoLineNumbers = new java.util.ArrayDeque<Integer>();
     MethodVisitor mvisitor;
     int insnCount = 0;
 
@@ -34,11 +35,13 @@ public class CodeAttr extends Attribute implements AttrContainer
     {
         if (prevGoto != null)
         {
-            if (!afterGoto.contains(prevGoto))
+            if (!afterGotoLabels.contains(prevGoto))
                 emitJumpInsn(GOTO, prevGoto.asmLabel);
-            while (!afterGoto.isEmpty())
-                mvisitor.visitLabel(afterGoto.poll().asmLabel);
             prevGoto = null;
+            while (!afterGotoLabels.isEmpty())
+                mvisitor.visitLabel(afterGotoLabels.poll().asmLabel);
+            while (!afterGotoLineNumbers.isEmpty())
+                putLineNumber(afterGotoLineNumbers.poll());
         }
     }
 
@@ -259,6 +262,11 @@ public class CodeAttr extends Attribute implements AttrContainer
 
     public final void putLineNumber(int linenumber)
     {
+        if (prevGoto != null)
+        {
+            afterGotoLineNumbers.add(linenumber);
+            return;
+        }
         if (linenumber == prev_linenumber)
             return;
         if (sourceDbgExt != null)
@@ -430,7 +438,7 @@ public class CodeAttr extends Attribute implements AttrContainer
     void defineRaw(Label l)
     {
         if (prevGoto != null)
-            afterGoto.add(l);
+            afterGotoLabels.add(l);
         else
             mvisitor.visitLabel(l.asmLabel);
     }
