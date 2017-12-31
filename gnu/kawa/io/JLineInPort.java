@@ -225,6 +225,9 @@ public class JLineInPort extends TtyInPort
             term.setSize(new Size(ncols, nrows));
     }
 
+    @Override
+    public boolean isJLine() { return true; }
+
     public static class KawaParsedLine implements ParsedLine {
         JLineInPort inp;
         Compilation comp;

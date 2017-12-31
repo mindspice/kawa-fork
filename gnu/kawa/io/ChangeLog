@@ -1,3 +1,9 @@
+2017-12-31  Per Bothner  <per@bothner.com>
+
+	* TtyInPort.java (promptTemplate1): Tweak if using DomTerm and JLine.
+	(isJLine): New method.
+	* JLineInPort.java (isJLine): New method.
+
 2017-12-23  Per Bothner  <per@bothner.com>
 
 	* URIPath.java (toURL): Use toURIString.
