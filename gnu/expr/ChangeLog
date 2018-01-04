@@ -1,5 +1,7 @@
 2018-01-03  Per Bothner  <per@bothner.com>
 
+	* InlineCalls.java (visitCaseExp): Inline formatted types in warnings.
+
 	* Language.java (unionType): Use Type.lowestCommonSharedType.
 	This fixes GitLab issue #32 "Imprecise infered return type".
 

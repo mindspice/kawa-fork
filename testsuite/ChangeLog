@@ -1,4 +1,8 @@
 2018-01-03  Per Bothner  <per@bothner.com>
+
+	* case-warnings.scm: Update for more detailed warning messages.
+
+2018-01-03  Per Bothner  <per@bothner.com>
             Helmut Eller  <eller.helmut@gmail.com>
 
 	* inlining-test.scm (list-cond): New test.

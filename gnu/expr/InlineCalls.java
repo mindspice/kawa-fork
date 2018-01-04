@@ -466,7 +466,7 @@ public class InlineCalls extends ExpExpVisitor<Type> {
 
     protected Expression visitCaseExp(CaseExp exp, Type required) {
         Expression key = exp.key.visit(this, ValueNeededType.instance);
-        
+
         // Inline the key when it is a ReferenceExp bound
         // to a known value (a QuoteExp).
         if (key instanceof ReferenceExp) {
@@ -489,8 +489,10 @@ public class InlineCalls extends ExpExpVisitor<Type> {
         Expression lastIncomp = null;
         int incomps = 0;
         for (int i = 0; i < exp.clauses.length; i++) {
-            for (int j = 0; j < exp.clauses[i].datums.length; j++) {
-                Expression dexp = exp.clauses[i].datums[j];
+            CaseExp.CaseClause clause = exp.clauses[i];
+            for (int j = 0; j < clause.datums.length; j++) {
+                clause.datums[j] = this.visit(clause.datums[j], null);
+                Expression dexp = clause.datums[j];
                 Object d = ((QuoteExp) dexp).getValue();
                 if (d instanceof SimpleVector
                         || (!(d instanceof EmptyList) && d instanceof PairWithPosition)) {
@@ -498,9 +500,12 @@ public class InlineCalls extends ExpExpVisitor<Type> {
                 } else if (d instanceof CharSequence) {
                     comp.error('w', "a string in a case clause will never match (except another literal)", dexp);
                 }
-                if (key.getType().isCompatibleWithValue(dexp.getType()) == -1){
+                Type keyType = key.getType();
+                Type dtype = dexp.getType();
+                if (keyType.isCompatibleWithValue(dtype) == -1){
+                    Language language = comp.getLanguage();
                     if (incomps < 2)
-                        comp.error('w', "datum type incompatible with the key", dexp);
+                        comp.error('w', "datum type ("+language.formatType(dtype)+") incompatible with the key type ("+language.formatType(keyType)+")", dexp);
                     else if (incomps == 2)
                         lastIncomp = dexp;
                     incomps++;
