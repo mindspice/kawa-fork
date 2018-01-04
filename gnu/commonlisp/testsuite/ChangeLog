@@ -1,5 +1,9 @@
 2017-11-09  Helmut Eller  <eller.helmut@gmail.com>
 
+	* lang-test.lisp: Add tests for dynamic variables in lambda lists.
+
+2017-11-09  Helmut Eller  <eller.helmut@gmail.com>
+
 	* lang-test.lisp: Add basic tests for EXPORT, MAKE-PACKAGE,
 	MAPCAR, UNLESS, WHEN, PROGN.
 

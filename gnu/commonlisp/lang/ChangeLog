@@ -1,5 +1,12 @@
 2017-11-09  Helmut Eller  <eller.helmut@gmail.com>
 
+	* OrdinaryLambda.java (rewriteFormals): Detect dynamic variables
+	and set the IS_FLUID flag and decl.base.
+	(auxillaryRewrite): Insert a FluidLetExp if needed.
+	(bindDynamicVars): New helper.
+
+2017-11-09  Helmut Eller  <eller.helmut@gmail.com>
+
 	* CommonLisp.java (initLisp): Bind make-package, export, mapcar
 	when, unless.  Also use the more CL like version for progn than
 	Scheme's begin.

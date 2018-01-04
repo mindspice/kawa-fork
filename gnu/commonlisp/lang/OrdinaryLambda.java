@@ -234,8 +234,13 @@ public class OrdinaryLambda extends Lambda
         //          tr.syntaxError("malformed lambda list `" + p + "`");
         //        }
       }
+      Declaration outerDecl = tr.lexical.lookup(name, false);
       Declaration decl = addParam((Symbol) name, templateScope, lexp, tr);
       decl.setFlag(Declaration.IS_PARAMETER);
+      if (outerDecl != null && outerDecl.getFlag(Declaration.IS_DYNAMIC)) {
+	  decl.setFluid(true);
+	  decl.base = outerDecl;
+      }
       //if (suppliedp != null || keyname != null) {
 
       if (mode == optionalKeyword || mode == keyKeyword || mode == auxKeyword)
@@ -325,7 +330,41 @@ public class OrdinaryLambda extends Lambda
     if (keywords != null)
       lexp.keywords = keywords.toArray(new Keyword[keywords.size()]);
   }
-  
+
+    @Override
+    public Expression auxillaryRewrite(Object body, Translator tr)
+    {
+	FluidLetExp fluidLet = bindDynamicVars(tr);
+	if (fluidLet == null)
+	    return tr.rewrite_body(body);
+	else {
+	    tr.push(fluidLet);
+	    fluidLet.setBody(tr.rewrite_body(body));
+	    tr.pop(fluidLet);
+	    return fluidLet;
+	}
+    }
+
+    private FluidLetExp bindDynamicVars(Translator tr) {
+	FluidLetExp fluidLet = null;
+	LambdaExp lambda = tr.curLambda;
+	for (Declaration p = lambda.firstDecl(); p != null; p = p.nextDecl()) {
+	    if (p.getFlag(p.IS_PARAMETER) && p.isFluid()) {
+		NameLookup lexical = tr.lexical;
+		if (fluidLet == null) fluidLet = new FluidLetExp();
+		Declaration decl = fluidLet.addDeclaration(p.getSymbol());
+		decl.base = p.base;
+		decl.setCanWrite(true);
+		decl.setFluid(true);
+		decl.setFlag(Declaration.IS_DYNAMIC);
+		decl.setIndirectBinding(true);
+		decl.setInitValue(new ReferenceExp(p));
+		decl.noteValueUnknown();
+	    }
+	}
+	return fluidLet;
+    }
+
   @Override
   public void print (Consumer out)
   {
