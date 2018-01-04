@@ -574,7 +574,7 @@ inlining.log: InliningTest.class cycle1.class cycle2.class \
 	topLevelRecurse1 topLevelRecurse2 sum1 sum2 numcomp eqv raise \
 	case callWithValues mmemq greaterEqual rshift lshift index \
 	incrementS8a incrementArrS8 incrementU8a setU16a addU8aU16a \
-	setU8vector >inlining.log
+	setU8vector listCond >inlining.log
 	$(LIST_CODE_SIZE) cycle1.class isIsEven >>inlining.log
 	$(LIST_CODE_SIZE) cycle2.class isIsOdd >>inlining.log
 	$(LIST_CODE_SIZE) binarytrees.class bottomUpTree test >>inlining.log

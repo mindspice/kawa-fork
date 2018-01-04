@@ -1,3 +1,9 @@
+2018-01-03  Per Bothner  <per@bothner.com>
+            Helmut Eller  <eller.helmut@gmail.com>
+
+	* inlining-test.scm (list-cond): New test.
+	Based on GitLab issue #32 "Imprecise infered return type".
+
 2017-12-18  Helmut Eller  <eller.helmut@gmail.com>
 
 	* formatst.scm: Add tests for ~<...~> justification.

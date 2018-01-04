@@ -1,3 +1,8 @@
+2018-01-03  Per Bothner  <per@bothner.com>
+
+	* Language.java (unionType): Use Type.lowestCommonSharedType.
+	This fixes GitLab issue #32 "Imprecise infered return type".
+
 2017-12-02  Per Bothner  <per@bothner.com>
 
 	* Compilation.java (generateCheckMethod,generateCheckKeywords)

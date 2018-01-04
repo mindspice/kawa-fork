@@ -499,6 +499,11 @@ public abstract class Type
         t2 = ((PrimType) t2).promotedType();
         return t1 == t2 ? t1 : null;
       }
+    return lowestCommonSharedType(t1, t2);
+  }
+
+  public static Type lowestCommonSharedType(Type t1, Type t2)
+  {
     if (t1.isSubtype(t2))
       return t2;
     else if (t2.isSubtype(t1))

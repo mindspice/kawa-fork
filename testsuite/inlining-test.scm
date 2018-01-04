@@ -555,3 +555,5 @@
 (define (index-garr7 x::array[int] i::int j::int)
   (x i j))
 
+;; From GitLab issue #32 "Imprecise infered return type".
+(define (list-cond x) (if x '() (list 1 2)))

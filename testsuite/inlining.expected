@@ -187,6 +187,7 @@ InliningTest.setU16a(int)void: 5 bytes
 InliningTest.addU8aU16a()int: 13 bytes
 InliningTest.setU8vector1(gnu.lists.U8Vector,int,long)void: 12 bytes
 InliningTest.setU8vector2(gnu.lists.U8Vector,int,long)void: 12 bytes
+InliningTest.listCond(java.lang.Object)gnu.lists.LList: 23 bytes
 cycle1.isIsEven(int)boolean: 17 bytes
 cycle2.isIsOdd(int)boolean: 17 bytes
 binarytrees.bottomUpTree(int,int)binarytrees$TreeNode: 60 bytes
