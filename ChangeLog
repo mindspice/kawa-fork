@@ -1,3 +1,8 @@
+2017-11-21  Sudarshan S Chawathe <chaw@eip10.org>
+
+	* gnu/kawa/slib/srfi14.scm: Change non-tail to tail recursion in
+	%make-boundary-pairs to avoid stack overflow for large inputs.
+
 2017-11-08  Helmut Eller  <eller.helmut@gmail.com>
 
 	* source-list (GNU_COMMONLISP_LANG_JSOURCES): Add CLReadTable.java.

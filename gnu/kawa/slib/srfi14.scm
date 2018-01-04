@@ -941,9 +941,14 @@ allowed, but not required, to side-effect its first argument."
   (if (= 0 len) '()
       (begin
         (define (make-pairs (i ::int)) ::list
-          (if (= i len) '()
-              (cons (cons (arr (+ 1 i)) (- (arr i) 1))
-                    (make-pairs (+ i 2)))))
+          (let loop ((i i)
+                     (r '()))
+            (if (>= i len)
+                (reverse r)
+                (loop (+ i 2)
+                      (cons (cons (arr (+ 1 i))
+                                  (- (arr i) 1))
+                            r)))))
         (if (even? len)
             (make-pairs 0)
             (cons (cons (arr 0) *highest-code-point*)
