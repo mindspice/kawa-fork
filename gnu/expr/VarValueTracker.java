@@ -23,6 +23,7 @@ public class VarValueTracker
   public VarValueTracker (VarValueTracker outer)
   {
     this.outer = outer;
+    this.visitor = outer.visitor;
     this.declValueUsage = outer.declValueUsage;
   }
 

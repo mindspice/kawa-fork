@@ -1,3 +1,7 @@
+2018-01-06  Per Bothner  <per@bothner.com>
+
+	* VarValueTracker.java (<init>): Copy visitor field.
+
 2018-01-03  Per Bothner  <per@bothner.com>
 
 	* InlineCalls.java (visitCaseExp): Inline formatted types in warnings.
