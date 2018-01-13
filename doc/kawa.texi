@@ -18001,11 +18001,10 @@ The type of Scheme pairs.  This is a sub-type of @code{list}.
 
 @defvar string
 The type of Scheme strings.
-(Implemented using @code{java.lang.String} for immutable strings,
+(Implemented using @code{gnu.lists.IString} or @code{java.lang.String}
+for immutable strings,
 and @code{gnu.lists.FString} for mutable strings.
-Both of these implement the interface @code{java.lang.CharSequence}.
-In the future, we may change the representation for strings
-containing ``surrogate characters'', for efficient indexing.)
+These all implement the interface @code{java.lang.CharSequence}.
 (@CompatibilityNote{} Previous versions of Kawa
 always used @code{gnu.lists.FString}.)
 @end defvar

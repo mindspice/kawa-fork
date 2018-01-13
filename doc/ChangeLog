@@ -1,3 +1,7 @@
+2018-01-13  Per Bothner  <per@bothner.com>
+
+	* kawa.texi (Standard Types): Minor update for string type.
+
 2017-11-30  Per Bothner  <per@bothner.com>
 
 	* kawa.texi: Fix typos '--full-tail-calls' to '--full-tailcalls'.
