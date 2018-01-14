@@ -5103,6 +5103,7 @@ becomes a separate argument when call the @var{operator}.
 
 @node Colon notation
 @section Property access using colon notation
+@cindex colon notation
 
 The @dfn{colon notation} accesses named parts (properties) of a value.
 It is used to get and set fields, call methods, construct compound symbols,
