@@ -62,7 +62,7 @@
                       (java.lang.Float? x)
                       (java.lang.Double? x))
                   (= (java.lang.Math:IEEEremainder
-                      (java.lang.Number:doubleValue x)
+                      ((->java.lang.Number x):doubleValue)
                       1.0)
                      0.0))
                  ((java.math.BigDecimal? x)

@@ -17,6 +17,6 @@
     (gnu.mapping.LocationProc:new loc conv)))
 
 (define (as-location% param) :: <gnu.mapping.Location>
-  (if (instance? param <gnu.mapping.LocationProc>)
-      (gnu.mapping.LocationProc:getLocation param)
+  (if (? p::gnu.mapping.LocationProc param)
+      (p:getLocation)
       (as <gnu.mapping.Location> param)))

@@ -183,9 +183,31 @@ public class CompileInvoke {
         int keywordStart = kind == 'N' && exp.numKeywordArgs > 0 ? exp.firstKeywordArgIndex - 1 : nargs;
         int tailArgs = nargs - keywordStart;
         int spliceCount = exp.spliceCount();
+        boolean none = false;
         try {
             if (methods == null)
                 methods = getMethods(ctype, name, caller, iproc);
+            if (kind == 'S' || kind == 's') {
+                int n = methods.length;
+                for (int i = 0; i < n; ) {
+                    if (methods[i].getStaticFlag()) {
+                        i++;
+                    } else {
+                        PrimProcedure tmp = methods[n-1];
+                        methods[n-1] = methods[i];
+                        methods[i] = tmp;
+                        n--;
+                    }
+                }
+                if (n == 0)
+                    none = true;
+                if (n > 0 && n != methods.length) {
+                    PrimProcedure[] tmp = new PrimProcedure[n];
+                    System.arraycopy(methods, 0, tmp, 0, n);
+                    methods = tmp;
+                } else if (n == 0 && kind == 's')
+                    comp.error('w', "no static method '"+name+"' in "+type.getName());
+            }
             numCode = ClassMethods.selectApplicable(methods,
                                                     margsLength - tailArgs - spliceCount,
                                                     spliceCount > 0);
@@ -256,7 +278,7 @@ public class CompileInvoke {
                     atype = null; // actually string or symbol
                 else if (kind == 'P' && i == 1)
                     atype = ctype;
-                else if (numCode > 0) {
+                else if (numCode > 0 && ! none) {
                     int pi = i - (kind == 'N' ? 1 : argsStartIndex);
                     for (int j = 0;  j < numCode;  j++) {
                         PrimProcedure pproc = methods[j];
@@ -302,14 +324,34 @@ public class CompileInvoke {
             if (kind == 'P' || comp.warnInvokeUnknownMethod()) {
                 if (kind=='N')
                     name = name+"/valueOf";
-                StringBuilder sbuf = new StringBuilder();;
+                int min = Integer.MAX_VALUE, max = 0;
+                for (int i = methods.length; --i >= 0; ) {
+                    int mini = methods[i].minArgs();
+                    int maxi = methods[i].maxArgs();
+                    if (mini < min)
+                        min = mini;
+                    if (maxi == -1 || (maxi > max && max != -1))
+                        max = maxi;
+                }
+                int margs = margsLength - exp.spliceCount();
+                StringBuilder sbuf = new StringBuilder();
                 if (nmethods + methods.length == 0)
                     sbuf.append("no accessible method '");
-                else if (numCode == MethodProc.NO_MATCH_TOO_FEW_ARGS)
-                    sbuf.append("too few arguments for method '");
-                else if (numCode == MethodProc.NO_MATCH_TOO_MANY_ARGS)
-                    sbuf.append("too many arguments for method '");
-                else
+                else if (numCode == MethodProc.NO_MATCH_TOO_FEW_ARGS) {
+                    sbuf.append("too few arguments (");
+                    sbuf.append(margs);
+                    sbuf.append("; must be ");
+                    sbuf.append(min);
+                    sbuf.append(") for method '");
+                } else if (numCode == MethodProc.NO_MATCH_TOO_MANY_ARGS) {
+                    sbuf.append("too many arguments (");
+                    sbuf.append(margs);
+                    if (exp.spliceCount() > 0)
+                        sbuf.append(" or more");
+                    sbuf.append("; must be ");
+                    sbuf.append(max);
+                    sbuf.append(") for method '");
+                } else
                     sbuf.append("no possibly applicable method '");
                 sbuf.append(name);
                 sbuf.append("' in ");
@@ -321,22 +363,6 @@ public class CompileInvoke {
             index = 0;
         else if (okCount > 0) {
             index = PrimProcedure.mostSpecific(methods, okCount);
-            if (index < 0) {
-                if (kind == 'S') {
-                    // If we didn't find a most specific method,
-                    // check if there is one that is static.  If so,
-                    // prefer that - after all, we're using invoke-static.
-                    for (int i = 0;  i < okCount;  i++) {
-                        if (methods[i].getStaticFlag()) {
-                            if (index >= 0) {
-                                index = -1;
-                                break;
-                            } else
-                                index = i;
-                        }
-                    }
-                }
-            }
             if (index < 0
                 && (kind == 'P' || comp.warnInvokeUnknownMethod())) {
                 StringBuffer sbuf = new StringBuffer();
@@ -401,9 +427,8 @@ public class CompileInvoke {
         }
     }
 
-    protected static PrimProcedure[]
-        getMethods(ObjectType ctype, String mname,
-                   ClassType caller, Invoke iproc) {
+    protected static PrimProcedure[] getMethods(ObjectType ctype, String mname,
+                                                ClassType caller, Invoke iproc) {
         int kind = iproc.kind;
         return ClassMethods.getMethods(ctype, mname,
                                        kind == 'P' ? 'P'

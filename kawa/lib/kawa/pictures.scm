@@ -165,10 +165,10 @@
 (define (->paint value) :: <java.awt.Paint>
   (cond ((instance? value <java.awt.Paint>)
 	 value)
-	((instance? value <java.lang.Integer>)
-	 (make <java.awt.Color> (java.lang.Integer:intValue value)))
-	((instance? value <gnu.math.IntNum>)
-	 (make <java.awt.Color> (gnu.math.IntNum:intValue value)))
+	((? i::java.lang.Integer value)
+	 (java.awt.Color (i:intValue)))
+	((? i::gnu.math.IntNum value)
+	 (java.awt.Color (i:intValue)))
 	(else
          (let ((c (StandardColor:valueOf (value:toString))))
            (if (eq? c #!null)

@@ -1,3 +1,12 @@
+2018-01-13  Per Bothner  <per@bothner.com>
+
+	For invoke-static and similarstatic, prefer static methods.
+	This fixes GitLab issue#25 "invoke-static on virtual method".
+	* CompileInvoke.java (validateNamedInvoke): Prefer static methods;
+	warn if no static methods found.
+	* ClassMethods.java (getMethods): Filter on (non-)static.
+	* Invoke.java (invokeStatic): Change 'kind' letter.
+
 2017-08-31  Per Bothner  <per@bothner.com>
 
 	* SlotSet.java (set$Mnfield$Ex, set$Mnstatic$Mnfield$Ex):

@@ -26,7 +26,7 @@
 (define-namespace date-test-ns <SimpleDateTest>)
 (define (make-date-test)
   (let ((d :: <SimpleDateTest> (date-test-ns:new)))
-    (date-test-ns:get-year d)))
+    d:year))
 
 ;; Test that we can make <TestCapture1> before <TestCapture1> is defined.
 (define (make-TestCapture1)

@@ -1,3 +1,7 @@
+2018-01-13  Per Bothner  <per@bothner.com>
+
+	Don't use Class:method syntax to call non-static methods.
+
 2017-09-24  Per Bothner  <per@bothner.com>
 
 	* kawa/base.scm: Only export scheme-window if kawa.GuiConsole exists.

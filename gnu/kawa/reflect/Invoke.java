@@ -36,7 +36,7 @@ public class Invoke extends Procedure
         lookupApplyHandle(Invoke.class, "applyToObject");
 
   public static final Invoke invoke = new Invoke("invoke", '*');
-  public static final Invoke invokeStatic = new Invoke("invoke-static", 'S');
+  public static final Invoke invokeStatic = new Invoke("invoke-static", 's');
   public static final Invoke invokeSpecial = new Invoke("invoke-special", 'P');
   public static final Invoke make = new Invoke("make", 'N');
 

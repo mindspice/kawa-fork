@@ -5,7 +5,7 @@
   (syntax-case form ()
     ((import-class fqcn)
      (let* ((cls :: java.lang.Class (eval (syntax fqcn)))
-	    (name (string->symbol (java.lang.Class:getSimpleName cls))))
+	    (name (string->symbol (invoke cls 'getSimpleName))))
        #`(define-alias #,(datum->syntax-object form name) fqcn)))))
 
 (import-class java.util.Date)

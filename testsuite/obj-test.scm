@@ -348,7 +348,7 @@
 
 (define simple-date (make <SimpleDateTest>))
 (define-namespace date "class:java.util.Date")
-(test (+ 1900 (date:get-year (date:new)))
+(test (+ 1900 (date:new):year)
       invoke simple-date 'get-year)
 (define non-simple-date (make <DateTest>))
 (test (+ 1900 (*:get-year (date:new)))

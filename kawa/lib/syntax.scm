@@ -180,8 +180,7 @@
      (begin
        (define-constant name :: gnu.mapping.LocationProc[type]
 	 (gnu.mapping.LocationProc:makeNamed 'name location))
-       (gnu.mapping.LocationProc:pushConverter
-	name
+       ((->gnu.mapping.LocationProc name):pushConverter
 	(lambda (arg)
 	  (try-catch
 	   (as type arg)

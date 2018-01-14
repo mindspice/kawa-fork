@@ -10,10 +10,8 @@
 		   (let loop ((i :: <int> 0))
 		     (if (< i num-args)
 			 (let ((arg (args i)))
-			   (cond ((instance? arg <gnu.expr.Keyword>)
-				  (handle-keyword obj
-						  (gnu.expr.Keyword:getName arg)
-						  (args (+ i 1)))
+			   (cond ((? k::gnu.expr.Keyword arg)
+				  (handle-keyword obj k:name (args (+ i 1)))
 				  (loop (+ i 2)))
 				 ((instance? arg <gnu.kawa.xml.KAttr>)
 				  (let* ((attr :: <gnu.kawa.xml.KAttr> arg)

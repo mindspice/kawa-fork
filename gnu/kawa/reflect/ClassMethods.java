@@ -102,7 +102,12 @@ public class ClassMethods extends Procedure2
         // FIXME kludge until we handle "language types".
         if (dtype == Type.tostring_type)
             dtype = Type.string_type;
-        MethodFilter filter = new MethodFilter(mname, 0, 0, caller,
+        int modifiers = 0;
+        int modmask = 0;
+        if (mode == 'S' || mode == 's')
+            modifiers = modmask = Access.STATIC;
+        MethodFilter filter = new MethodFilter(mname, modifiers, modmask,
+                                               caller,
                                                mode == 'P' ? null : dtype);
         boolean named_class_only = mode == 'P' || "<init>".equals(mname);
         ArrayList<Method> methods = new ArrayList<Method>();
