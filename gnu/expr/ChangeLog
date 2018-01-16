@@ -1,3 +1,11 @@
+2018-01-15  Per Bothner  <per@bothner.com>
+
+	Revert 2017-08-26 cȟange (commit 77784568 for issue #11).
+	This fixes GitLab issue #33 "Odd closure issue with cond and =>"
+	and Savannah bug #52390
+	"kawa 3.0 anonymous class instantiation in map issue".
+	(A different fix for issue #11 is in the works.)
+
 2018-01-06  Per Bothner  <per@bothner.com>
 
 	* VarValueTracker.java (<init>): Copy visitor field.

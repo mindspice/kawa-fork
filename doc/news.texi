@@ -4,8 +4,13 @@ most recent changes first.
 See also the list of @uref{../qexo/news.html,Qexo (XQuery)-specific
 changes}.
 
-@c @subheading In Git repository (master branch) since last release
-@c @anchor{#in-git-repository-since-last-release}
+@subheading In Git repository (master branch) since last release
+@anchor{#in-git-repository-since-last-release}
+
+@itemize
+@item
+Revert 3.0 change in allocating closure objects for inlined functions.
+@end itemize
 
 @subheading Kawa 3.0 (October 2, 2017)
 

@@ -737,7 +737,7 @@ SCRIPTS_TO_RUN = case-warnings.scm uninit1.scm \
   anonymous-lambda-1.scm unreach1.scm unreach2.scm unreach3.scm \
   bad-defclass.scm defclass1.scm defclass2.scm defclass3.scm bad-voidexp.scm \
   srfi-45-test1.scm srfi-45-test2.scm bad-srfi-109.scm \
-  inline1.scm inline2.scm inline3.scm inline4.scm inline5.scm \
+  inline1.scm inline2.scm inline3.scm inline4.scm inline5.scm inline6.scm \
   let1.scm map1.scm location1.scm location2.scm location3.scm try1.scm \
   define1.scm define2.scm define3.scm mac-obj.scm objexp1.scm \
   overload1.scm overload2.scm match1.scm symbol1.scm values1.scm values2.scm \
@@ -752,7 +752,7 @@ SCRIPTS_TO_RUN = case-warnings.scm uninit1.scm \
   sva40077.scm sva40494.scm sva40649.scm sva40729.scm sva40814.scm \
   sva42377.scm sva42382.scm sva42689.scm sva42722.scm sva43131.scm \
   sva43750.scm sva47412.scm sva46728.scm sva47651.scm sva47725.scm \
-  sva47863.scm sva48938.scm sva49416.scm
+  sva47863.scm sva48938.scm sva49416.scm sva52390.scm
 
 # Files needed for SCRIPTS_TO_RUN
 AUX_FOR_SCRIPTS_TO_RUN = aux-libs.scm sva46728x.scm sva46728z.scm

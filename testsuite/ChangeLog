@@ -1,3 +1,14 @@
+2018-01-15  Per Bothner  <per@bothner.com>
+
+	* sva52390.scm: New test based on Savannah bug #52390
+	"kawa 3.0 anonymous class instantiation in map issue".
+
+2018-01-15  Shawn Wagner
+            Per Bothner  <per@bothner.com>
+
+	* inline6.scm: New test based on GitLab issue #33
+	"Odd closure issue with cond and =>".
+
 2018-01-13  Per Bothner  <per@bothner.com>
 
 	Don't use Class:method syntax to call non-static methods.
