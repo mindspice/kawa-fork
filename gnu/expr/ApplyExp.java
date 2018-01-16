@@ -622,6 +622,8 @@ public class ApplyExp extends Expression
                     ptype = ((ArrayType) vtype).getComponentType();
             }
             args[i] = visitor.visitAndUpdate(args[i], ptype);
+            if (param != null)
+                param.noteValueFromApply(this, i);
             if (param != null && ! param.getFlag(Declaration.IS_REST_PARAMETER))
                 param = param.nextDecl();
         }

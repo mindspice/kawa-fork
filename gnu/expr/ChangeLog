@@ -1,5 +1,13 @@
 2018-01-15  Per Bothner  <per@bothner.com>
 
+	* ApplyExp.java (visitArgs): Call noteValueFromApply on param.
+	This helps when the parameter is a LambdaExp as it sets the
+	latter's nameDecl, wich means we can track calls and set closureEnv.
+	This is a better fix for issue #11 on GitLab
+	''"attempting to push dead variable" error on loading Alexpander'.'
+
+2018-01-15  Per Bothner  <per@bothner.com>
+
 	Revert 2017-08-26 cȟange (commit 77784568 for issue #11).
 	This fixes GitLab issue #33 "Odd closure issue with cond and =>"
 	and Savannah bug #52390

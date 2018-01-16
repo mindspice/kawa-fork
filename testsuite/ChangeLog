@@ -1,5 +1,10 @@
 2018-01-15  Per Bothner  <per@bothner.com>
 
+	* alexp1.scm: New test for issue #11 on GitLab
+	''"attempting to push dead variable" error on loading Alexpander'.
+
+2018-01-15  Per Bothner  <per@bothner.com>
+
 	* sva52390.scm: New test based on Savannah bug #52390
 	"kawa 3.0 anonymous class instantiation in map issue".
 

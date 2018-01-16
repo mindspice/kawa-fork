@@ -437,7 +437,7 @@ public class FindCapturedVars extends ExpExpVisitor<Void>
                     methodLambda = outer;
                 }
             }
-            if (! decl.isFluid()) {
+            if (decl.isLexical()) {
                 heapLambda.setImportsLexVars();
             }
 	    LambdaExp parent = heapLambda.outerLambda();
