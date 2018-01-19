@@ -68,6 +68,20 @@ public class SourceError extends SourceLocator.Simple
         appendTo(buffer, stripDirectories, null);
         return buffer.toString ();
     }
+
+    public static void appendEscaped(Appendable out, CharSequence str)
+        throws java.io.IOException {
+        int len = str.length();
+        for (int i = 0; i < len; i++) {
+            char ch = str.charAt(i);
+            if (ch == '<' || ch == '>' || ch == '&') {
+                out.append(ch == '<' ? "&lt;"
+                           : ch == '>' ? "&gt;"
+                           : "&amp;");
+            } else
+                out.append(ch);
+        }
+    }
    
     public void appendTo(Appendable out, boolean stripDirectories,
                          String newLine) {
@@ -102,9 +116,10 @@ public class SourceError extends SourceLocator.Simple
                     out.append(position);
                 }
                 out.append("'>");
+                appendEscaped(out, fname);
             }
-            // FIXME if (isDomTerm) escape for html text:
-            out.append(fname);
+            else
+                out.append(fname);
             if (position.length() > 0) {
                 out.append(':');
                 out.append(position);

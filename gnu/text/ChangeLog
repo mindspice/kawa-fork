@@ -1,3 +1,8 @@
+2018-01-19  Per Bothner  <per@bothner.com>
+
+	* SourceError.java (appendTo): Escape for html if DomTerm.
+	(appendEscape): New helper method.
+
 2017-12-23  Per Bothner  <per@bothner.com>
 
 	* SourceError.java (appendTo): Highlight link on DomTerm.
