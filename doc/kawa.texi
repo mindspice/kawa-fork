@@ -22341,7 +22341,7 @@ where each position has an x cordinate and y coordinate.
 Normally, x values increase as you move right on the screen/page,
 while y values increase as you move @emph{down}.
 This convention matches that used by Java 2D, SVG, and many other
-graphics library.  However, note that this is different from the traditional
+graphics libraries.  However, note that this is different from the traditional
 mathematical convention of y values increasing as you go up.
 
 By default, one unit is one ``pixel''.  (More precisely,
@@ -22512,7 +22512,7 @@ that provides a default that is used for the first circle.
 Fill the ``inside'' of @var{shape}.
 If no @var{paint} is specified, uses the current default paint.
 Otherwise, @code{(fill @var{paint} @var{shape})}
-is the same @code{(with-paint @var{paint} (file @var{shape}))}.
+is the same @code{(with-paint @var{paint} (fill @var{shape}))}.
 @end deffn
 
 @subsection Stroking (outlining) a shape
@@ -22733,7 +22733,7 @@ If the @var{picture} is a shape, so is the result.
 
 The @var{xpos} can have four possible values, all of which are symbols:
 @code{'left} (move the origin to the left edge of the bounding box);
-@code{'right} (move the origin to the left edge of the bounding box);
+@code{'right} (move the origin to the right edge of the bounding box);
 @code{'center} (or @code{'centre}) (move the origin to halfway between the left and right edges);
 or @code{'origin} (don't change the location along the x-axis).
 The @var{ypos} can likewise have four possible values:
@@ -22873,7 +22873,7 @@ Limited support - SVG and DomTerm output has not been implemented.
 @subsubsection Export to SVG
 
 @deffn Procedure picture-write-svg picture path [headers]
-Writes the @var{picture} to the file specified @var{path},
+Writes the @var{picture} to the file specified by @var{path},
 in SVG (Structered Vector Graphics) format.
 If @var{headers} is true (which is the default)
 first write out the XML and DOCTYPE declarations

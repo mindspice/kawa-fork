@@ -1,3 +1,7 @@
+2018-01-19  Per Bothner  <per@bothner.com>
+
+	* kawa.texi (Composable pictures): Fix some typos.
+
 2018-01-13  Per Bothner  <per@bothner.com>
 
 	* kawa.texi (Standard Types): Minor update for string type.
