@@ -1,3 +1,7 @@
+2018-01-21  Per Bothner  <per@bothner.com>
+
+	* module3.scm (my-compare): Tweak to avoid a warning.
+
 2018-01-15  Per Bothner  <per@bothner.com>
 
 	* alexp1.scm: New test for issue #11 on GitLab

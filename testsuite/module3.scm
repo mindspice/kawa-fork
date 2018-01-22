@@ -63,8 +63,7 @@
 ;; but not (intentionally): (define-alias timestamp  "class:MyTimestamp")
 
 (define (my-compare a b)
-  (timestamp:myCompareTo (as <MyTimestamp> a)
-                         (as <MyTimestamp> b)))
+  ((as timestamp a):myCompareTo (as <MyTimestamp> b)))
 
 ;; Test for Savannah bug #11578
 (define *VAR* 'A)
