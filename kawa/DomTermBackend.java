@@ -185,7 +185,7 @@ public class DomTermBackend extends Backend implements Runnable {
         */
         try {
             sendInputMode(usingJLine ? 'c' : 'p');
-            setAutomaticNewline(true);
+            termWriter.write("\033[20;1h"); // treat "\n" output as "\r\n"
             termWriter.write("\033]0;Kawa\007");
         } catch (Throwable ex) { ex.printStackTrace(); }
         if (this.nrows >= 0)

@@ -1,3 +1,7 @@
+2018-01-21  Per Bothner  <per@bothner.com>
+
+	* DomTermBackend.java (run): Only set automatic-newline for output.
+
 2017-12-04  Per Bothner  <per@bothner.com>
 
 	* lang/Translator.java (checkDefaultBinding):
