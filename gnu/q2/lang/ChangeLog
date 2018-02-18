@@ -1,3 +1,7 @@
+2018-02-18  Per Bothner  <per@bothner.com>
+
+	* Q2.java: Fix so --kashell command-line flags works.
+
 2017-08-24  Per Bothner  <per@bothner.com>
 
 	* Q2Read.java (handlePostfix): Handle VAR^ or VAR^TYPE.

@@ -52,12 +52,17 @@ public class Q2 extends Scheme
       }
   }
 
-  public static Q2 getQ2Instance()
-  {
-    if (instance == null)
-      new Q2 ();
-    return instance;    
-  }
+    public static Q2 getQ2Instance()
+    {
+	return getKashellInstance();
+    }
+
+    public static Q2 getKashellInstance()
+    {
+	if (instance == null)
+	    new Q2();
+	return instance;
+    }
 
   public void initQ2 ()
   {
