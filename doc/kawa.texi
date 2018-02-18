@@ -923,7 +923,7 @@ We can build on Kawa's existing framework for
 non-standard primitive types such as @code{character} and @code{ulong}.
 Skills: Need good Java experience, and somewhat familiar with the
 Java Virtual Machine.
-You will need to become comfortable reading <code>javap</code> output.
+You will need to become comfortable reading @code{javap} output.
 Difficulty: Modest.
 
 @subsection Compiler should use class-file reading instead of reflection
