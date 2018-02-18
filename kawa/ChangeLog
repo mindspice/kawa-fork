@@ -1,3 +1,9 @@
+2018-02-18  Per Bothner  <per@bothner.com>
+
+	* standard/require.java (importDefinitions): Add check for ERROR_SEEN
+	when deciding whetehr to re-parse.  This fixes GitLab issue #37
+	"No matching syntax-rule breaks the reader".
+
 2018-01-21  Per Bothner  <per@bothner.com>
 
 	* DomTermBackend.java (run): Only set automatic-newline for output.

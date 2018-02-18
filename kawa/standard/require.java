@@ -225,7 +225,8 @@ public class require extends Syntax
                       ScopeExp defs, Compilation tr) {
         ModuleManager manager = ModuleManager.getInstance();
         if ((info.getState() & 1) == 0
-            && info.getCompilation() == null
+            && (info.getCompilation() == null
+                || info.getState() == Compilation.ERROR_SEEN)
             && ! info.checkCurrent(manager, System.currentTimeMillis())) {
             SourceMessages messages = tr.getMessages();
             Language language = Language.getDefaultLanguage();
