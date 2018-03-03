@@ -1,3 +1,8 @@
+2018-03-02  Per Bothner  <per@bothner.com>
+
+	* sva53262.scm: New testase based on Savannah bug #53262
+	"Kawa 'loses' arguments for functions with dotted pair arguments".
+
 2018-01-21  Per Bothner  <per@bothner.com>
 
 	* module3.scm (my-compare): Tweak to avoid a warning.

@@ -1,3 +1,9 @@
+2018-03-02  Per Bothner  <per@bothner.com>
+
+	* ApplyExp.java (compile):  Fix logic error with rest args.
+	This fixes Savannah bug #53262
+	"Kawa 'loses' arguments for functions with dotted pair arguments".
+
 2018-01-15  Per Bothner  <per@bothner.com>
 
 	* ApplyExp.java (visitArgs): Call noteValueFromApply on param.

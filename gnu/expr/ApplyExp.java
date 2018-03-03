@@ -405,7 +405,7 @@ public class ApplyExp extends Expression
         Declaration rest = pushArgs(func_lambda, exp.args, fixed, incValues, comp);
         if (toArray)
             PrimProcedure.compileRestArg(rest.getType(), exp,
-                                         0, exp.args.length-1, comp);
+                                         0, fixed, comp);
         method = null;
       }
     else
