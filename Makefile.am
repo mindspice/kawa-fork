@@ -327,12 +327,14 @@ JLINE_LINK = lib/jline.jar
 
 lib/jline.jar:
 	mkdir -p lib
+	-rm -f lib/jline.jar
 	$(LN_S) @WITH_JLINE_PATH@ lib/jline.jar
 endif
 if WITH_DOMTERM
 DOMTERM_LINK = lib/domterm.jar
 lib/domterm.jar:
 	mkdir -p lib
+	-rm -f lib/domterm.jar
 	$(LN_S) $(DOMTERM_JAR) lib/domterm.jar
 endif
 if ENABLE_SERVLET

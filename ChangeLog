@@ -1,3 +1,8 @@
+2018-04-09  Per Bothner  <per@bothner.com>
+
+	* Makefile.am (lib/jline.jar, lib/domterm.jar):
+	Remove old symlinks before creating new ones.
+
 2017-11-21  Sudarshan S Chawathe <chaw@eip10.org>
 
 	* gnu/kawa/slib/srfi14.scm: Change non-tail to tail recursion in
