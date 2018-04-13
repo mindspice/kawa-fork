@@ -1,3 +1,9 @@
+2018-04-12  Per Bothner  <per@bothner.com>
+
+	Initial support for LSP (Language Server Proptocol).
+	* Language.java (PARSE_FOR_LINT): New parse flag.
+	* Compilation.java (process): Check PARSE_FOR_LINT.
+
 2018-03-02  Per Bothner  <per@bothner.com>
 
 	* ApplyExp.java (compile):  Fix logic error with rest args.

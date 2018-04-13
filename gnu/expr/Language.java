@@ -725,6 +725,7 @@ public abstract class Language
   public static final int PARSE_EXPLICIT = 64;
   public static final int PARSE_INTERACTIVE_MODULE = 128;
   public static final int PARSE_EMIT_MAIN = 256;
+  public static final int PARSE_FOR_LINT = 512;
 
   public static boolean requirePedantic;
 

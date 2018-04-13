@@ -1756,6 +1756,7 @@ public class Compilation implements SourceLocator
 
         // Avoid writing class needlessly.
         if (! explicit && ! immediate
+            && (langOptions & Language.PARSE_FOR_LINT) == 0
             && getMinfo().checkCurrent(ModuleManager.getInstance(), System.currentTimeMillis()))
           {
             getMinfo().cleanupAfterCompilation();
@@ -2406,7 +2407,7 @@ public class Compilation implements SourceLocator
   {
     if (severity == 'w' && warnAsError())
       severity = 'e';
-    
+
     messages.error(severity, this, message);
   }
 
