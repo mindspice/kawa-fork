@@ -1,3 +1,7 @@
+2018-04-12  Per Bothner  <per@bothner.com>
+
+	* repl.java: Update copyright year for --version.
+
 2018-02-18  Per Bothner  <per@bothner.com>
 
 	* standard/require.java (importDefinitions): Add check for ERROR_SEEN
