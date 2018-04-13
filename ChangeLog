@@ -1,3 +1,10 @@
+2018-04-12  Per Bothner  <per@bothner.com>
+
+	Initial support for LSP (Language Server Proptocol).
+	* configure.ac: Support --with-lsp4j and --with-gson.
+	* config.classpath: Add lsp4j and gson to classpath.
+	* Makefile.am: Related changes.
+
 2018-04-09  Per Bothner  <per@bothner.com>
 
 	* Makefile.am (lib/jline.jar, lib/domterm.jar):

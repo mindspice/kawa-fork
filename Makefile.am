@@ -290,6 +290,11 @@ if WITH_JLINE3
 	cd $(DESTDIR)$(datadir)/kawa/lib && \
 	  $(LN_S) @WITH_JLINE_PATH@ jline.jar
 endif
+if WITH_LSP4J
+	-rm -f $(DESTDIR)$(datadir)/kawa/lib/lsp4j.jar
+	cd $(DESTDIR)$(datadir)/kawa/lib && \
+	  $(LN_S) @WITH_LSP4J_PATH@ lsp4j.jar
+endif
 
 install-bytecode-jar: lib/bytecode.jar
 	@$(NORMAL_INSTALL)
@@ -320,8 +325,24 @@ kawa/Version.java: $(srcdir)/kawa/Version.java.in $(srcdir)/configure.ac
 	sed -e 's|VERSION|@VERSION@'"$$GIT_REVISION|" <$(srcdir)/kawa/Version.java.in >$@
 
 all-recursive:  kawa/Version.java selected-java-source $(GENERATED_SIMPLEVECTOR_FILES)
-all: lib/kawa.jar lib/kawart.jar $(JLINE_LINK) $(DOMTERM_LINK) $(SERVLET_LINK)
+all: lib/kawa.jar lib/kawart.jar $(JLINE_LINK) $(DOMTERM_LINK) $(SERVLET_LINK) \
+  $(GSON_LINK) $(LSP4J_LINK) $(LSP4J_JSONRPC_LINK)
 
+if WITH_LSP4J
+GSON_LINK = lib/gson.jar
+LSP4J_LINK = lib/lsp4j.jar
+LSP4J_JSONRPC_LINK = lib/lsp4j.jsonrpc.jar
+
+lib/gson.jar:
+	mkdir -p lib
+	$(LN_S) @WITH_GSON_PATH@ lib/gson.jar
+lib/lsp4j.jar:
+	mkdir -p lib
+	$(LN_S) @WITH_LSP4J_PATH@ lib/lsp4j.jar
+lib/lsp4j.jsonrpc.jar:
+	mkdir -p lib
+	$(LN_S) @WITH_LSP4J_JSONRPC_PATH@ lib/lsp4j.jsonrpc.jar
+endif
 if WITH_JLINE3
 JLINE_LINK = lib/jline.jar
 
@@ -356,6 +377,11 @@ PREPROCESS_JLINE3 = +with:jline3
 else
 PREPROCESS_JLINE3 = -with:jline3
 endif
+if WITH_LSP4J
+PREPROCESS_LSP4J = +with:lsp4j
+else
+PREPROCESS_LSP4J = -with:lsp4j
+endif
 if ENABLE_XML
 PREPROCESS_XML = +enable:XML
 else
@@ -378,7 +404,7 @@ kawa/Version.class: kawa/Version.java
 gnu/kawa/util/PreProcess.class: gnu/kawa/util/PreProcess.java
 	$(JAVAC) -d . $(JAVACFLAGS) $^
 
-JAVA_PREPROCESS_OPTIONS = @JAVA_SOURCE_SELECTOR@ $(PREPROCESS_HTTPSERVER) $(PREPROCESS_XML) $(PREPROCESS_JLINE3) $(PREPROCESS_AWT)
+JAVA_PREPROCESS_OPTIONS = @JAVA_SOURCE_SELECTOR@ $(PREPROCESS_HTTPSERVER) $(PREPROCESS_XML) $(PREPROCESS_JLINE3) $(PREPROCESS_LSP4J) $(PREPROCESS_AWT)
 
 selected-java-source: Makefile $(srcdir)/patch-source-list
 	if test ! -e selected-java-source -o \

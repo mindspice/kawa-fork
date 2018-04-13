@@ -56,3 +56,11 @@ case ${with_jline3} in
      run_classpath='$kawadir/lib/jline.jar'${CLASSPATH_SEPARATOR}"$run_classpath"
     ;;
 esac
+case ${with_lsp4j} in
+  yes) ;;
+  no) ;;
+  "") ;;
+  *) conf_classpath=${WITH_LSP4J_PATH}${CLASSPATH_SEPARATOR}${WITH_LSP4J_JSONRPC_PATH}${CLASSPATH_SEPARATOR}${WITH_GSON_PATH}${CLASSPATH_SEPARATOR}$conf_classpath
+     run_classpath='$kawadir/lib/lsp4j.jar'${CLASSPATH_SEPARATOR}'$kawadir/lib/lsp4j.jsonrpc.jar'${CLASSPATH_SEPARATOR}'$kawadir/lib/gson.jar'${CLASSPATH_SEPARATOR}"$run_classpath"
+    ;;
+esac

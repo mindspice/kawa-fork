@@ -30,6 +30,13 @@ AC_ARG_WITH(javafx,
   AS_HELP_STRING(--with-javafx@<:@=jfxrt.jar@:>@,Enable support for JavaFX))
 WITH_JAVAFX_ARG="${with_javafx}"
 
+AC_ARG_WITH(lsp4j,
+  AS_HELP_STRING(--with-lsp4j=<:@=lsp4j.jar@>))
+AC_ARG_WITH(lsp4j.jsonrpc,
+  AS_HELP_STRING(--with-lsp4j.jsonrpc=<:@=lsp4j.jsonrpc.jar@>))
+AC_ARG_WITH(gson,
+  AS_HELP_STRING(--with-gson=<:@=gson.jar@>))
+
 AC_ARG_WITH(domterm,
  AS_HELP_STRING(--with-domterm=<:@=domterm_home:>@,Build support for DomTerm))
  WITH_DOMTERM_ARG="${with_domterm}"
@@ -176,6 +183,8 @@ AM_CONDITIONAL(ENABLE_XML, test "$enable_xml" = "yes")
 AM_CONDITIONAL(ENABLE_SERVLET,
   test "$enable_servlet" != "" -a "$enable_servlet" != "no")
 AM_CONDITIONAL(WITH_SWING, test "$with_swing" != "no")
+AM_CONDITIONAL(WITH_LSP4J,
+  test "$with_lsp4j" != "" -a "$with_lsp4j" != "no")
 AM_CONDITIONAL(WITH_JLINE3,
   test "$with_jline3" != "" -a "$with_jline3" != "no")
 AM_CONDITIONAL(WITH_DOMTERM,
@@ -214,6 +223,20 @@ if test "$with_jline3" != "" -a "$with_jline3" != "no"
 then WITH_JLINE_PATH="${with_jline3}"
 fi
 
+if test "$with_gson" != "" -a "$with_gson" != "no"
+then WITH_GSON_PATH="${with_gson}"
+fi
+
+if test "$with_lsp4j" != "" -a "$with_lsp4j" != "no"
+then WITH_LSP4J_PATH="${with_lsp4j}"
+fi
+
+if test "$with_lsp4j_jsonrpc" != "" -a "$with_lsp4j_jsonrpc" != "no"
+then WITH_LSP4J_JSONRPC_PATH="${with_lsp4j_jsonrpc}"
+elif test -n "${WITH_LSP4J_PATH}"
+then WITH_LSP4J_JSONRPC_PATH=`echo "${WITH_LSP4J_PATH}"|sed -e 's|\(org.eclipse.lsp4j\)\(.\)|\1.jsonrpc\2|g'`
+fi
+
 JEMACS_VERSION=`echo $VERSION | sed  -e 's/^1/0/'`
 BYTECODE_VERSION="$VERSION"
 
@@ -237,7 +260,10 @@ AC_SUBST(filesep)
 AC_SUBST(WITH_SERVLET_ARG)
 AC_SUBST(WITH_JAVAFX_ARG)
 AC_SUBST(WITH_JLINE3)
+AC_SUBST(WITH_GSON_PATH)
 AC_SUBST(WITH_JLINE_PATH)
+AC_SUBST(WITH_LSP4J_PATH)
+AC_SUBST(WITH_LSP4J_JSONRPC_PATH)
 AC_SUBST(WITH_DOMTERM_ARG)
 
 AC_SUBST(JAVA)
