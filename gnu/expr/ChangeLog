@@ -1,3 +1,9 @@
+2018-04-13  Per Bothner  <per@bothner.com>
+
+	* Compilation.java (proess): Do FindCapturedVars.visit in WALKED.
+	This way it gets called (and produces missing-variable warnings)
+	when called by KawaLanguageServer.
+
 2018-04-12  Per Bothner  <per@bothner.com>
 
 	Initial support for LSP (Language Server Proptocol).

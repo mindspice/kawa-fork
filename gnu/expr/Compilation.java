@@ -1792,6 +1792,7 @@ public class Compilation implements SourceLocator
             }
             ChainLambdas.chainLambdas(mexp, this);
             FindTailCalls.findTailCalls(mexp, this);
+            FindCapturedVars.findCapturedVars(mexp, this);
             setState(WALKED);
           }
 
@@ -1799,7 +1800,6 @@ public class Compilation implements SourceLocator
           {
             litTable = new LitTable(this);
             mexp.setCanRead(true);
-            FindCapturedVars.findCapturedVars(mexp, this);
             mexp.allocFields(this);
             mexp.allocChildMethods(this);
             setState(COMPILE_SETUP);
