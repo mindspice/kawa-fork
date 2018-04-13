@@ -259,6 +259,10 @@ public class repl extends Procedure0or1 {
             checkDomTerm();
         for ( ;  iArg < maxArg;  )  {
             String arg = args[iArg++];
+            if (arg.equals("--langserver")) {
+                kawa.langserver.KawaLanguageServer.main(args);
+                return -1;
+            }
             if (arg.equals ("-c") || arg.equals ("-e")) {
                 if (iArg == maxArg)
                     bad_option(arg);

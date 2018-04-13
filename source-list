@@ -1,3 +1,6 @@
+KAWA_LANGSERVER_JSOURCES = \
+  kawa/langserver/KawaLanguageServer.java
+
 GNU_EXPR_JSOURCES = \
   gnu/expr/AccessExp.java \
   gnu/expr/ANormalize.java \
@@ -883,6 +886,7 @@ endif
 if WITH_DOMTERM
 sources_kawa_selected += $(KAWA_WITH_DOMTERM)
 endif
+sources_kawa_selected += $(KAWA_LANGSERVER_JSOURCES)
 java_sources = $(sources_gnu_core) $(sources_gnu_misc) $(sources_kawa_core) $(sources_gnu_selected) $(sources_kawa_selected)
 
 dist_jsources = \
@@ -926,4 +930,3 @@ MISC_EXTRA_DIST = \
   gnu/kawa/reflect/package.html \
   kawa/Version.java.in \
   $(GNU_KAWA_ANT_JSOURCES)
-

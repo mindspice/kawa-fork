@@ -4,6 +4,9 @@
 	* configure.ac: Support --with-lsp4j and --with-gson.
 	* config.classpath: Add lsp4j and gson to classpath.
 	* Makefile.am: Related changes.
+	* kawa/langserver/KawaLanguageServer.java: New server logic.
+	* source-list: Update accordingly.
+	* kawa/repl.java: Handle --langserver option.
 
 2018-04-09  Per Bothner  <per@bothner.com>
 
