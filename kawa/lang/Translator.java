@@ -1063,9 +1063,11 @@ public class Translator extends Compilation
         }
         if (namespaceName == LispLanguage.entityNamespace.getName()) {
             Object val = lookupStandardEntity(local);
-            if (val != null)
-                return makeQuoteExp(val);
-            tr.error('e', "unknown entity name "+local);
+            if (val == null) {
+                tr.error('e', "unknown entity name "+local);
+                val = "{"+namespace.getPrefix()+":"+local+"}";
+            }
+            return makeQuoteExp(val);
         }
 
         char ch0 = name.charAt(0);
