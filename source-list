@@ -886,7 +886,9 @@ endif
 if WITH_DOMTERM
 sources_kawa_selected += $(KAWA_WITH_DOMTERM)
 endif
+if WITH_LSP4J
 sources_kawa_selected += $(KAWA_LANGSERVER_JSOURCES)
+endif
 java_sources = $(sources_gnu_core) $(sources_gnu_misc) $(sources_kawa_core) $(sources_gnu_selected) $(sources_kawa_selected)
 
 dist_jsources = \

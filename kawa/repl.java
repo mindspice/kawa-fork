@@ -260,7 +260,13 @@ public class repl extends Procedure0or1 {
         for ( ;  iArg < maxArg;  )  {
             String arg = args[iArg++];
             if (arg.equals("--langserver")) {
-                kawa.langserver.KawaLanguageServer.main(args);
+                try {
+                    Class.forName("kawa.langserver.KawaLanguageServer")
+                        .getMethod("main", String[].class)
+                        .invoke(null, (Object) args);
+                } catch (Throwable ex) {
+                    WrappedException.rethrow(ex);
+                }
                 return -1;
             }
             if (arg.equals ("-c") || arg.equals ("-e")) {

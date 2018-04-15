@@ -1,3 +1,9 @@
+2018-04-15  Per Bothner  <per@bothner.com>
+
+	Fix build for --without-lps4 case.
+	* kawa/repl.java: Use reflection to call KawaLanguageServer.main.
+	* source-list: Conditionalize KAWA_LANGSERVER_JSOURCES.
+
 2018-04-12  Per Bothner  <per@bothner.com>
 
 	Initial support for LSP (Language Server Proptocol).
