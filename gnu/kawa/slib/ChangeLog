@@ -1,3 +1,9 @@
+2018-04-21  Per Bothner  <per@bothner.com>
+
+	* testing.scm (test-on-group-begin-simple): Filter questionable
+	characters for log file name.  Fixes GitLab issue #42
+	"(srfi 64) test-suite name with ":" gives error".
+
 2018-01-13  Per Bothner  <per@bothner.com>
 
 	Don't use Class:method syntax to call non-static methods.
