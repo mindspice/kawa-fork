@@ -200,13 +200,18 @@ public class KawaLanguageServer implements LanguageServer, LanguageClientAware,
                 // language = Language.getDefaultLanguage();
                 language = Language.getInstance(null);
             }
-            minfo.clearClass();
-            int options = Language.PARSE_PROLOG|Language.PARSE_EXPLICIT|Language.PARSE_FOR_LINT;
+            Language saveLanguage = Language.setSaveCurrent(language);
             try {
-                Compilation comp = language.parse(inport, messages, options, minfo);
-                comp.process(Compilation.WALKED);
-            } catch (IOException ex) {
-                logWarning("caught "+ex); // FIXME
+                minfo.clearClass();
+                int options = Language.PARSE_PROLOG|Language.PARSE_EXPLICIT|Language.PARSE_FOR_LINT;
+                try {
+                    Compilation comp = language.parse(inport, messages, options, minfo);
+                    comp.process(Compilation.WALKED);
+                } catch (IOException ex) {
+                    logWarning("caught "+ex); // FIXME
+                }
+            } finally {
+                Language.restoreCurrent(saveLanguage);
             }
         }
         publishDiagnostics(spaths, messages);

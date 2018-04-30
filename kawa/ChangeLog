@@ -1,3 +1,8 @@
+2018-04-30  Per Bothner  <per@bothner.com>
+
+	* langserver/KawaLanguageServer.java (doLint): Push/restore language.
+	This works better for supporting multiple languages.
+
 2018-04-13  Per Bothner  <per@bothner.com>
 
 	* lang/Translator.java (checkDefaultBinding):
