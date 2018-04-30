@@ -1,3 +1,7 @@
+2018-04-29  Per Bothner  <per@bothner.com>
+
+	* Expression.java (setLine): Add overload taking endLine/endColumn.
+
 2018-04-13  Per Bothner  <per@bothner.com>
 
 	* Compilation.java (proess): Do FindCapturedVars.visit in WALKED.

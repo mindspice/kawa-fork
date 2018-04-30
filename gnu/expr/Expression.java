@@ -293,6 +293,13 @@ public abstract class Expression extends Procedure
     this.filename = filename;
   }
 
+    public final void setLine(int startLine, int startColumn,
+                              int endLine, int endColumn)
+    {
+        position = SourceMapper.simpleEncode(startLine, startColumn,
+                                             endLine, endColumn);
+    }
+
   public final void setLine (int lineno, int colno)
   {
     position = SourceMapper.simpleEncode(lineno, colno);
