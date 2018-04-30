@@ -3,7 +3,7 @@ package gnu.kawa.io;
 import gnu.lists.*;
 import java.io.IOException;
 
-/** An Inport for reading from a char array.
+/** An InPort for reading from a char array.
   * Essentially the same as an InPort wrapped around a CharArrayReader, but
   * more efficient because it uses the char array as the InPort's buffer. */
 
