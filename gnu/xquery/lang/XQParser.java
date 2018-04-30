@@ -2999,10 +2999,15 @@ public class XQParser extends Lexer
 	if (name == null)
 	  return syntaxError("missing Variable");
 	exp = new ReferenceExp(name);
-        maybeSetLine(exp, curLine, curColumn);
+        maybeSetLine(exp, startLine, startColumn,
+                     port.getLineNumber() + 1, port.getColumnNumber() + 1);
         break;
       case FNAME_TOKEN:
 	name = new String(tokenBuffer, 0, tokenBufferLength);
+	ReferenceExp rexp = new ReferenceExp(name, null);
+	rexp.setProcedureName(true);
+        maybeSetLine(rexp, startLine, startColumn,
+                     port.getLineNumber() + 1, port.getColumnNumber() + 1);
 	char save = pushNesting('(');
 	getRawToken();
         vec = new Vector(10);
@@ -3022,8 +3027,6 @@ public class XQParser extends Lexer
 	args = new Expression[vec.size()];
 
 	vec.copyInto(args);
-	ReferenceExp rexp = new ReferenceExp(name, null);
-	rexp.setProcedureName(true);
 	exp = new ApplyExp(rexp, args);
         maybeSetLine(exp, startLine, startColumn);
 	popNesting(save);
@@ -3788,9 +3791,9 @@ public class XQParser extends Lexer
 	  return syntaxError("missing keyword after 'define'");
 
       case DECLARE_FUNCTION_TOKEN:
-	declLine = getLineNumber() + 1;
-	declColumn = getColumnNumber() + 1;
 	getRawToken();
+	declLine = curLine;
+	declColumn = curColumn;
 	peekNonSpace("unexpected end-of-file after 'define function'");
 	char save = pushNesting('d');
 	exp = parseFunctionDefinition(declLine, declColumn);
@@ -4459,16 +4462,21 @@ public class XQParser extends Lexer
       error(comp.isPedantic() ? 'e' : 'w', message);
   }
 
-  public void maybeSetLine (Expression exp, int line, int column)
-  {
-    String file = getName();
-    if (file != null && exp.getFileName() == null
-        && ! (exp instanceof QuoteExp))
-      {
-        exp.setFile(file);
-	exp.setLine(line, column);
-      }
-  }
+    public void maybeSetLine(Expression exp, int line, int column)
+    {
+        maybeSetLine(exp, line, column, -1, -1);
+    }
+
+    public void maybeSetLine(Expression exp, int startLine, int startColumn,
+                             int endLine, int endColumn)
+    {
+        String file = getName();
+        if (file != null && exp.getFileName() == null
+            && ! (exp instanceof QuoteExp)) {
+            exp.setFile(file);
+            exp.setLine(startLine, startColumn, endLine, endColumn);
+        }
+    }
 
   public void maybeSetLine (Declaration decl, int line, int column)
   {
