@@ -110,7 +110,7 @@ public abstract class Expression extends Procedure
 
   /**
    * Print line and column number if specified.
-   * This is a helper routineintended for use by print(OutPort).
+   * This is a helper routine intended for use by print(OutPort).
    */
   public void printLineColumn(OutPort out)
   {
