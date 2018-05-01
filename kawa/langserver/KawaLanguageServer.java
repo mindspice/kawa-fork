@@ -336,11 +336,19 @@ public class KawaLanguageServer implements LanguageServer, LanguageClientAware,
                     if (name != null
                         && line >= startLine
                         && line <= (endLine > 0 ? endLine : startLine)
-                        && character >= startColumn
-                        && (endColumn > 0 ? character < endColumn
-                            : character < startColumn + name.length())) {
+                        && (line > startLine || character >= startColumn)
+                        && (line < endLine
+                            || (endColumn > 0 ? character < endColumn
+                                : character < startColumn + name.length()))) {
                         Declaration decl = exp.getBinding();
-                        System.err.println("check "+exp+":"+startLine+":"+startColumn+"-"+endLine+":"+endColumn+" d:"+decl);
+                        Declaration followed = Declaration.followAliases(decl);
+                        // FIXME imported declarations aren't always
+                        // handled as needed for LSP.
+                        if (followed.getFileName() != null
+                            && followed.getLineNumber() > 0)
+                            decl = followed;
+                        if (decl != null)
+                            System.err.println("check "+exp+":"+startLine+":"+startColumn+"-"+endLine+":"+endColumn+" d:"+decl+" ctx:"+decl.context+" fn:"+decl.getFileName());
                         this.exitValue = decl;
                     }
                 }
