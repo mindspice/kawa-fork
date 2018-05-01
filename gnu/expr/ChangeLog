@@ -1,3 +1,7 @@
+2018-04-30  Per Bothner  <per@bothner.com>
+
+	* QuoteExp.java (validateApply): Add test for PARSE_FOR_LINT.
+
 2018-04-29  Per Bothner  <per@bothner.com>
 
 	* Expression.java (setLine): Add overload taking endLine/endColumn.

@@ -211,6 +211,10 @@ public class QuoteExp extends Expression
 				       comp.getLanguage());
 	if (mproc != null)
 	  {
+            if ((comp.langOptions & Language.PARSE_FOR_LINT) != 0) {
+                exp.setType(mproc.getReturnType());
+                return exp;
+            }
 	    ApplyExp nexp;
 	    if (mproc.getStaticFlag() || decl == null)
 	      nexp = new ApplyExp(mproc, exp.args);
