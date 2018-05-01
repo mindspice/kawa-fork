@@ -140,12 +140,13 @@
 
 (define-syntax %let-init
   (syntax-rules (::)
+                ;; The begin forms are for line numbers
 		((%let-init (var init))
-		 init)
+		 (begin init))
 		((%let-init (var :: type init))
-		 init)
+		 (begin init))
 		((%let-init (var type init))
-		 init)
+		 (begin init))
 		((%let-init (var))
 		 (syntax-error "let binding with no value"))
 		((%let-init (var a b c))
