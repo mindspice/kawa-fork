@@ -1097,7 +1097,7 @@ public class Declaration extends SourceLocator.Simple
       sbuf.append("[interned-string]");
     else if (symbol instanceof String)
       sbuf.append("[noninterned-string]");
-    sbuf.append('/');
+    sbuf.append('#');
     sbuf.append(id);
     /*
     int line = getLineNumber();
@@ -1140,7 +1140,7 @@ public class Declaration extends SourceLocator.Simple
 
   public String toString()
   {
-    return "Declaration["+symbol+'/'+id+']';
+    return "Declaration["+symbol+'#'+id+']';
     /*
     StringBuffer sbuf = new StringBuffer();
     sbuf.append("Declaration[");

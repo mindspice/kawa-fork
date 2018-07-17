@@ -238,7 +238,9 @@ public class ReferenceExp extends AccessExp
     if (binding != null)
       {
 	ps.print('/');
-	ps.print(binding);
+        ps.print(binding.symbol);
+        ps.print('#');
+        ps.print(binding.id);
       }
     ps.print(")");
   }
