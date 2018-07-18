@@ -1,5 +1,7 @@
 2018-07-17  Per Bothner  <per@bothner.com>
 
+	* PrettyWriter.java (maybeOutput): Minor fix, for DomTerm.
+
 	* PrettyWriter.java (reallyStartLogicalBlock): Fix typo.
 	This dates back to translating from SBCL's pprint.lisp.
 

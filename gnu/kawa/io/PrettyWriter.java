@@ -1447,7 +1447,7 @@ public class PrettyWriter extends PrintConsumer
             writeToBase(sbuf.toString());
             String suffix = queueStrings[next + QITEM_BLOCK_START_SUFFIX];
             reallyStartLogicalBlock (posnColumn(queueInts[next + QITEM_POSN]),
-                                     "", suffix);
+                                     null, suffix);
 	    if (currentBlock == next)
 	      currentBlock = -1;
             break;
@@ -1461,7 +1461,7 @@ public class PrettyWriter extends PrintConsumer
 	    break;
 	  }
         }
-        else
+        else // ! isDomTerm()
 	switch (type)
 	  {
 	  case QITEM_NEWLINE_TYPE:
