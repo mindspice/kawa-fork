@@ -876,7 +876,7 @@ public class PrettyWriter extends PrintConsumer
       {
 	blocks[blockDepth + BLOCK_PER_LINE_PREFIX_END] = column;
 	int plen = prefix.length();
-	prefix.getChars(0, plen, this.suffix, column - plen);
+	prefix.getChars(0, plen, this.prefix, column - plen);
       }
     if (suffix != null)
       {
