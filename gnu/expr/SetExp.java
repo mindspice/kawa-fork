@@ -454,8 +454,11 @@ public class SetExp extends AccessExp
 	out.print('/');
 	out.print(binding);
       }
+    out.writeShowHideButton(true);
     out.writeSpaceLinear();
+    out.startHiderSection(true);
     new_value.print(out);
+    out.endHiderSection();
     out.endLogicalBlock(")");
   }
 

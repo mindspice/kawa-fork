@@ -183,6 +183,8 @@ public class BeginExp extends Expression
     out.startLogicalBlock("(Begin", ")", 2);
     out.writeSpaceFill();
     printLineColumn(out);
+    out.writeShowHideButton(true);
+    out.startHiderSection(true);
     if (compileOptions != null)
       {
 	out.writeSpaceFill();
@@ -207,6 +209,7 @@ public class BeginExp extends Expression
 	out.writeSpaceLinear();
 	exps[i].print(out);
       }
+    out.endHiderSection();
     out.endLogicalBlock(")");
   }
 

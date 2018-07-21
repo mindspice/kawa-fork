@@ -1,3 +1,10 @@
+2018-07-20  Per Bothner  <per@bothner.com>
+
+	Add show/hide buttons for debug output of expressions.
+	* ApplyExp.java (print): Print button to hide arguments
+	* BeginExp.java (print): Print button to hide sub-expressions.
+	* SetExp.java (print): Print button to hide RHS expression.
+
 2018-07-17  Per Bothner  <per@bothner.com>
 
 	* Declaration: Use '#' rather than ':' before printed id.

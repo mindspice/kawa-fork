@@ -649,18 +649,23 @@ public class ApplyExp extends Expression
     out.writeSpaceFill();
     printLineColumn(out);
     func.print(out);
-    int firstKeyword = firstKeywordArgIndex-1;
-    for (int i = 0; args != null && i < args.length; ++i)
-      {
-	out.writeSpaceLinear();
-        Expression arg = args[i];
-        if (i >= firstKeyword && ((i - firstKeyword) & 1) == 0
-            && i < firstKeyword + 2 * numKeywordArgs
-            && arg.valueIfConstant() instanceof Keyword) {
-            out.print(arg.valueIfConstant().toString());
-        } else
-            arg.print(out);
-      }
+    if (args != null && args.length > 0) {
+        out.writeShowHideButton(true);
+        out.startHiderSection(true);
+        int firstKeyword = firstKeywordArgIndex-1;
+        for (int i = 0; i < args.length; ++i)
+        {
+            out.writeSpaceLinear();
+            Expression arg = args[i];
+            if (i >= firstKeyword && ((i - firstKeyword) & 1) == 0
+                && i < firstKeyword + 2 * numKeywordArgs
+                && arg.valueIfConstant() instanceof Keyword) {
+                out.print(arg.valueIfConstant().toString());
+            } else
+                arg.print(out);
+        }
+        out.endHiderSection();
+    }
     out.endLogicalBlock(")");
   }
 
