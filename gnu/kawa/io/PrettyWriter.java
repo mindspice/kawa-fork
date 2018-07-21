@@ -126,6 +126,7 @@ public class PrettyWriter extends PrintConsumer
   int miserWidth = 40;
 
     boolean isDomTerm;
+    @Override
     public boolean isDomTerm() { return isDomTerm; }
 
   /**
@@ -1158,6 +1159,14 @@ public class PrettyWriter extends PrintConsumer
     currentBlock = start;
   }
 
+    public void startLogicalBlock(String prefix, String suffix,
+                                  int indent) {
+        startLogicalBlock(prefix, false, suffix);
+        addIndentation(prefix == null ? indent
+                       :  indent - prefix.length(),
+                       false);
+    }
+
   public void endLogicalBlock ()
   {
     int end = enqueue (QITEM_BLOCK_END_TYPE, QITEM_BLOCK_END_SIZE);
@@ -1620,6 +1629,31 @@ public class PrettyWriter extends PrintConsumer
     // Hook.
   }
 
+    private void writeBreak(int kind, boolean space) {
+        String cmd = null;
+        int op = -1;
+        switch (kind) {
+        case NEWLINE_FILL:
+        case NEWLINE_SPACE:
+            op = 115; break;
+        case NEWLINE_LINEAR:
+            op = 116; break;
+        case NEWLINE_MISER:
+            op = 117; break;
+        case NEWLINE_LITERAL:
+            if (blockDepth == LOGICAL_BLOCK_LENGTH) {
+                cmd = "\n";
+                break;
+            }
+            // else fall through
+        default:
+            op = 118; break;
+        }
+        if (op >= 0)
+            cmd = "\033]"+op+(space ? ";\"\",\"\",\" \"\007" : "\007");
+        writeToBase(cmd);
+    }
+
   /** Output a new line.
    * @param newline index of a newline queue item
    */
@@ -1650,6 +1684,12 @@ public class PrettyWriter extends PrintConsumer
 	      }
 	  }
       }
+    boolean spaceBreak = false;
+    if (kind != NEWLINE_DUMMY && isDomTerm()
+        && amountToPrint > 0 && buffer[amountToPrint-1] == ' ') {
+        amountToPrint--;
+        spaceBreak = true;
+    }
     writeToBase(buffer, 0, amountToPrint);
     int lineNumber = this.lineNumber;
     lineNumber++;
@@ -1671,28 +1711,10 @@ public class PrettyWriter extends PrintConsumer
 	  }
       }
     this.lineNumber = lineNumber;
-    if (kind ==  NEWLINE_DUMMY) {
+    if (kind == NEWLINE_DUMMY) {
         // emit nothing
     } else if (isDomTerm()) {
-        String cmd;
-        switch (kind) {
-        case NEWLINE_FILL:
-        case NEWLINE_SPACE:
-            cmd = "\033]115\007"; break;
-        case NEWLINE_LINEAR:
-            cmd = "\033]116\007"; break;
-        case NEWLINE_MISER:
-            cmd = "\033]117\007"; break;
-        case NEWLINE_LITERAL:
-            if (blockDepth == LOGICAL_BLOCK_LENGTH) {
-                cmd = "\n";
-                break;
-            }
-            // else fall through
-        default:
-            cmd = "\033]118\007"; break;
-        }
-        writeToBase(cmd);
+        writeBreak(kind, spaceBreak);
     } else {
         writeToBase('\n');
     }
@@ -2070,7 +2092,7 @@ public class PrettyWriter extends PrintConsumer
     try { log = new PrintWriter(new FileOutputStream("/tmp/pplog")); }
     catch (Throwable ex) { ex.printStackTrace(); }
   }
-  void log(String str)
+  public static void log(String str)
   {
     log.println(str);
     log.flush();

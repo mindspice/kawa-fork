@@ -148,6 +148,35 @@ public class PrintConsumer extends PrintWriter
             ((PrintConsumer) base).setIndentation(amount, current);
     }
 
+    public boolean isDomTerm() { return false; }
+
+    /** If supported (i.e. on DomTerm), "print" a show/hide button. */
+    public void writeShowHideButton(boolean show) {
+        if (base instanceof PrintConsumer
+            && ((PrintConsumer) base).isDomTerm()) {
+            String buttonChar = "\u25BC";
+            writeRaw("\033[16u"+buttonChar+"\033[17u");
+        }
+    }
+
+    /** Start section controled by a show/hide button.
+     * Must be properly nested within/around logical blocks.
+     * Current only supported on DomTerm. */
+    public void startHiderSection(boolean show) {
+        if (base instanceof PrintConsumer
+            && ((PrintConsumer) base).isDomTerm()) {
+            writeRaw(show ? "\033[83;1u" : "\033[83;2u");
+        }
+    }
+
+    /** End section controled by a show/hide button */
+    public void endHiderSection() {
+        if (base instanceof PrintConsumer
+            && ((PrintConsumer) base).isDomTerm()) {
+            writeRaw("\033[83;0u");
+        }
+    }
+
     public static void startLogicalBlock(String prefix, boolean perLine,
                                          String suffix, Consumer out) {
         if (out instanceof PrintConsumer)

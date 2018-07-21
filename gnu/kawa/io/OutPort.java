@@ -420,6 +420,7 @@ public class OutPort extends PrintConsumer implements Printable
   }
 
     public boolean isOpen() { return (flags & IS_CLOSED) == 0; }
+    @Override
     public boolean isDomTerm() { return (flags & IS_DOMTERM) != 0; }
     public void setDomTerm(boolean v) {
         if (v) flags |= IS_DOMTERM;
@@ -507,12 +508,7 @@ public class OutPort extends PrintConsumer implements Printable
 
     public void startLogicalBlock(String prefix, String suffix,
                                   int indent) {
-        synchronized(lock) {
-            bout.startLogicalBlock(prefix, false, suffix);
-            bout.addIndentation(prefix == null ? indent
-                                :  indent - prefix.length(),
-                                false);
-        }
+        bout.startLogicalBlock(prefix, suffix, indent);
     }
 
     public void endLogicalBlock(String suffix) {
