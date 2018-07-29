@@ -73,7 +73,7 @@ public class LangPrimType extends PrimType
     /** Special type used for boolean-valued guard expressions in patterns. */
     public static final LangPrimType isTrueType
         = new LangPrimType(Type.booleanType);
-    static { stringCursorType.setName("true-values"); }
+    static { isTrueType.setName("true-values"); }
 
     public LangPrimType(PrimType type) {
         super(type);

@@ -1,3 +1,7 @@
+2018-07-29  Jamison Hope  <jrh@theptrgroup.com>
+
+	* LangPrimType.java (isTrueType): Fix copy-paste mistake.
+
 2017-12-04  Per Bothner  <per@bothner.com>
 
 	* LispPackage.java (getNamedType): Handle "array" and "arrayN".
