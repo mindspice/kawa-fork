@@ -69,6 +69,19 @@ public class set_b extends Syntax
     ReferenceExp ref = (ReferenceExp) name;
     Declaration decl = ref.getBinding();
     SetExp sexp = new SetExp (ref.getSymbol(), value);
+
+    // A kludge to treat interactive set! as similar to (re-)definition.
+    if (decl != null
+        && decl.getContext() instanceof ModuleExp
+        && tr.currentScope() instanceof ModuleExp
+        && decl.getContext().getFlag(ModuleExp.INTERACTIVE)
+        && decl.getContext() != tr.getModule()) {
+        decl = tr.define(decl.getSymbol(), syntax, tr.getModule());
+        ref.setBinding(decl);
+        sexp.setBinding(decl);
+        sexp.setDefining(true);
+        decl.noteValueUnknown();
+    }
     sexp.setContextDecl(ref.contextDecl());
     if (decl != null)
       {

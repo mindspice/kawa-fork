@@ -1,3 +1,8 @@
+2018-07-31  Per Bothner  <per@bothner.com>
+
+	* standard/set_b.java (rewriteForm): Kludge to treat as re-definition.
+	This fixes GitLab issue #44 "JVM crash on untrace from REPL (only)".
+
 2018-04-30  Per Bothner  <per@bothner.com>
 
 	* langserver/KawaLanguageServer.java (definition): Improve.
