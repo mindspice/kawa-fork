@@ -2057,10 +2057,12 @@ because for a function all the arguments are evaluated before the
 function is called, but in a special form that is not neceassarily the case.
 
 In addition to @code{#t} any value except @code{#f}
-counts as ``true'' when evaluating the first expression of an @code{if}:
+(and the Kawa-specific @code{#!null})
+counts as ``true'' when evaluating the first expression of an @code{if}.
+Unlike C or JavaScript both (zero) and @code{""} (the empty string) are true:
 
 @example
-(if 0 (+ 5 5) (+ 5 6)) @result{} 11
+(if 0 (+ 5 5) (+ 5 6)) @result{} 10
 @end example
 
 You can use @code{and}, @code{or},
