@@ -16,6 +16,7 @@ Makefile.in
 *-classes.stamp
 patch-source-list
 *.info*
+.deps
 selected-java-source
 tmp-sources1.list
 kawa-*/bin
@@ -31,6 +32,15 @@ bin/qexo
 bin/cgi-servlet
 bin/cgi-servlet.o
 bin/kawapath.o
+/build-aux/compile
+/build-aux/config.guess
+/build-aux/config.guess
+/build-aux/config.sub
+/build-aux/depcomp
+/build-aux/install-sh
+/build-aux/mdate-sh
+/build-aux/missing
+/build-aux/texinfo.tex
 doc/kawa-manual.epub
 doc/kawa.xml
 doc/ebook
