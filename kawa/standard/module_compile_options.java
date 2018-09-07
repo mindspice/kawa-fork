@@ -20,6 +20,6 @@ public class module_compile_options extends Syntax
 
   public Expression rewriteForm (Pair form, Translator tr)
   {
-    return null;
+    return tr.syntaxError(getName()+" is only allowed in a <body>");
   }
 }
