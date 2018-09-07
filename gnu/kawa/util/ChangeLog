@@ -1,3 +1,7 @@
+2018-09-07  Per Bothner  <per@bothner.com>
+
+	* PreProcess.java: Allow %java10 and %java11.
+
 2017-09-27  Per Bothner  <per@bothner.com>
 
 	* generate-charsets.scm: Constant-fold the int arrays used.

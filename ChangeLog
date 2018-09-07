@@ -1,3 +1,7 @@
+2018-09-07  Per Bothner  <per@bothner.com>
+
+	* configure.ac: Handle --with-java-source=10 and above.
+
 2018-09-06  Mathieu Lirzin <mthl@gnu.org>
 
 	* autogen.sh: Use autoreconf --install.

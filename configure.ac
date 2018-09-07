@@ -112,13 +112,17 @@ case "/${with_java_source}/" in
     JAVA_SOURCE=8; JAVA_SOURCE_SELECTOR='%java8' ;;
   /9/|/1.9*/) # Java 9
     JAVA_SOURCE=9; JAVA_SOURCE_SELECTOR='%java9' ;;
+  [/[1-9][0-9]/]) # Java 10-
+    JAVA_SOURCE=${with_java_source};
+    JAVA_SOURCE_SELECTOR="%java${with_java_source}"
+    ;;
   /android*/)
         JAVA_SOURCE=android; JAVA_SOURCE_SELECTOR='%android'
         test -z "$with_swing" && with_swing="no"
         test -z "$with_awt" && with_awt="no"
         ;;
   /*/) AC_MSG_ERROR([Invalid version for --with-java-version.
-  (Must be 1, 2, 5, 6, 7, 8, 9, or a JDK version such as 1.5.)]) ;;
+  (Must be 5, 6, ..., or a JDK version such as 1.5.)]) ;;
 esac
 AC_SUBST(JAVA_SOURCE)
 AC_SUBST(JAVA_SOURCE_SELECTOR)
