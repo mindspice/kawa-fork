@@ -1,3 +1,7 @@
+2018-09-08  Per Bothner  <per@bothner.com>
+
+	* Compilation.java (defaultClassFileVersion): Add JAVA_10_VERSION.
+
 2018-07-20  Per Bothner  <per@bothner.com>
 
 	Add show/hide buttons for debug output of expressions.
