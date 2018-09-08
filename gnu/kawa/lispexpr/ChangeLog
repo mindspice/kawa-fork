@@ -1,3 +1,7 @@
+2018-09-08  Per Bothner  <per@bothner.com>
+
+	* LispLanguage.java (getPrimaryPrompt): Add DomTerm "hider" button.
+
 2018-07-29  Jamison Hope  <jrh@theptrgroup.com>
 
 	* LangPrimType.java (isTrueType): Fix copy-paste mistake.
