@@ -38,8 +38,8 @@ public class PreProcess
         "java7", JAVA5_FEATURES+" +JAVA6 +JAVA7 -JAVA8 -JAVA9 -JAVA6COMPAT5 +use:java.text.Normalizer +use:javax.lang.model +use:java.lang.invoke -Android",
         "java8", JAVA5_FEATURES+" +JAVA6 +JAVA7 +JAVA8 -JAVA9 -JAVA6COMPAT5 +use:java.text.Normalizer +use:javax.lang.model +use:java.lang.invoke -Android",
         "java9", JAVA9_FEATURES,
-        "java10", JAVA9_FEATURES,
-        "java11", JAVA9_FEATURES,
+        "java10", JAVA9_FEATURES + " +JAVA10",
+        "java11", JAVA9_FEATURES + " +JAVA10 +JAVA11",
         "android", "+JAVA5 "+JAVA4_FEATURES+" +use:org.w3c.dom.Node +JAXP-1.3 -JAXP-QName -use:javax.xml.transform -JAVA6 -JAVA6COMPAT5 +Android "+NO_JAVA6_FEATURES,
 
         "OBJECT",

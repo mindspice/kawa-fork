@@ -1,3 +1,7 @@
+2018-09-08  Per Bothner  <per@bothner.com>
+
+	* PreProcess.java: Have %java10 and %java11 define JAVA10 and JAVA11.
+
 2018-09-07  Per Bothner  <per@bothner.com>
 
 	* PreProcess.java: Allow %java10 and %java11.
