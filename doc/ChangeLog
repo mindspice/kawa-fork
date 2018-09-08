@@ -1,3 +1,7 @@
+2018-09-07  Per Bothner  <per@bothner.com>
+
+	* kawa.texi (Ports): Document %H escape for prompt pattern.
+
 2018-08-03  Per Bothner  <per@bothner.com>
 
 	* kawa.texi (Tutorial - Booleans): Fix thinko.

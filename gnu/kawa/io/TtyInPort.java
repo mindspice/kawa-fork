@@ -37,7 +37,7 @@ public class TtyInPort extends InPort
     public String promptTemplate1() {
         String str = CheckConsole.prompt1.get("");
         if (inDomTerm && ! haveDomTermEscapes(str))
-            str = "%{\033[19u\033[16u%}\u25BC%{\033[17u\033[14u%}"+str
+            str = "%{\033[19u\033[14u%}"+str
                 +"%{\033[15"+(isJLine()?";2":"")+"u%}";
         return str;
     }
@@ -55,7 +55,7 @@ public class TtyInPort extends InPort
             return "";
         int line = getLineNumber() + 1;
         if (readState == ' ') {
-            String pattern = promptTemplate1();
+            String pattern = expandPromptHider(promptTemplate1());
             int[] width = new int[1];
             String str = expandPrompt(pattern, 0, line, "", width);
             prompt1Length = width[0];
@@ -65,6 +65,36 @@ public class TtyInPort extends InPort
             String m = new String(new char[] { readState });
             return expandPrompt(pattern, prompt1Length, line, m, null);
         }
+    }
+
+    protected String expandPromptHider(String pattern) {
+        StringBuilder sb = new StringBuilder();
+        int plen = pattern.length();
+        for (int i = 0; i < plen; ) {
+            char ch = pattern.charAt(i++);
+            if (ch == '%' && i < plen) {
+                ch = pattern.charAt(i++);
+                switch (ch) {
+                case 'H':
+                    char hideChar = i < plen ? pattern.charAt(i++) : '-';
+                    char showChar = i < plen ? pattern.charAt(i++) : '+';
+                    if (inDomTerm) {
+                        sb.append("%{\033[16u%}");
+                        sb.append(hideChar);
+                        sb.append("%{");
+                        sb.append(showChar);
+                        sb.append("\033[17u%}");
+                    }
+                    break;
+               default:
+                   sb.append('%');
+                   sb.append(ch);
+                   break;
+                }
+            } else
+                sb.append(ch);
+        }
+        return sb.toString();
     }
 
     /** Expand a prompt1 or prompt2 template to yield an actual prompt. */

@@ -17147,6 +17147,12 @@ to change color or style:
 @end example
 The above changes both the text and the background color
 (to a pale blue).
+@item @stxlit{%H}@var{c}@var{d}
+If running under DomTerm, use the characters @var{c} and @var{d} as a clickable
+mini-button to hide/show (fold) the command and its output.
+(When output is visible @var{c} is displayed; clicking on it hides the output.
+When output is hidden @var{d} is displayed; clicking on it shows the output.)
+Ignored if not running under DomTerm.
 @item @stxlit{%M}
 Insert a ``message'' string.
 Not normally used by Kawa, but supported by JLine.
@@ -17157,7 +17163,7 @@ arguments @code{console:prompt1=@var{prompt1}} and
 @code{console:prompt2=@var{prompt2}}, respectively.  If these are
 not specified, languages-specific defaults are used.
 For example for Scheme the default value of @code{input-prompt1}
-is @code{"#|kawa:%N|# "} and @code{input-prompt2} is @code{"#|%P.%N| "}.
+is @code{"#|%H▼▶kawa:%N|# "} and @code{input-prompt2} is @code{"#|%P.%N| "}.
 These have the form of Scheme comments, to make it easier to cut-and-paste.
 
 If @code{input-prompt1} (respectively @code{input-prompt2}) does not contain
