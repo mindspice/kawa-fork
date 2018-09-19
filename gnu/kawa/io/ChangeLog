@@ -1,3 +1,8 @@
+2018-09-19  Per Bothner  <per@bothner.com>
+
+	* JLineInPort.java (KawaParsedLine): Implement CompletingParsedLine.
+	This is an incompatible change - if using jline, must be 3.7 or newer.
+
 2018-09-07  Per Bothner  <per@bothner.com>
 
 	* TtyInPort.java: Add %H prompt escape for DomTerm show/hide button.

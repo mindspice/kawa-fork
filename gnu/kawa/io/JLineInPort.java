@@ -14,6 +14,7 @@ import org.jline.reader.EndOfFileException;
 import org.jline.reader.EOFError;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.CompletingParsedLine;
 import org.jline.reader.ParsedLine;
 import org.jline.reader.Parser;
 import org.jline.reader.Parser.ParseContext;
@@ -228,7 +229,7 @@ public class JLineInPort extends TtyInPort
     @Override
     public boolean isJLine() { return true; }
 
-    public static class KawaParsedLine implements ParsedLine {
+    public static class KawaParsedLine implements CompletingParsedLine {
         JLineInPort inp;
         Compilation comp;
         String source;
@@ -331,6 +332,15 @@ public class JLineInPort extends TtyInPort
 
         public int cursor() {
             return cursor;
+        }
+        public CharSequence escape(CharSequence candidate, boolean complete) {
+            return candidate; // FIXME
+        }
+        public int rawWordCursor() {
+            return wordCursor();
+        }
+        public int rawWordLength() {
+            return word().length();
         }
     }
 }
