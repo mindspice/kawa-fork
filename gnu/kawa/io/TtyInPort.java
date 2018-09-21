@@ -222,10 +222,26 @@ public class TtyInPort extends InPort
         return false;
     }
 
+    /** True iff MoreInputNeeded was thrown. */
+    boolean moreRequested = false;
+
+    /** Marker class thrown when parsing syntaically incomplete input. */
+    public static class MoreInputNeeded extends java.io.IOException {
+    }
+
     public void lineStart(boolean revisited) throws java.io.IOException {
       if (! revisited) {
           promptEmitted = false;
-          if (prompter != null) {
+          if (moreRequested)
+              moreRequested = false;
+          else if (readState != '\n' && readState != ' '
+              && inDomTerm && ! isJLine()) {
+              if (pos == limit) {
+                  emitPrompt("\033]123;\007");
+                  moreRequested = true;
+                  throw new MoreInputNeeded();
+              }
+          } else if (prompter != null) {
               try {
                   Object prompt = readState == '\n' ? null
                       : readState == ' ' ? prompter.apply1(this)

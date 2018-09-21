@@ -263,7 +263,13 @@ public class Shell
                         throw ex.getTargetException();
                     }
                 } else {
-                    comp = language.parse(lexer, opts, null);
+                    for (;;) {
+                        try {
+                            comp = language.parse(lexer, opts, null);
+                            break;
+                        } catch (TtyInPort.MoreInputNeeded ex) {
+                        }
+                    }
                 }
 		boolean sawError;
                 if (interactive) {

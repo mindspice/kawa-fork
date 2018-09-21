@@ -1,3 +1,7 @@
+2018-09-21  Per Bothner  <per@bothner.com>
+
+	* Shell.java (run): Handle new TtyInPort.MoreInputNeeded exception.
+
 2018-09-07  Per Bothner  <per@bothner.com>
 
 	* standard/module_compile_options.java: Make more robust.

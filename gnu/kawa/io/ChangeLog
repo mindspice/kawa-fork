@@ -1,3 +1,10 @@
+2018-09-21  Per Bothner  <per@bothner.com>
+
+	* TtyInPort.java (lineStart): Request continuation line from DomTerm.
+	If input is syntactically incomplete, request DomTerm to add a new
+	empty input line appended to the previous input.
+	(class MoreInputNeeded): New marker class.
+
 2018-09-19  Per Bothner  <per@bothner.com>
 
 	* JLineInPort.java (KawaParsedLine): Implement CompletingParsedLine.
