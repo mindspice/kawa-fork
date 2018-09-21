@@ -1,3 +1,7 @@
+2018-09-21  Per Bothner  <per@bothner.com>
+
+	* srfi-64-test.scm: Update due to recent srfi-64 implementation change.
+
 2018-03-02  Per Bothner  <per@bothner.com>
 
 	* sva53262.scm: New testase based on Savannah bug #53262

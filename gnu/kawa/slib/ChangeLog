@@ -1,3 +1,9 @@
+2018-09-21  Per Bothner  <per@bothner.com>
+
+	* testing.scm (%test-end): Reset test-runner-current if done.
+	This fixes bug "Loading test source file multiple time without having
+	report incrementing" reported to srfi-64 mailing list.
+
 2018-04-21  Per Bothner  <per@bothner.com>
 
 	* testing.scm (test-on-group-begin-simple): Filter questionable
