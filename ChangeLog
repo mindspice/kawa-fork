@@ -1,3 +1,7 @@
+2018-09-29  Per Bothner  <per@bothner.com>
+
+	* bin/kawa.sh.in: Set kawa.command.pid property.
+
 2018-09-07  Per Bothner  <per@bothner.com>
 
 	* configure.ac: Handle --with-java-source=10 and above.

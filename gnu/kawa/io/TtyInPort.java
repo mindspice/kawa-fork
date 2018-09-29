@@ -34,11 +34,23 @@ public class TtyInPort extends InPort
     /** Saved length of the expanded primary prompt. */
     int prompt1Length = 0;
 
+    static String sessionKey;
+    static {
+        sessionKey = System.getProperty("kawa.command.pid");
+        if (sessionKey == null)
+            sessionKey = "{kawa}";
+    }
+
     public String promptTemplate1() {
         String str = CheckConsole.prompt1.get("");
-        if (inDomTerm && ! haveDomTermEscapes(str))
-            str = "%{\033[19u\033[14u%}"+str
-                +"%{\033[15"+(isJLine()?";2":"")+"u%}";
+        if (inDomTerm && ! haveDomTermEscapes(str)) {
+            String str2 = CheckConsole.prompt2.get("");
+            str = "%{\033]119;"+sessionKey+"\007\033[14u%}"+str
+                +"%{\033[15"+(isJLine()?";2":"")+"u";
+            if (str2 != null && str.length() > 0)
+                str += "\033]122;"+str2.replace("%","%%")+"\007";
+            str += "%}";
+        }
         return str;
     }
 

@@ -1,3 +1,9 @@
+2018-09-29  Per Bothner  <per@bothner.com>
+
+	* TtyInPort.java: Change prompt on DomTerm.
+	(promptTemplate1): Add session name and prompt-2 template.
+	(sessionName): New static field.
+
 2018-09-21  Per Bothner  <per@bothner.com>
 
 	* TtyInPort.java (lineStart): Request continuation line from DomTerm.
