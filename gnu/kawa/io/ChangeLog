@@ -1,3 +1,7 @@
+2018-10-29  Per Bothner  <per@bothner.com>
+
+	* InPort.java (systemInPort): Use name "/dev/tty" if console.
+
 2018-09-29  Per Bothner  <per@bothner.com>
 
 	* TtyInPort.java: Change prompt on DomTerm.

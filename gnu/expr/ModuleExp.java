@@ -488,7 +488,9 @@ public class ModuleExp extends LambdaExp
         if (mname == null) {
             if (fileName == null)
                 mname = "$unnamed_input_file$";
-            else if (fileName.equals("-") || fileName.equals("/dev/stdin"))
+            else if (fileName.equals("-")
+                     || fileName.equals("/dev/tty")
+                     || fileName.equals("/dev/stdin"))
                 mname = "$stdin$";
             else {
                 path = Path.valueOf(fileName);

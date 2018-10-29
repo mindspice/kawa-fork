@@ -1,3 +1,11 @@
+2018-10-29  Per Bothner  <per@bothner.com>
+
+	* SourceError.java (<init>(char,SourceLocator,String)):
+	Use SourceMapper.simpleEncode, whcih copies over end position.
+	(appendTo): Some non-visible changes to output when on DomTerm:
+	Wrap in a special escape sequence and include end position.
+	* SourceLocator.java (isRepl): New method.
+
 2018-01-19  Per Bothner  <per@bothner.com>
 
 	* SourceError.java (appendTo): Escape for html if DomTerm.

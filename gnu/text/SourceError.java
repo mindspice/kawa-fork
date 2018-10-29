@@ -37,8 +37,10 @@ public class SourceError extends SourceLocator.Simple
     }
 
     public SourceError(char severity, SourceLocator location, String message) {
-        this(severity, location.getFileName(), location.getLineNumber(),
-             location.getColumnNumber(), message);
+        this.severity = severity;
+        this.filename = location.getFileName();
+        this.position = SourceMapper.simpleEncode(location);
+        this.message = message;
     }
 
     /** Create a new SourceError using the current line/column from
@@ -87,6 +89,10 @@ public class SourceError extends SourceLocator.Simple
                          String newLine) {
         boolean isDomTerm = gnu.kawa.io.CheckConsole.forDomTerm(out);
         try {
+            if (isDomTerm)
+                out.append("\033]44;"+(isRepl() ? "repl: true" : "")+"\007");
+            if (isDomTerm)
+                out.append("\033[44;0u");
             String fname;
             if (filename == null)
                 fname = "<unknown>";
@@ -96,16 +102,24 @@ public class SourceError extends SourceLocator.Simple
                     fname = new File(fname).getName();
             }
             StringBuilder position = new StringBuilder();
+            String endpos = "";
             int line = getStartLine();
             int column = getStartColumn();
             if (line > 0 || column > 0) {
-                // out.append(':');
                 position.append(Integer.toString(line));
                 if (column > 0) {
                     position.append(':');
                     position.append(Integer.toString(column));
                 }
-                // FIXME show end position if non-empty
+                int eline = getEndLine();
+                int ecolumn = getEndColumn();
+                if (eline > 0 && ecolumn > 0 && column > 0) {
+                    if (line == eline && ecolumn > column) {
+                        endpos = "-" + ecolumn;
+                    } else if (eline > line) {
+                        endpos = "-" + eline + ":" + ecolumn;
+                    }
+                }
             }
             if (isDomTerm) {
                 out.append("\033]72;");
@@ -114,6 +128,7 @@ public class SourceError extends SourceLocator.Simple
                 if (position.length() > 0) {
                     out.append("#position=");
                     out.append(position);
+                    out.append(endpos);
                 }
                 out.append("'>");
                 appendEscaped(out, fname);
@@ -147,6 +162,8 @@ public class SourceError extends SourceLocator.Simple
                     out.append(stackTrace[i].toString());
                 }
             }
+            if (isDomTerm)
+                out.append("\033[44;0u");
             if (newLine != null)
                 out.append(newLine);
         } catch (java.io.IOException ex) {

@@ -2390,22 +2390,14 @@ public class Compilation implements SourceLocator
   public void setMessages (SourceMessages messages)
   { this.messages = messages; }
  
-  public void error(char severity, String message, SourceLocator location)
-  {
-    String file = location.getFileName();
-    int line = location.getLineNumber();
-    int column = location.getColumnNumber();
-    if (file == null || line <= 0)
-      {
-        file = getFileName();
-        line = getLineNumber();
-        column = getColumnNumber();
-      }
-
-    if (severity == 'w' && warnAsError())
-      severity = 'e';
-    messages.error(severity, file, line, column, message);
-  }
+    public void error(char severity, String message, SourceLocator location)
+    {
+        if (location.getFileName() == null || location.getLineNumber() <= 0)
+            location = this;
+        if (severity == 'w' && warnAsError())
+            severity = 'e';
+        messages.error(severity, location, message);
+    }
 
   public void error(char severity, String message)
   {

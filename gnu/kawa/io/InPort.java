@@ -33,9 +33,10 @@ public class InPort extends Reader implements Printable
     private static InPort systemInPort;
     static {
         Path systemInPath = Path.valueOf(systemInFilename);
+        Path ttyPath = Path.valueOf("/dev/tty");
         if (CheckConsole.haveConsole()) {
             TtyInPort tin
-                = TtyInPort.make(System.in, systemInPath, OutPort.outInitial);
+                = TtyInPort.make(System.in, ttyPath, OutPort.outInitial);
             if (CheckConsole.getDomTermVersionInfo() != null)
                 tin.setInDomTerm(true);
             systemInPort = tin;

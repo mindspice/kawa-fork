@@ -46,6 +46,8 @@ public interface SourceLocator
             return filename;
         }
 
+        public boolean isRepl() { return "/dev/tty".equals(getFileName()); }
+
         public String getPublicId() {
             return null;
         }
