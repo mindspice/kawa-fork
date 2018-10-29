@@ -1,3 +1,7 @@
+2018-10-28  Per Bothner  <per@bothner.com>
+
+	* QRead.java, Q2.java: Allow braces for extended string literals.
+
 2018-02-18  Per Bothner  <per@bothner.com>
 
 	* Q2.java: Fix so --kashell command-line flags works.

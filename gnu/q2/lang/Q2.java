@@ -122,6 +122,7 @@ public class Q2 extends Scheme
     ReadTable rt = ReadTable.createInitial();
     rt.set('(', new Q2Read.ReadTableEntry());
     rt.set(';', new Q2Read.ReadTableEntry());
+    rt.set('{', new Q2Read.ReadTableEntry());
     rt.set('|', new Q2Read.ReadTableEntry());
     ReaderDispatch rdispatch = ReaderDispatch.create(rt, false);
     rt.set('#', rdispatch);

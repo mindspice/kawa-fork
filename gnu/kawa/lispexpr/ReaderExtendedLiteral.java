@@ -17,7 +17,13 @@ public class ReaderExtendedLiteral extends ReaderConstituent {
     static final Symbol startEnclosedSymbol = Symbol.valueOf("$<<$");
     static final Symbol endEnclosedSymbol = Symbol.valueOf("$>>$");
 
-    public ReaderExtendedLiteral() { super(ReadTable.CONSTITUENT); }
+    public char escapeChar;
+
+    public ReaderExtendedLiteral(char escapeChar) {
+        super(ReadTable.CONSTITUENT);
+        this.escapeChar = escapeChar;
+    }
+    public ReaderExtendedLiteral() { this('&'); }
 
     public Object read(Lexer in, int ch, int count)
 	throws java.io.IOException, SyntaxException {
@@ -72,7 +78,7 @@ public class ReaderExtendedLiteral extends ReaderConstituent {
             readContent(reader, '}', rtail);
         }
         else if (tag == null) {
-            reader.error("unexpected character after &");
+            reader.error("unexpected character after "+escapeChar);
         } else
              reader.unread(next);
         return result;
@@ -128,7 +134,7 @@ public class ReaderExtendedLiteral extends ReaderConstituent {
                      && (! isNestableEndDelim(next)
                          || --braceNesting == 0))
                 item = Special.eof;
-            else if (next == '&') {
+            else if (next == escapeChar) {
                 int next1 = reader.peek();
                 if (next1 == '|') {
                     int skipped = 0;
@@ -136,12 +142,12 @@ public class ReaderExtendedLiteral extends ReaderConstituent {
                     if (lineStart < 0) {
                         reader.error('e', reader.getName(),
                                      line, column+1,
-                                     "invalid '&|'");
+                                     "invalid '"+escapeChar+"|'");
                     } else if (nonSpace != reader.tokenBufferLength) {
                         reader.error('e', reader.getName(),
                                      line,
                                      nonSpace - lineStart + 1,
-                                     "non-whitespace before '&|'");
+                                     "non-whitespace before '"+escapeChar+"|'");
                     }
                     else
                         reader.tokenBufferLength = lineStart;
@@ -158,7 +164,7 @@ public class ReaderExtendedLiteral extends ReaderConstituent {
                             reader.error('e', reader.getName(),
                                          reader.getLineNumber() + 1,
                                          reader.getColumnNumber(),
-                                         "non-whitespace after '&-'");
+                                         "non-whitespace after '"+escapeChar+"-'");
                             complained = true;
                         }
                     }
@@ -191,7 +197,7 @@ public class ReaderExtendedLiteral extends ReaderConstituent {
                 next = ' ';
             }
             if (reader.tokenBufferLength > 0
-                    && (next == delimiter || next == '&' || next < 0)) {
+                    && (next == delimiter || next == escapeChar || next < 0)) {
                 String text = reader.tokenBufferString();
                 reader.tokenBufferLength = 0;
                 Object tnode = wrapText(text);
@@ -200,7 +206,7 @@ public class ReaderExtendedLiteral extends ReaderConstituent {
                 resultTail.setCdrBackdoor(pair);
                 resultTail = pair;
             }
-            if (next == '&') {
+            if (next == escapeChar) {
                 ReadTable rtable = ReadTable.getCurrent();
                 next = reader.read();
                 int endDelimiter = enclosedExprDelim(next, reader);

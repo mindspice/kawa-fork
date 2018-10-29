@@ -437,6 +437,9 @@ public class Q2Read extends LispReader
     expressionStartColumn = port.getColumnNumber();
   }
 
+    public static final ReaderExtendedLiteral braces
+        = new ReaderExtendedLiteral('\\');
+
  static class ReadTableEntry extends ReaderDispatchMisc
   {
     public Object read (Lexer in, int ch, int count)
@@ -446,6 +449,12 @@ public class Q2Read extends LispReader
         {
         case '(':  return readParens(in);
         case ';':  return Symbol.valueOf(";");
+        case '{':
+            int startLine = in.getLineNumber() + 1;
+            int startColumn = in.getColumnNumber() - 2;
+            ReadTable rtable = ReadTable.getCurrent();
+            return braces.readNamedLiteral((LispReader) in, rtable,
+                                           null,  '{', startLine, startColumn);
         case '|':
             in.error("unexpected '|'");
             return Values.empty;

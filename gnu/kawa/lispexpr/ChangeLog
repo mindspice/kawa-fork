@@ -1,3 +1,7 @@
+2018-10-28  Per Bothner  <per@bothner.com>
+
+	* ReaderExtendedLiteral.java: Don't hard-wire escape character.
+
 2018-09-08  Per Bothner  <per@bothner.com>
 
 	* LispLanguage.java (getPrimaryPrompt): Add DomTerm "hider" button.
