@@ -1,6 +1,7 @@
 2018-10-31  Per Bothner  <per@bothner.com>
 
 	* kawa.texi (Arrays): Two small fixes.
+	(Ideas and tasks): New subsection 'Recusively initialized data structures'.
 
 2018-10-29  Per Bothner  <per@bothner.com>
 

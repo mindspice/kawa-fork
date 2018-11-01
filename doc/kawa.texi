@@ -841,6 +841,89 @@ The ones marked @i{(GSoC)} are probably most suitable for a Google
 Summer of Code project, in being a reasonable size, self-contained, and not
 depending on other tasks.
 
+@subsection Recusively initialized data structures
+@i{(GSoC)}
+
+Kawa has convenient syntax to @ref{Allocating objects, allocate and initialize objects},
+but it gets messier it you want to initialize multiple objects that
+reference each other.
+Likewise for a single object ``tree'' which contains links to the root.
+In this example, we will looks at two vectors, but the feature is more useful
+for tree structures.  Assume:
+@example
+(define-constant list1 [1 2 list2])
+(define-constant list2 ['a 'b list1])
+@end example
+The compiler translates this to:
+@example
+(define-constant list1
+   (let ((t (object[] length: 3))) ;; allocate native Java array
+      (set! (t 0) 1)
+      (set! (t 1) 2)
+      (set! (t 2) list2)
+      (FVector:makeConstant t)))
+(define-constant list2
+   (let ((t (object[] length: 3))) ;; allocate native Java array
+      (set! (t 0) 'a)
+      (set! (t 1) 'b)
+      (set! (t 2) list1)
+      (FVector:makeConstant t)))
+@end example
+The problem is that @code{list2} has not been created when
+we evaluate the initializing expression for @code{list}.
+
+We can solve the problem by re-writing:
+@example
+(define-private tmp1 (object[] length: 3))
+(define-constant list1 (FVector:makeConstant tmp1)
+(define-private tmp2 (object[] length: 3))
+(define-constant list2 (FVector:makeConstant tmp2)
+(set! (tmp1 0) 1)
+(set! (tmp1 1) 2)
+(set! (tmp1 2) list2)
+(set! (tmp2 0) 1)
+(set! (tmp2 1) 2)
+(set! (tmp2 2) list1)
+@end example
+
+The complication is that the code for re-writing vector and object constructors
+is spead out (depending on the result type), and not where we
+deal with initializing the variables.
+One solution is to introduce an inlineable helper function @code{$build$} defined as:
+@example
+(define ($build$ raw-value create init)
+  (let ((result (create raw-value))
+    (init raw-value result)
+    result))
+@end example
+Then we can re-write the above code to:
+@example
+(define-constant list1
+  ($build$
+    (object[] length: 3)
+    (lambda (raw) (FVector:makeConstant raw))
+    (lambda (raw result)
+      ($init-raw-array$ raw 1 2 list2))))
+(define-constant list2
+  ($build$
+    (object[] length: 3)
+    (lambda (raw) (FVector:makeConstant raw))
+    (lambda (raw result)
+      ($init-raw-array$ raw 'a 'b list1))))
+@end example
+Note that the call to @code{$build$}, as well as the generated @code{lambda}
+expressions, are all easily inlineable.
+
+Now assume if at the top-level @var{body} if there is a sequence of @code{define-constant}
+definitions initialized with calls to @code{$build$}.
+Now it is relatively easy to move all the @code{init} calls after all
+@code{alloc} and @code{create} expressions.
+The @code{$init-raw-array$} calls are expanded after the code has been re-arranged.
+
+The project includes both implementing the above framework,
+as well as updating type-specific (and default) object creation to use the framework.
+It would also be good to have compiler warnings if accessing an unitialied object.
+
 @subsection Run interactive process in separate Java Virtual Machine:
 @i{(GSoC)}
 
