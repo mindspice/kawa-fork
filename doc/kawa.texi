@@ -14750,7 +14750,7 @@ Produce a nice ``pretty'' display for @var{value}, which is usually an array.
 
 The top line includes an @code{array-literal-header}.
 The lower bound are only printed if non-zero.
-The dimension lengths are printed if there is zoom, or if one of them is zero.
+The dimension lengths are printed if there is room, or if one of them is zero.
 @example
 #|kawa:34|# @kbd{(! arr (array [[1 <=: 2] [1 <=: 3]]}
 #|.....35|# @kbd{  #2a((1 2) (3 4)) 9 #2a((3 4) (5 6))}
@@ -14823,7 +14823,7 @@ not retain a reference to @var{shape}.
 Returns a newly allocated array whose shape is given by @var{shape}.
 If @var{value} is provided, then each element is initialized to it.
 If there is more than one @var{value}, they are used in order, starting
-over then the @var{value}s are exhausted.
+over when the @var{value}s are exhausted.
 If there is no @var{value}, the initial contents of each element is
 unspecified.  (Actually, it is the @code{#!null}.)
 The array does not retain a reference to @var{shape}.

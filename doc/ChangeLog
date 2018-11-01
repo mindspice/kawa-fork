@@ -1,3 +1,7 @@
+2018-10-31  Per Bothner  <per@bothner.com>
+
+	* kawa.texi (Arrays): Two small fixes.
+
 2018-10-29  Per Bothner  <per@bothner.com>
 
 	* kashell.md: Various additions and fixes.
