@@ -887,7 +887,7 @@ We can solve the problem by re-writing:
 @end example
 
 The complication is that the code for re-writing vector and object constructors
-is spead out (depending on the result type), and not where we
+is spread out (depending on the result type), and not where we
 deal with initializing the variables.
 One solution is to introduce an inlineable helper function @code{$build$} defined as:
 @example
@@ -918,11 +918,14 @@ Now assume if at the top-level @var{body} if there is a sequence of @code{define
 definitions initialized with calls to @code{$build$}.
 Now it is relatively easy to move all the @code{init} calls after all
 @code{alloc} and @code{create} expressions.
-The @code{$init-raw-array$} calls are expanded after the code has been re-arranged.
+The @code{$init-raw-array$} calls are expanded after the code has been re-ordered.
 
 The project includes both implementing the above framework,
 as well as updating type-specific (and default) object creation to use the framework.
-It would also be good to have compiler warnings if accessing an unitialied object.
+It would also be good to have compiler warnings if accessing an uninitialized object.
+
+@subsection Enhance texinfo-js documentation browser for Kawa documentation
+@i{(GSoC)}
 
 @subsection Run interactive process in separate Java Virtual Machine:
 @i{(GSoC)}
