@@ -42,6 +42,7 @@ bin/kawapath.o
 /build-aux/missing
 /build-aux/texinfo.tex
 doc/kawa-manual.epub
+doc/kashell.html
 doc/kawa.xml
 doc/ebook
 doc/kawa.1

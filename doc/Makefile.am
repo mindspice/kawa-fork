@@ -181,3 +181,6 @@ kawa-manual.epub: kawa.xml
 	mkdir -p ebook/OEBPS/images
 	cp $(DOC_IMAGES) ebook/OEBPS/images/
 	cd ebook && zip -r -q -X ../kawa-manual.epub mimetype META-INF OEBPS
+
+kashell.html: $(srcdir)/kashell.texi
+	$(MAKEINFO) -html --no-split -o $@ $<

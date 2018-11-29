@@ -1,0 +1,316 @@
+\input texinfo
+@settitle The KaShell Programming Language
+
+KaShell is an evolving design for a programming language
+with a compact syntax similar to shell and friendly for interactive use,
+and with semantics similar to optionally-typed languages like Scheme.
+
+The prototype is a variant of @uref{https://www.gnu.org/software/kawa,Kawa}.
+To try it, @uref{https://www.gnu.org/software/kawa/Installation.html,install Kawa},
+and then start up kawa with the @code{--kashell} option.
+
+KaShell was previously known as Q2.
+There is some old documentation/ideas
+@uref{https://www.gnu.org/software/kawa/q2,here}.
+
+@subheading Basic syntax
+
+Whitespace and indentation are signficant.
+
+Commands are similar to shell syntax:
+A simple command has the form of a command followed
+by the argument expressions, separated by spaces:
+@example
+expt 2 3
+@end example
+
+This calls the @code{expt} function with the given arguments.
+Parentheses are not needed, except for grouping:
+@example
+expt 2 (sqrt 9)
+@end example
+
+Such a command is an example of a @dfn{phrase}.
+The function name and each argument is a @dfn{word}.
+
+@example
+@var{word} ::= @var{identifier} | @var{literal} | ....  
+  | `(` @var{phrase} `)`  
+@var{phrase} ::= @var{word} ...
+@end example
+
+Phrases can be separated by newline or semicolons.
+
+A procedure call is a @dfn{phrase} whose first word
+evaluates to a procedure value.
+(It can be a single-word phrase, if there are no arguments.)
+
+A syntactic form is  @dfn{phrase} whose first word is
+a predefined syntactic keyword or an in-scope macro.
+
+@subheading Identifiers
+
+An identifier is used to name things in a program.
+The allowed characters in an identifier is bigger that
+in most programming languages and roughly follows Scheme.
+
+There are no reserved identifiers, though there are
+syntactic keywords predefined in the default scope.
+
+The recommend style for multi-part names is to use hyphens between the parts:
+@code{array-rank}.
+
+There will be some syntax to include otherwise-disallowed characters
+in an identifier.  This has not been decided or implemented
+but I'm leaning towards backslash followed by a string template.
+For example @code{\@{1.5@}} would be an identifier
+(with the 3 characters @code{"1"}, @code{"."}, and @code{"5"}) rather than a number.
+
+Compound identifiers have two parts, separated by a colon (and no whitespace).
+The first part is a namespace (an identifier), and the second part is a name
+within that namespace.
+
+@subheading Indentation
+
+Indentation is significant:
+
+@example
+foo 1 2 3
+   bar 4 5
+       3 + 3
+   baz 10 11
+@end example
+is equivalent to:
+@example
+foo 1 2 3 (bar 4 5 (3 + 3)) (baz 10 11)
+@end example
+
+@subheading Comments
+
+A hash-sign @code{# } followed by at least one space
+comments out the rest of the line.
+
+A hash-sign followed by an exclamation point @code{#!} is also a comment.
+
+Syntax for nestable comments hasn't been decided yet.
+Candidates include @code{#[comment#]} or @code{#[comment]#} or plain @code{#[comment}`.
+
+@subheading Numbers
+
+KaShell implements the Kawa Scheme ``numeric tower'',
+including exact integers and rationals, floating-point reals,
+and complex numbers.  (Syntax of literals may change slightly from Kawa Scheme.)
+Quaternions are also supported.
+
+We may add exact decimal numbers, possibly with repeating fractional part.
+These are mathematically equivalent to exact rationals, but are
+typically easier to read and write.
+
+Quantities are a product of a real number and a unit.
+For example: @code{3cm + 2in} evaluates to @code{8.08cm} (the second
+quantity is converted to the unit of the first).
+A designed extension will be able to do unit-checking at compile-time
+based on @uref{https://www.gnu.org/software/kawa/Ideas-and-tasks.html#Types-for-units,this design}.
+
+@subheading Arithmetic
+
+The usual infix and operator precedence rules apply.
+For example, the following evaluates as expected to 22:
+@example
+10 + 2 * 6
+@end example
+
+Note that spaces are (generally) required.
+
+However, note that infix operators like @code{+} are @emph{not} reserved
+syntax.  They are predefined syntatic keywords (with associated
+precedence information), and there will be a way to
+add or replace operators.
+
+@subheading Variables and definitions
+
+All variables must be defined before using them,
+to catch typos.  However, the syntax to define a variable
+is quite compact - you just need to add @code{^} after the variable:
+@example
+twenty^ = 10 + 5 + 5
+@end example
+
+You can do simple pattern matching:
+@example
+[x^ y^] = [3 4]
+@end example
+
+(In the future, the @code{=} operator may be extended to bi-directonal
+@uref{https://en.wikipedia.org/wiki/Unification_(computer_science),unification}.)
+
+Variables defined using @code{=} may not be re-assigned
+(though this is not currently enforced).
+For a variable that can be modfied, use `:=`.
+@example
+counter^ := 0
+counter := counter + 1
+@end example
+
+@subheading Optional type specifiers [not working yet]
+
+You can add an optional type specifier after the `^` in a definition:
+@example
+pi^float = 3.14
+@end example
+    
+@subheading Conditional operator
+
+The @code{?>} is syntatically an infix operator but it integrates
+with the phrase-parsing to provide a ternary if-the-else operator:
+@example
+(3 > 4 ?> "it is true"; "if is false")
+@end example
+
+or:
+@example
+x > 0 ?>
+   display x
+   display " is positive"
+   newline
+x < 0 ?>
+   display x
+   display " is negative"
+   newline
+display x
+display " is zero"
+newline
+@end example
+
+[This is a hack that needs further thought and specification.]
+
+@subheading Vectors and arrays
+
+Use square brackets to construct (immutable) vectors:
+@example
+[3 (2 + 2) 5]
+@end example
+
+A vector is a function from an integer to an element.
+@example
+[3 4 5] 2
+@end example
+evalutes to 5.
+
+You can use a vector index to select elements:
+@example
+[10 11 12] [2 1]
+@end example
+evaluates to @code{[12 11]}.
+
+There is support for @uref{https://www.gnu.org/software/kawa/Arrays.html,multi-dimensional arrays} but specifics (such as syntax and operator names) have not been decided.
+
+@subheading Strings
+
+A string is an immutable sequence (vector) of characters (Unicode code points).
+You can index it (like a vector) to get a character.
+
+(Not yet implemented: A character is also a string of length 1,
+so @code{"X" 0} yields the same @code{"X"}.
+This removes the need for distinct character literal syntax.)
+
+There are two syntaxes for string literals:
+
+@subsubheading Double quoted string literals
+
+The traditional syntax with double quotes: @code{"Hello"}.
+Most C-style escapes are supported: @code{"Hello!\n"}.
+May not extend over multiple lines, to help catch errors.
+(They may be a way to continue line using some escape sequence,
+details not yet decided.)
+
+@subsubheading Brace string literals
+
+A string may also be written using curly braces: @code{@{Hello@}}.
+Braces nest: @code{@{string with @{braces@}.@}}.
+These maybe multi-line and there are various escape sequences,
+@uref{https://www.gnu.org/software/kawa/String-literals.html#String-templates,like Kawa template string}, though backslash is used as the
+escape character rather than @code{&}.
+
+@code{@{L\aelig;rdals\oslash;yri@}} evaluates to @code{"Lærdalsøyri"}.
+
+@code{@{Adding 3 and 4 yields \(3 + 4).@}} evaluates to @code{"Adding 3 and 4 yields 7."}.
+
+You can also add formatting specifiers.
+
+@subheading Object constructor syntax [not implemented yet]
+
+An identifier allowed by a brace-literal is a conveniece syntax
+for constructing complex objects:
+@example
+URI@{http://example.com/@}
+@end example
+
+The constructor can also contain expressions in parentheses
+(which is evaluated), or bracket literals that contain multiple expressions.
+There may be no (unescaped) spaces between the parts of an object literal.
+
+The concept and implementation are similar to Kawa's and SRFI-108's
+@uref{https://srfi.schemers.org/srfi-108/srfi-108.html,Named quasi-literal constructors}.  However, the syntax is different in using backslash
+as the escape character, and not requiring an initial backslash.
+
+@subheading Rich text objects
+
+A rich text is an enhanced string,
+with embedded objects and formatting.
+It is syntatic sugar for a kind of object constructor.
+@example
+@{Some text *strong* and \em@{emphasized@}.@}
+@end example
+
+A subset of Markdown syntax is recognized, including
+@code{*}, @code{_} and blank lines for paragrph separator.
+Beyond that, general object literal syntax is used.
+
+The above is equivalent to:
+@example
+text@{Some text \text:b@{strong@} and \text:em@{emphasized@}.@}
+@end example
+
+Evaluating either expression yields a text object,
+which is a tree-structure that generalies strings.
+The text object can then be converted to various formats
+depending on context.  For example:
+@example
+write-pdf filename: "hello.pdf" '@{Hello!@}
+@end example
+or
+@example
+as-html '@{Some text *strong* and \em@{emphasized@}.@}
+@end example
+which yields @code{"<p>Some text <b>strong</b> and <em>emphasized</em>.</p>"}
+
+It is intended that text literals be used to document programs.
+Tools that pretty-print programs or extract API information
+should format these documentation strings.
+
+The DomTerm terminal emulator allows ``printing'' HTML as rich text.
+When printing a text value in a DomTerm REPL it should
+implicitly call @code{as-html} and show that.
+
+@subheading Running programs [not implemented yet]
+
+The @code{run} macro quasi-quotes its arguments, and then executes
+the resulting string list as a process invocation,
+as if using the Kawa @code{run-process} function.
+@example
+run date --utc
+@end example
+
+The result is a @dfn{process} object. A process can be coerced to
+a string (or more generally a @dfn{blob}), which is the result of
+standard output from the process.
+A @var{process} ``written'' to the REPL coerces it to a string.
+
+The @code{run} macro can be left out if the following word
+has the form of a fully-qualified filename (i.e. starting with @code{/}).
+Also, if the following word is not in the lexical scope,
+but if there is (at compile-time) an executable file by that name in
+the @code{PATH} then @code{run} is also implied.
+
+@bye
