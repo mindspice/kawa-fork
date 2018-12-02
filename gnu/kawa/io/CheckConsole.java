@@ -3,6 +3,7 @@ package gnu.kawa.io;
 import gnu.lists.Consumer;
 import gnu.mapping.ThreadLocation;
 import gnu.text.Options;
+import gnu.lists.PrintConsumer;
 
 /** Helper class to decide if we have an interactive console.
  * This needs to be separate from InPort, since the latter uses haveConsole
@@ -71,8 +72,8 @@ public class CheckConsole {
 
     /** Check if parameter is a DomTerm console. */
     public static boolean forDomTerm(Consumer out) {
-        return out instanceof OutPort
-            && ((OutPort) out).isDomTerm();
+        return out instanceof PrintConsumer
+            && ((PrintConsumer) out).isDomTerm();
     }
 
     /** Check if parameter is a DomTerm console. */
