@@ -13,6 +13,8 @@ import kawa.lang.*;
 
 public class Q2Read extends LispReader
 {
+    public static Symbol wordSym = Symbol.valueOf("$word$");
+
   void init()
   {
     ((InPort) port).readState = ' ';
@@ -160,7 +162,44 @@ public class Q2Read extends LispReader
     return makeCommand(head.getCdr());
   }
 
-  Object makeCommand (Object command)
+    private boolean isSubWordStart(int ch, ReadTable rtable) {
+        if (ch == '{' || ch == '[' || ch == '(')
+            return true;
+	int kind = rtable.lookup(ch).getKind();
+        return kind != ReadTable.TERMINATING_MACRO
+            && kind != ReadTable.WHITESPACE
+            && kind != ReadTable.ILLEGAL;
+    }
+
+    public Pair readValuesAndAppend(int ch, ReadTable rtable, Pair last)
+            throws java.io.IOException, SyntaxException {
+        int line = port.getLineNumber();
+        int column = port.getColumnNumber() - 1; // Adjust for ch
+        Pair next = super.readValuesAndAppend(ch, rtable, last);
+        ch = port.peek();
+        if (isSubWordStart(ch, rtable)) {
+            Pair head = makePair(wordSym, line, column);
+            setCdr(head, next);
+            Pair first = next;
+            Pair last2 = next;
+            for (;;) {
+                last2 = super.readValuesAndAppend(port.read(), rtable, last2);
+                ch = port.peek();
+                if (! isSubWordStart(ch, rtable))
+                    break;
+            }
+            if (first.getCar() instanceof SimpleSymbol) {
+                Symbol op = LispLanguage.constructNamespace.getSymbol(first.getCar().toString());
+                head = makePair(op, line, column);
+                setCdr(head, first.getCdr());
+            }
+            next = makePair(head, line, column);
+            setCdr(last, next);
+        }
+        return next;
+    }
+
+    Object makeCommand (Object command)
   {
     return command;
   }

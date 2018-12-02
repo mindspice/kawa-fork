@@ -1,3 +1,7 @@
+2018-12-02  Per Bothner  <per@bothner.com>
+
+	* QRead.java: Support object constructor (object literal) syntax.
+
 2018-10-28  Per Bothner  <per@bothner.com>
 
 	* QRead.java, Q2.java: Allow braces for extended string literals.

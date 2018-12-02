@@ -30,7 +30,6 @@ public class DefineOp extends Syntax {
         return null;
     }
     public void scanForm(Pair st, ScopeExp defs, Translator tr) {
-        System.err.println("DefineOp scan "+st.getCdr());
         super.scanForm(st, defs, tr);
     }
 }
