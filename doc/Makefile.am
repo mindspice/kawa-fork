@@ -183,4 +183,4 @@ kawa-manual.epub: kawa.xml
 	cd ebook && zip -r -q -X ../kawa-manual.epub mimetype META-INF OEBPS
 
 kashell.html: $(srcdir)/kashell.texi
-	$(MAKEINFO) -html --no-split -o $@ $<
+	$(MAKEINFO) --html --no-split -o $@ $<
