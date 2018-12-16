@@ -1,3 +1,8 @@
+2018-12-16  Per Bothner  <per@bothner.com>
+
+	* standard/IfFeature.java: Generalize "java-NN" core feature.
+	Also make sure to intern strings.
+
 2018-09-21  Per Bothner  <per@bothner.com>
 
 	* Shell.java (run): Handle new TtyInPort.MoreInputNeeded exception.

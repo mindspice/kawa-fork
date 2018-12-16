@@ -103,16 +103,19 @@ public class IfFeature extends Syntax {
     }
 
     private static List<String> coreFeatures = new ArrayList<String>();
+    private static void addCoreFeature(String feature) {
+        coreFeatures.add(feature.intern());
+    }
     static {
-        coreFeatures.add("kawa");
-        coreFeatures.add("kawa-"+Version.getVersion());
+        addCoreFeature("kawa");
+        addCoreFeature("kawa-"+Version.getVersion());
 
-        coreFeatures.add("complex");
-        coreFeatures.add("exact-complex");
-        coreFeatures.add("exact-closed");
-        coreFeatures.add("ieee-float");
-        coreFeatures.add("ratios");
-        coreFeatures.add("full-unicode");
+        addCoreFeature("complex");
+        addCoreFeature("exact-complex");
+        addCoreFeature("exact-closed");
+        addCoreFeature("ieee-float");
+        addCoreFeature("ratios");
+        addCoreFeature("full-unicode");
 
         String javaVersion = System.getProperty("java.version");
         if (javaVersion != null && javaVersion.length() >= 1) {
@@ -120,109 +123,112 @@ public class IfFeature extends Syntax {
                 && javaVersion.charAt(0) == '1'
                 && javaVersion.charAt(1) == '.')
                 javaVersion = javaVersion.substring(2);
-            switch (javaVersion.charAt(0)) {
-            case '9':
-                coreFeatures.add("java-9");
-                /* fall through */
-            case '8':
-                coreFeatures.add("java-8");
-                /* fall through */
-            case '7':
-                coreFeatures.add("java-7");
-                /* fall through */
-            case '6':
-                coreFeatures.add("java-6");
-                /* fall through */
+            int dot = javaVersion.indexOf('.');
+            if (dot >= 0)
+                javaVersion = javaVersion.substring(0, dot);
+            int version;
+            int minVersion = 6;
+            try {
+                version = Integer.parseInt(javaVersion);
+                if (version > 20) { // sanity check
+                    addCoreFeature("java-"+version);
+                    version = 11;
+                }
+            } catch (Throwable ex) {
+                version = 0;
+            }
+            for (int i = minVersion; i <= version; i++) {
+                addCoreFeature("java-"+i);
             }
         }
 
         if (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN)
-            coreFeatures.add("big-endian");
+            addCoreFeature("big-endian");
         else
-            coreFeatures.add("little-endian");
+            addCoreFeature("little-endian");
 
         String osName =
             System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
         // FIXME check for cygwin, bsd
         if (osName.indexOf("linux") >= 0) {
-            coreFeatures.add("posix");
-            coreFeatures.add("unix");
-            coreFeatures.add("linux");
-            coreFeatures.add("gnu-linux");
+            addCoreFeature("posix");
+            addCoreFeature("unix");
+            addCoreFeature("linux");
+            addCoreFeature("gnu-linux");
         }
         else if (osName.indexOf("win") >= 0) {
-            coreFeatures.add("windows");
+            addCoreFeature("windows");
         } else if (osName.indexOf("sunos") >= 0
                    || osName.indexOf("solaris") >= 0) {
-            coreFeatures.add("posix");
-            coreFeatures.add("unix");
-            coreFeatures.add("solaris");
+            addCoreFeature("posix");
+            addCoreFeature("unix");
+            addCoreFeature("solaris");
         } else if (osName.indexOf("mac") >= 0
                    || osName.indexOf("darwin") >= 0) {
-            coreFeatures.add("posix");
-            coreFeatures.add("unix");
-            coreFeatures.add("darwin");
-            coreFeatures.add("macosx");
+            addCoreFeature("posix");
+            addCoreFeature("unix");
+            addCoreFeature("darwin");
+            addCoreFeature("macosx");
         } else if (osName.indexOf("bsd") >= 0) {
-            coreFeatures.add("bsd");
-            coreFeatures.add("posix");
-            coreFeatures.add("unix");
+            addCoreFeature("bsd");
+            addCoreFeature("posix");
+            addCoreFeature("unix");
         } else if (osName.indexOf("nix") >= 0
                    || osName.indexOf("nux") >= 0
                    || osName.indexOf("aix") > 0) {
-            coreFeatures.add("posix");
-            coreFeatures.add("unix");
+            addCoreFeature("posix");
+            addCoreFeature("unix");
         }
 
         String archName =
             System.getProperty("os.arch").toLowerCase(Locale.ENGLISH);;
         if (archName.indexOf("amd64") >= 0
             || archName.indexOf("x86_64") >= 0) {
-            coreFeatures.add("x86-64");
+            addCoreFeature("x86-64");
         } else if (archName.indexOf("x86") >= 0
                    || archName.indexOf("i386") >= 0) {
-            coreFeatures.add("i386");
+            addCoreFeature("i386");
         } else if (archName.indexOf("ppc") >= 0
                    || archName.indexOf("powerpc") >= 0) {
-            coreFeatures.add("ppc");
+            addCoreFeature("ppc");
         } else if (archName.indexOf("sparc") >= 0) {
-            coreFeatures.add("sparc");
+            addCoreFeature("sparc");
         }
-        coreFeatures.add("jvm");
+        addCoreFeature("jvm");
 
-        coreFeatures.add("r7rs");
+        addCoreFeature("r7rs");
 
-        coreFeatures.add("srfi-0"); // cond-expand
-        // coreFeatures.add("srfi-1"); // lists - only if require used.
+        addCoreFeature("srfi-0"); // cond-expand
+        // addCoreFeature("srfi-1"); // lists - only if require used.
         //if (name == "srfi-1") return true; // lists
-        coreFeatures.add("srfi-4"); // Homogeneous numeric vector datatypes
-        coreFeatures.add("srfi-6"); // Basic String Ports
-        coreFeatures.add("srfi-8"); // receive: Binding to multiple values
-        coreFeatures.add("srfi-9"); // Defining Record Types
-        coreFeatures.add("srfi-11"); // let-values, let*-values
-        coreFeatures.add("srfi-16"); // case-lambda
-        coreFeatures.add("srfi-17"); // Generalized set!
-        coreFeatures.add("srfi-23"); // Error reporting mechanism
-        coreFeatures.add("srfi-25"); // Multi-dimensional Array Primitives
-        coreFeatures.add("srfi-26"); // Notation for Specializing Parameters
-        coreFeatures.add("srfi-28"); // Basic Format Strings
-        coreFeatures.add("srfi-30"); // Nested Multi-line Comments.
-        coreFeatures.add("srfi-39"); // Parameter objects
+        addCoreFeature("srfi-4"); // Homogeneous numeric vector datatypes
+        addCoreFeature("srfi-6"); // Basic String Ports
+        addCoreFeature("srfi-8"); // receive: Binding to multiple values
+        addCoreFeature("srfi-9"); // Defining Record Types
+        addCoreFeature("srfi-11"); // let-values, let*-values
+        addCoreFeature("srfi-16"); // case-lambda
+        addCoreFeature("srfi-17"); // Generalized set!
+        addCoreFeature("srfi-23"); // Error reporting mechanism
+        addCoreFeature("srfi-25"); // Multi-dimensional Array Primitives
+        addCoreFeature("srfi-26"); // Notation for Specializing Parameters
+        addCoreFeature("srfi-28"); // Basic Format Strings
+        addCoreFeature("srfi-30"); // Nested Multi-line Comments.
+        addCoreFeature("srfi-39"); // Parameter objects
 
         /* #ifdef use:java.text.Normalizer */
         /* #ifdef JAVA6COMPAT5 */
         // try {
         //     Class.forName("java.text.Normalizer");
-        //     coreFeatures.add("string-normalize-unicode");
+        //     addCoreFeature("string-normalize-unicode");
         // }
         // catch (ClassNotFoundException ex) {
         // }
         /* #else */
-        coreFeatures.add("string-normalize-unicode");
+        addCoreFeature("string-normalize-unicode");
         /* #endif */
         /* #endif */
 
-        coreFeatures.add("threads");
+        addCoreFeature("threads");
     }
 
     /** Check if we implement a named feature.
