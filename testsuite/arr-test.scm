@@ -1,5 +1,5 @@
 ;; -*- coding: utf-8 -*-
-(test-begin "arrays" 228)
+(test-begin "arrays" 230)
 
 ;;; array test
 ;;; 2001 Jussi Piitulainen
@@ -551,6 +551,8 @@
 
 (test-equal [2 5] [2 by: 3 <: 8])
 (test-equal [2 5 8] [2 by: 3 <=: 8])
+(test-equal [1 4 7 10] [1 by: 3 size: 4])
+(test-equal [3 4 5 6] [3 size: 4])
 (test-equal [2 5 8] [2 by: 3 <: 9])
 (test-equal [2 5 8 11] [2 by: 3 <=: 11])
 (test-equal [2 5 8 11] [2 by: 3 <=: 13])

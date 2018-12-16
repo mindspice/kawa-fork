@@ -1,3 +1,8 @@
+2018-12-16  Per Bothner  <per@bothner.com>
+
+	* syntax.scm ($bracket-list$): Handle [N size: M].
+	Fixes GitLab issue #48 'Kawa | Range "[1 size: 5]'.
+
 2018-04-30  Per Bothner  <per@bothner.com>
 
 	* std_syntax.scm (%let-init): Add begin forms for preserving position.

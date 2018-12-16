@@ -1,3 +1,8 @@
+2018-12-16  Per Bothner  <per@bothner.com>
+
+	* arr-test.scm: Add 2 tests for range syntax,
+	Test for GitLab issue #48 'Kawa | Range "[1 size: 5]'.
+
 2018-09-21  Per Bothner  <per@bothner.com>
 
 	* srfi-64-test.scm: Update due to recent srfi-64 implementation change.
