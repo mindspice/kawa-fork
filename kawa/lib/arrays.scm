@@ -75,5 +75,15 @@
     (result:setBase vec)
     result))
 
-(define (format-array value #!optional (elementFormat ::string #!null))::string
-  (gnu.kawa.functions.ArrayPrint:print value elementFormat))
+(define (format-array value #!optional (arg1 #!null) (arg2 #!null))
+  (cond ((? port ::java.lang.Appendable arg1)
+         (port:append (gnu.kawa.functions.ArrayPrint:print value arg2))
+         #!void)
+        ((eqv? arg1 #t)
+         ((gnu.kawa.io.OutPort:outDefault):append
+          (gnu.kawa.functions.ArrayPrint:print value arg2))
+         #!void)
+        ((eqv? arg1 #f)
+         (gnu.kawa.functions.ArrayPrint:print value arg2))
+        (else
+         (gnu.kawa.functions.ArrayPrint:print value arg1))))

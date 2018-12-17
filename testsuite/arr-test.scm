@@ -493,7 +493,7 @@
 ╟──┼─┼──╢
 ║ 5│9│11║
 ╚══╧═╧══╝}
-  (format-array #2a((12 3 4) (5 9 11))))
+  (format-array #2a((12 3 4) (5 9 11)) #f))
 
 (test-equal &{&-
 ╔#2a:2:4╤═══╗
@@ -538,7 +538,7 @@
   (format-array
    #2a((334 4545 #2f32((5 6))) (78987 "abc\ndefg\nhi" #2A((1 2) (3 14))))))
 
-(test-equal "#0a -02" (format-array #0a -2 "~3,'0d"))
+(test-equal "#0a -02" (format-array #0a -2 #f "~3,'0d"))
 
 (test-equal "#2a@1:3:0 ()"
             (format-array #2a@1:3:0()))

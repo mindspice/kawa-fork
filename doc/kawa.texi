@@ -14831,8 +14831,18 @@ using the @code{format-array} procedure.
 (Note that @code{format-array} is only used when the output is in column 0,
 because Kawa has very limited support for printing rectangles.)
 
-@deffn Procedure format-array value [element-format]
+@deffn Procedure format-array value [port] [element-format]
 Produce a nice ``pretty'' display for @var{value}, which is usually an array.
+
+If @var{port} is an output port, the formatted output is written into
+that port.
+Otherwise, @var{port} must be a boolean (one of @code{#t} or @code{#f}).
+If the port is @code{#t}, output is to the @code{(current-output-port)}.
+If the port is @code{#f} or no port is specified,
+the output is returned as a string.
+If the port is specified and is @code{#t} or an output-port,
+the result of the @code{format-array} procedure is unspecified.
+(This convention matches that of the @code{format} procedure.) 
 
 The top line includes an @code{array-literal-header}.
 The lower bound are only printed if non-zero.
