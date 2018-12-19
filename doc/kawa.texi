@@ -14936,10 +14936,10 @@ The array does not retain a reference to @var{shape}.
 @CompatibilityNote{} Guile has an incompatible @code{make-array} procedure.
 @end deffn
 
-@deffn Procedure build-array shape procedure
+@deffn Procedure build-array shape getter [setter[
 Construct a ``virtual array'' of the given @var{shape},
 which uses no storage for the elements.
-Instead, elements are calculated on-demand by calling @var{procedure},
+Instead, elements are calculated on-demand by calling @var{getter},
 which takes a single argument, an index vector.
 
 There is no caching or memoization.
@@ -14954,6 +14954,27 @@ There is no caching or memoization.
 ╟──┼──┼─╢
 ║11│10│9║
 ╚══╧══╧═╝
+@end example
+
+The resulting array is mutable if a @var{setter} is provided.
+The @var{setter} takes two arguments:
+An index vector, and the new value for the specified element.
+Below is a simple and space-efficient (but slow) implementation
+of sparse arrays: Most element have a default initial value,
+but you can override specific elements.
+@example
+(define (make-sparse-array shape default-value)
+  (let ((vals '())) ;; association list of (INDEX . VALUE)
+    (build-array shape
+                 (lambda (I)
+                   (let ((v (assoc I vals)))
+                     (if v (cdr v)
+                         default-value)))
+                 (lambda (I newval)
+                   (let ((v (assoc I vals)))
+                     (if v
+                         (set-cdr! v newval)
+                         (set! vals (cons (cons I newval) vals))))))))
 @end example
 @end deffn
 
