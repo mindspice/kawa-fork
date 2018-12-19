@@ -475,18 +475,18 @@
                            (let ((x (ind 0)) (y (ind 1)))
                              (+ 10 x (- y))))))
 
-(define (make-sparse-array shape dflt)
+(define (make-sparse-array shape default-value)
   (let ((vals '()))
     (build-array shape
                  (lambda (I)
                    (let ((v (assoc I vals)))
                      (if v (cdr v)
-                         dflt)))
+                         default-value)))
                  (lambda (I newval)
                    (let ((v (assoc I vals)))
                      (if v
-                         (set-cdr! v newval))
-                     (set! vals (cons (cons I newval) vals)))))))
+                         (set-cdr! v newval)
+                         (set! vals (cons (cons I newval) vals))))))))
 
 (define sarr (make-sparse-array [3 4] -1))
 (array-set! sarr 1 1 10)
