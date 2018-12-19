@@ -1,5 +1,5 @@
 ;; -*- coding: utf-8 -*-
-(test-begin "arrays" 230)
+(test-begin "arrays" 231)
 
 ;;; array test
 ;;; 2001 Jussi Piitulainen
@@ -474,6 +474,25 @@
                          (lambda (ind)
                            (let ((x (ind 0)) (y (ind 1)))
                              (+ 10 x (- y))))))
+
+(define (make-sparse-array shape dflt)
+  (let ((vals '()))
+    (build-array shape
+                 (lambda (I)
+                   (let ((v (assoc I vals)))
+                     (if v (cdr v)
+                         dflt)))
+                 (lambda (I newval)
+                   (let ((v (assoc I vals)))
+                     (if v
+                         (set-cdr! v newval))
+                     (set! vals (cons (cons I newval) vals)))))))
+
+(define sarr (make-sparse-array [3 4] -1))
+(array-set! sarr 1 1 10)
+(array-set! sarr 2 3 23)
+(array-set! sarr 1 1 11)
+(test-equal #2a((-1 -1 -1 -1) (-1 11 -1 -1) (-1 -1 -1 23)) sarr)
 
 (test-equal &{&-
 #2a@10:2:3

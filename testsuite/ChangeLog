@@ -1,3 +1,7 @@
+2018-12-18  Per Bothner  <per@bothner.com>
+
+	* arr-test.scm: Add test for build-array with setter procedure.
+
 2018-12-17  Per Bothner  <per@bothner.com>
 
 	* arr-test.scm: Modify some tests for new format-array API.

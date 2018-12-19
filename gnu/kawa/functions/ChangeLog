@@ -1,3 +1,7 @@
+2018-12-18  Per Bothner  <per@bothner.com>
+
+	* Arrays.java (class BuiltArray): Support mutability.
+
 2017-12-18  Helmut Eller  <eller.helmut@gmail.com>
 
 	Add basic support for justification ~<...~> in format.

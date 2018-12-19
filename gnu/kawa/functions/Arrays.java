@@ -221,13 +221,25 @@ public class Arrays
      */
     public static class BuiltArray<E> extends AbstractSequence<E>
         implements Array<E> {
-        Procedure proc;
+        Procedure getter;
+        Procedure setter;
         int[] dims;
         int[] lowBounds;
-        public BuiltArray(Procedure proc,
+        protected void checkCanWrite () {
+            if (setter == null)
+                throw new UnsupportedOperationException("write not allowed to read-only "+(rank()==1 ? "sequence" : "array"));
+        }
+        public BuiltArray(Procedure getter,
+                          int[] dimensions, int[] lowBounds) {
+            this.getter = getter;
+            this.dims = dimensions;
+            this.lowBounds = lowBounds;
+        }
+        public BuiltArray(Procedure getter, Procedure setter,
                           int[] dimensions, int[] lowBounds) {
             
-            this.proc = proc;
+            this.getter = getter;
+            this.setter = setter;
             this.dims = dimensions;
             this.lowBounds = lowBounds;
         }
@@ -254,7 +266,7 @@ public class Arrays
 
         public E get(int[] indexes) {
             try {
-                return (E) proc.apply1(new S32Vector(indexes));
+                return (E) getter.apply1(new S32Vector(indexes));
             } catch (Throwable ex) {
                 throw new RuntimeException("caught "+ex+" evaluating array procedure", ex);
             }
@@ -268,10 +280,34 @@ public class Arrays
             }
             return get(indexes);
         }
+        public void set(int[] indexes, E value) {
+            checkCanWrite();
+            try {
+                setter.apply2(new S32Vector(indexes), value);
+            } catch (Throwable ex) {
+                throw new RuntimeException("caught "+ex+" evaluating array procedure", ex);
+            }
+        }
+        public void setRaw(int effi, E value) {
+            int[] indexes = new int[rank()];
+            for (int i = rank(); --i >= 0; ) {
+                int d = dims[i];
+                indexes[i] = (effi % d) + lowBounds[i];
+                effi = effi / d;
+            }
+            set(indexes, value);
+        }
     }
-    public static <E> Array<E> getBuiltArray(Array shape, Procedure procedure) {
+    public static <E> Array<E> getBuiltArray(Array shape, Procedure getter) {
         GeneralArray ashape = allocateArray(shape);
-        return new BuiltArray(procedure,
+        return new BuiltArray(getter,
+                              ashape.getDimensions(), ashape.getLowBounds());
+    }
+    public static <E> Array<E> getBuiltArray(Array shape,
+                                             Procedure getter,
+                                             Procedure setter) {
+        GeneralArray ashape = allocateArray(shape);
+        return new BuiltArray(getter, setter,
                               ashape.getDimensions(), ashape.getLowBounds());
     }
 

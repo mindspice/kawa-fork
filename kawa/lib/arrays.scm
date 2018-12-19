@@ -61,8 +61,9 @@
 (define (array-transform arr::<array> shape::<array> mapper::procedure)::<array>
   (gnu.kawa.functions.Arrays:getTransformed arr mapper shape))
 
-(define (build-array shape::<array> proc::procedure) ::<array>
-   (gnu.kawa.functions.Arrays:getBuiltArray shape proc))
+(define (build-array shape::<array> getter::procedure
+                     #!optional (setter::procedure #!null)) ::<array>
+   (gnu.kawa.functions.Arrays:getBuiltArray shape getter setter))
 
 (define (array-reshape arr::<array> shape::<array>)::<array>
   (let* ((result (gnu.kawa.functions.Arrays:allocateArray shape))
