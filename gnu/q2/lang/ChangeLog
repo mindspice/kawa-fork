@@ -1,3 +1,8 @@
+2018-12-20  Per Bothner  <per@bothner.com>
+
+	* Q2Read.java (readParens): Handle spaces in params.
+	Fixes GitLab issue #49 "Test function1.q2 fails during 'make check'"
+
 2018-12-02  Per Bothner  <per@bothner.com>
 
 	* QRead.java: Support object constructor (object literal) syntax.

@@ -527,6 +527,8 @@ public class Q2Read extends LispReader
                  port.skip();
                  break;
              }
+             if (rtable.lookup(ch).getKind() == ReadTable.WHITESPACE)
+                 continue;
              last = reader.readValuesAndAppend(ch, rtable, last);
            }
           return Operator.makeLambda(head.getCdr());
