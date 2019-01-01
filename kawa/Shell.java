@@ -273,7 +273,7 @@ public class Shell
                 }
 		boolean sawError;
                 if (interactive) {
-                  sawError = messages.checkErrors(perr, 20);
+                    sawError = messages.checkErrors(perr, Compilation.maxErrors());
                   perr.flush();
                 }
                 else if (messages.seenErrors())
@@ -349,7 +349,7 @@ public class Shell
     if (ex instanceof WrongArguments)
       {
         WrongArguments e = (WrongArguments) ex;
-        messages.printAll(perr, 20);
+        messages.printAll(perr, Compilation.maxErrors());
         if (e.usage != null)
           perr.println("usage: "+e.usage);
         e.printStackTrace(perr);
@@ -357,7 +357,7 @@ public class Shell
     /*
     else if (ex instanceof java.io.IOException)
       {
-        messages.printAll(perr, 20);
+        messages.printAll(perr, Compilation.maxErrors());
         String msg = new SourceError(inp, 'e', "").toString();
         msg = msg.substring(0, msg.length() - 2);
         perr.println(msg + " (or later): caught IOException");
@@ -370,12 +370,12 @@ public class Shell
         if (ex instanceof SyntaxException
             && (se = (SyntaxException) ex).getMessages() == messages)
           {
-            se.printAll(perr, 20);
+            se.printAll(perr, Compilation.maxErrors());
             se.clear();
           }
         else
           {
-            messages.printAll(perr, 20);
+            messages.printAll(perr, Compilation.maxErrors());
             ex.printStackTrace(perr);
           }
       }
@@ -551,7 +551,7 @@ public class Shell
                             = run(language, env, src, out, perr, url, messages);
                         if (ex instanceof SyntaxException
                             && ((SyntaxException) ex).getMessages() == messages) {
-                            messages.printAll(perr, 20);
+                            messages.printAll(perr, Compilation.maxErrors());
                             perr.flush();
                             return false;
                         }
@@ -591,7 +591,7 @@ public class Shell
             CallContext ctx = CallContext.getInstance();
             //ctx.values = Values.noArgs;
             Object inst = ModuleExp.evalModule1(env, comp, url, null);
-            messages.printAll(perr, 20);
+            messages.printAll(perr, Compilation.maxErrors());
             perr.flush();
             if (inst == null || messages.seenErrors())
                 return null;
@@ -604,11 +604,11 @@ public class Shell
             if (! (ex instanceof SyntaxException)
                 || ((SyntaxException) ex).getMessages() != messages) {
                 lexer.error('e', "unexpected exception while compiling: "+ex);
-                messages.printAll(perr, 20);
+                messages.printAll(perr, Compilation.maxErrors());
                 ex.printStackTrace(perr);
             }
             else
-                messages.printAll(perr, 20);
+                messages.printAll(perr, Compilation.maxErrors());
             return null;
         }
     }

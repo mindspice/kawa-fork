@@ -3498,6 +3498,11 @@ to turn it off use the @code{--no-warn-void-used} flag.
 @pindex warn-as-error
 @item --warn-as-error
 Treat a compilation warning as if it were an error and halt compilation.
+@item --max-errors=@var{value}
+Print no more than @var{value} errors or warnings (at a time).
+The value @code{-1} removes the limit.
+The initial default is 20. (A single error may so confuse Kawa
+that it prints very many useless error messages.)
 @end table
 
 An option can be followed by a value, as
@@ -14964,7 +14969,7 @@ of sparse arrays: Most element have a default initial value,
 but you can override specific elements.
 @example
 (define (make-sparse-array shape default-value)
-  (let ((vals '())) ;; association list of (INDEX . VALUE)
+  (let ((vals '())) ;; association list of (INDEX-VECTOR . VALUE)
     (build-array shape
                  (lambda (I)
                    (let ((v (assoc I vals)))

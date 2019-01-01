@@ -165,6 +165,9 @@ public class Compilation implements SourceLocator
   public static Options.OptionInfo warnAsError =
     options.add("warn-as-error", Options.BOOLEAN_OPTION, Boolean.FALSE,
 		"Make all warnings into errors");
+    public static Options.OptionInfo maxErrors =
+        options.add("max-errors", Options.INT_OPTION, null,
+                    "maxium number of errors or warnings to print");
 
   public Options currentOptions = new Options(options);
 
@@ -205,6 +208,9 @@ public class Compilation implements SourceLocator
   {
     return currentOptions.getBoolean(warnAsError);
   }
+    public static int maxErrors() {
+        return options.getInt(maxErrors, 20);
+    }
 
   /** Get a named boolean option. */
   public final boolean getBooleanOption (String key, boolean defaultValue)

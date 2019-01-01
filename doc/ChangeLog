@@ -1,3 +1,7 @@
+2018-12-31  Per Bothner  <per@bothner.com>
+
+	* kawa.texi (Options): Add --new-errors option.
+
 2018-12-18  Per Bothner  <per@bothner.com>
 
 	* kawa.texi (Arrays): Document build-array with setter.
