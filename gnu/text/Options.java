@@ -14,6 +14,8 @@ public class Options
 
   public static final int STRING_OPTION = 2;
 
+  public static final int INT_OPTION = 2;
+
   /** The option table contain defaults, that we "inherit" from. */
   Options previous;
 
@@ -81,14 +83,19 @@ public class Options
 	return null;
     }
 
-  static Object valueOf (OptionInfo info, String argument)
-  {
-    if ((info.kind & BOOLEAN_OPTION) != 0)
-      {
-        return booleanValue(argument);
-      }
-    return argument;
-  }
+    static Object valueOf(OptionInfo info, String argument) {
+        if ((info.kind & BOOLEAN_OPTION) != 0) {
+            return booleanValue(argument);
+        }
+        if ((info.kind & INT_OPTION) != 0) {
+            try {
+                return new Integer(argument);
+            } catch (Throwable ex) {
+                return null;
+            }
+        }
+        return argument;
+    }
 
   private void error(String message, SourceMessages messages)
   {
@@ -129,6 +136,17 @@ public class Options
 	    return oldValue;
 	  }
       }
+    else if ((info.kind & INT_OPTION) != 0)
+      {
+	if (value instanceof String)
+	  value = valueOf(info, (String) value);
+	if (value instanceof Integer)
+	  {
+	    error("value for option "+key+" must be integer",
+		  messages);
+	    return oldValue;
+	  }
+      }
     else if (value == null)
       value = "";
     valueTable.put(key, value);
@@ -161,6 +179,8 @@ public class Options
       {
 	if ((info.kind & BOOLEAN_OPTION) != 0)
 	  return "value of option "+key+" must be yes/no/true/false/on/off/1/0";
+	if ((info.kind & INT_OPTION) != 0)
+	  return "value of option "+key+" must be integer";
       }
     if (valueTable == null)
       valueTable = new HashMap<String,Object>();
@@ -250,6 +270,11 @@ public class Options
     Object value = get (key, null);
     return value == null ? false : ((Boolean) value).booleanValue();
   }
+
+    public int getInt(OptionInfo key, int defaultValue) {
+        Object value = get(key, null);
+        return value == null ? defaultValue : ((Integer) value).intValue();
+    }
 
   /** Set a list of options, remember the old value.
    * @param options is vector of triples, echo of which is consisting of:
