@@ -18,8 +18,9 @@
 
 (module-export define-record-type)
 
-(require <kawa.lib.prim_imports>)
-(require <kawa.lib.std_syntax>)
+(require kawa.lib.prim_imports)
+(require kawa.lib.std_syntax)
+(require kawa.lib.syntax)
 (import (only kawa.standard.begin begin))
 (import (only kawa.standard.define_class
               (define_class define-class)))
@@ -30,14 +31,14 @@
 (import (only gnu.kawa.reflect.Invoke make))
 (import (rename (only (kawa lang Quote) plainQuote) (plainQuote quote)))
 
-(define-syntax define-record-type
-  (syntax-rules ()
-    ((define-record-type type
-       (constructor constructor-tag ...)
-       predicate
-       (field-tag accessor . more) ...)
-     (begin
-       (define-class type () interface: #f
+(define-syntax-case define-record-type ()
+  ((define-record-type type
+     (constructor constructor-tag ...)
+     predicate
+     (field-tag accessor . more) ...)
+   #`(begin
+       (define-class type (kawa.lang.Record) interface: #f
+         ((getTypeName) #,((syntax->datum #'type):toString))
 	 (field-tag) ...)
        (define (predicate obj) :: <boolean>
 	 (instance? obj type))
@@ -46,7 +47,7 @@
 	   (begin (slot-set! tmp 'constructor-tag constructor-tag) ...)
 	   tmp))
        (%define-record-field type field-tag accessor . more)
-       ...))))
+       ...)))
 
 ; An auxilliary macro for define field accessors and modifiers.
 ; This is needed only because modifiers are optional.

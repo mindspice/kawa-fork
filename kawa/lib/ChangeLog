@@ -1,3 +1,8 @@
+2019-01-01  Per Bothner  <per@bothner.com>
+
+	* DefineRecordType.scm (define-record-type): Make resulting record
+	types extend kawa.lang.Record.
+
 2018-12-18  Per Bothner  <per@bothner.com>
 
 	* arrays.scm (build-array): Allow optional 'setter' procedure.
