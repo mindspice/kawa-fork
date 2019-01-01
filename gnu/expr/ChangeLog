@@ -1,3 +1,7 @@
+2019-01-01  Per Bothner  <per@bothner.com>
+
+	* ModuleExp.java: Use new Compilation.maxErrors option.
+
 2018-12-31  Per Bothner  <per@bothner.com>
 
 	* Compilation.java (maxErrors): New option.

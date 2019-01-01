@@ -230,7 +230,8 @@ public class ModuleExp extends LambdaExp
             comp.process(Compilation.RESOLVED);
             comp.getMinfo().loadByStages(Compilation.WALKED);
 
-            if (msg != null ? messages.checkErrors(msg, 20) : messages.seenErrors())
+            if (msg != null ? messages.checkErrors(msg, Compilation.maxErrors())
+                : messages.seenErrors())
                 return null;
 
             if (! comp.mustCompile) {
