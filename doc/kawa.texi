@@ -10331,6 +10331,15 @@ integer objects @emph{s} and @emph{r} where @code{@var{k} = s^2 + r} and
 @end example
 @end deffn
 
+@deffn Procedure expt @vari{z} @varii{z}
+Returns @vari{z} raised to the power @varii{z}.
+For nonzero @vari{z}, this is
+@vari{z}@sup{@varii{z}} = @var{e}@sup{@varii{z} log @vari{z}}.
+The value of 0@sup{@var{z}} is 1 if @code{(zero? @var{z})},
+0 if @code{(real-part @var{z})} is positive, and an error otherwise.
+Similarly for 0.0@sup{z}, with inexact results.
+@end deffn
+
 @node Numerical input and output
 @section Numerical input and output
 
@@ -18675,7 +18684,7 @@ is equivalent to:
 @end example
 This is possible when the required type is an interface or
 abstract class with a Single (exactly one) Abstract Methods.
-Such a class is sometypes called a @dfn{SAM-type}, and the
+Such a class is sometimes called a @dfn{SAM-type}, and the
 conversion from a lambda expression to an anonymous class
 is sometimes called @dfn{SAM-conversion}.
 
