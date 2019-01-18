@@ -3,11 +3,20 @@ package gnu.kawa.functions;
 import gnu.lists.*;
 import gnu.kawa.io.CharArrayOutPort;
 
-/** Pretty-print an array (in APL-style) */
-
+/**
+ * Pretty-print an array (in APL-style).
+ * This is compatible with SRFI 163 (https://srfi.schemers.org/srfi-163).
+ */
 public class ArrayPrint {
     private ArrayPrint() {
     }
+
+    /** Should the first character be a box character, or '#'?
+     * The former is slightly prettier, but the latter is recommended
+     * by SRFI 163 because it potentially enables parsing of the output.
+     * The value 1 is "always"; -1 is "never", 0 is "if available space".
+     */
+    public static int useInitialBoxChar = -1;
 
     /** Print a given value 2-dimensionally. */
     public static String print(Object value, String format) {
@@ -70,7 +79,8 @@ public class ArrayPrint {
             for (int i = 0; i < nfields; i++)
                 twidth += fieldw[i];
             int slen = sbuf.length();
-            if (twidth > slen)
+            if (useInitialBoxChar > 0
+                || (twidth > slen && useInitialBoxChar >= 0))
                 sbuf.insert(0, '\u2554');
             else if (twidth < slen && ! dimsNeeded) {
                 sbuf.setLength(headEnd);

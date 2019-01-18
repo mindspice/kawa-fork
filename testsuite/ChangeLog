@@ -1,3 +1,7 @@
+2019-01-18  Per Bothner  <per@bothner.com>
+
+	* arr-test.scm: Update to tweaked format-array change.
+
 2018-12-18  Per Bothner  <per@bothner.com>
 
 	* arr-test.scm: Add test for build-array with setter procedure.

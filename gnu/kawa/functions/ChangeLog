@@ -1,3 +1,9 @@
+2019-01-18  Per Bothner  <per@bothner.com>
+
+	* ArrayPrint.java (useInitialBoxChar): New option field.
+	Default to not start with box-draing character, in accordance
+	with srfi 163 recommendation.
+
 2018-12-18  Per Bothner  <per@bothner.com>
 
 	* Arrays.java (class BuiltArray): Support mutability.
