@@ -1,3 +1,7 @@
+2019-01-18  Per Bothner  <per@bothner.com>
+
+	* repl.java: Update Copyright year printed by --version.
+
 2018-12-31  Per Bothner  <per@bothner.com>
 
 	* Shell.java: Use new Compilation.maxErrors option.
