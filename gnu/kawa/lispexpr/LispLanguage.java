@@ -152,7 +152,7 @@ public abstract class LispLanguage extends Language
     Translator tr = (Translator) comp;
     ModuleExp mexp = tr.getModule();
     tr.resolveModule(mexp);
-    if (tr.subModuleMap != null) {
+    if (tr.subModuleMap != null && tr.mainClass != null) {
         String mainName = tr.mainClass.getName();
         ModuleInfo subinfo = tr.subModuleMap.get(mainName);
         if (subinfo != null

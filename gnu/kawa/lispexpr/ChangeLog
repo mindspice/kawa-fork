@@ -1,3 +1,9 @@
+2019-02-22  Per Bothner  <per@bothner.com>
+
+	* LispLanguage.java: Fix NPE if mainClass is null.
+	This fixes GitLab issue #52
+	"load/eval `define-library` causes NullPointerException".
+
 2018-10-28  Per Bothner  <per@bothner.com>
 
 	* ReaderExtendedLiteral.java: Don't hard-wire escape character.
