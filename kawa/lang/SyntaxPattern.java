@@ -141,11 +141,13 @@ public class SyntaxPattern extends Pattern implements Externalizable
     literalsbuf.copyInto(literals);
     varCount = tr.patternScope.pattern_names.size();
     String filename = tr.getFileName();
-    int fileslash = filename.replace(File.separatorChar, '/').lastIndexOf('/');
-    fileLine = fileslash >= 0 ? filename.substring(fileslash+1) : filename;
-    int line = tr.getLineNumber();
-    if (line > 0)
-        fileLine = fileLine + ':' + line;
+    if (filename != null) {
+        int sl = filename.replace(File.separatorChar, '/').lastIndexOf('/');
+        fileLine = sl >= 0 ? filename.substring(sl+1) : filename;
+        int line = tr.getLineNumber();
+        if (line > 0)
+            fileLine = fileLine + ':' + line;
+    }
     /* DEBUGGING:
     System.err.print("{translated pattern");
     Macro macro = tr.currentMacroDefinition;

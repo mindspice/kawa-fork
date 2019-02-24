@@ -1,3 +1,7 @@
+2019-02-24  Per Bothner  <per@bothner.com>
+
+	* lang/SyntaxPattern.java (<init>): Check for null filename.
+
 2019-01-18  Per Bothner  <per@bothner.com>
 
 	* repl.java: Update Copyright year printed by --version.
