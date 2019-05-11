@@ -1,3 +1,7 @@
+2019-05-11  Per Bothner  <per@bothner.com>
+
+	* Makefile.am (XQTS_JAVA_FLAGS): Higher memory requirement for Java 12.
+
 2017-09-04  Timo Myyrä <gitlab@mg.gitlab.com>
 
 	* Makefile.am (check-format-users): Tweak for OpenBSD.

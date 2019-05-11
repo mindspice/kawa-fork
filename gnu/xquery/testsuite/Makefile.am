@@ -29,7 +29,7 @@ RunXQTS.class:  RunXQTS.java
 
 XQTS_DIR = @XQTS_PATH@
 XQTS_CATALOG = $(XQTS_DIR)/XQTSCatalog.xml
-XQTS_JAVA_FLAGS = -Xmx120m
+XQTS_JAVA_FLAGS = -Xmx140m
 
 check-XQTS: RunXQTS.class
 	CLASSPATH=$(KAWALIB) \
