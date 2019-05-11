@@ -100,7 +100,7 @@
 (define (length (x :: <gnu.lists.Sequence>))
   (invoke x 'size))
 
-(define (arrayp x) |clisp:boolean|
+(define (arrayp x) ::|clisp:boolean|
   (instance? x <gnu.lists.SimpleVector>))
 
 (define (aref
@@ -120,7 +120,7 @@
 
 ;;; STRINGS
 
-(define (stringp x) |clisp:boolean|
+(define (stringp x) ::|clisp:boolean|
   (instance? x <string>))
 
 (define (make-string (count :: <int>) ch)
@@ -138,7 +138,7 @@
 (define (char-to-string ch)
   (make <gnu.lists.FString> 1 (invoke-static <gnu.commonlisp.lang.CommonLisp> 'asChar ch)))
 
-(define (functionp x) |clisp:boolean|
+(define (functionp x) ::|clisp:boolean|
   (instance? x <function>))
 
 (define (princ value #!optional (out (current-output-port))) :: <void>
