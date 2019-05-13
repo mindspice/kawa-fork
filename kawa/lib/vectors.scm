@@ -5,23 +5,23 @@
 (define (vector? x) :: <boolean>
   (instance? x vector))
 
-(define (make-vector (k :: <int>) #!optional (fill #!null)) :: vector
+(define (make-vector (k :: <int>) #!optional (fill #!null)) ::vector
   (gnu.lists.FVector k fill))
 
-(define (vector-length x :: <vector>) :: <int>
+(define (vector-length x ::gvector) :: <int>
   (invoke x 'size))
 
-(define (vector-set! (vector ::vector) (k ::int) obj) :: <void>
-  (invoke vector 'setAt k obj))
+(define (vector-set! (vec ::vector) (k ::int) obj) :: <void>
+  (invoke vec 'setAt k obj))
 
 (define-procedure vector-ref
   setter: vector-set!
   (begin
-    (define (vector-ref (vector :: <vector>) (k :: <int>))
+    (define (vector-ref (vector ::gvector) (k ::int))
       (invoke vector 'get k))
     vector-ref))
 
-(define (vector->list (vec :: <vector>)
+(define (vector->list (vec ::gvector)
                       #!optional (start ::int 0) (end ::int (vec:size)))
                       :: <list>
   (let loop ((result :: <list> '())
@@ -47,7 +47,7 @@
           (set! (result j) ch)
           (loop result (+ i 1) (+ j 1))))))
 
-(define (vector-copy (vec :: vector)
+(define (vector-copy (vec :: gvector)
                      #!optional
                      (start ::int 0)
                      (end ::int (vec:size)))
@@ -58,13 +58,13 @@
 
 (define (vector-copy! (to ::vector)
                       (at ::int)
-                      (from ::vector)
+                      (from ::gvector)
                       #!optional
                       (start ::int 0)
                       (end ::int (from:size)))
   (to:copyFrom  at from start end))
 
-(define (vector-fill! (vec :: vector) fill
+(define (vector-fill! (vec ::vector) fill
                       #!optional (start ::int 0) (end ::int (vec:size)))
   :: void
   (vec:fill start end fill))

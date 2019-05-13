@@ -69,14 +69,14 @@ public class repl extends Procedure0or1 {
 
     public static void printOption(PrintStream out,
                                    String option, String doc) {
-        out.print(" ");
-        out.print(option);
-
-        int len = option.length() + 1;
-        for (int i = 0; i < 30 - len; ++i)
-            out.print(" ");
-        out.print(" ");
-        out.println(doc);
+        StringBuilder buf = new StringBuilder(" ");
+        buf.append(option);
+        buf.append(' ');
+        for (int i = 30 - option.length(); --i >= 0; )
+            buf.append(' ');
+        buf.append(' ');
+        buf.append(doc);
+        out.println(buf);
     }
   
     public static void printOptions(PrintStream out) {
