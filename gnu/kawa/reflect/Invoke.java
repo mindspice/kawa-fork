@@ -148,25 +148,14 @@ public class Invoke extends Procedure
           {
             int len = ctx.numArguments()-1;
             String name;
-            int length;
-            int i;
-            boolean lengthSpecified;
-            /* FIXME
-            if (len >= 2 && args[1] instanceof Keyword
-                && ("length".equals(name = ((Keyword) args[1]).getName())
-                    || "size".equals(name)))
-              {
-                length = ((Number) args[2]).intValue();
-                i = 3;
-                lengthSpecified = true;
-              }
-            else
-            */
-              {
-                length = len;
-                i = 1;
-                lengthSpecified = false;
-              }
+            int lengthIndex = ctx.findKeyword("length");
+            if (lengthIndex < 0)
+                lengthIndex = ctx.findKeyword("size");
+            boolean lengthSpecified = lengthIndex >= 0;
+            int i = lengthSpecified ? 2 : 1;
+            int length = lengthSpecified
+                ? ((Number) ctx.getArgAsObject(lengthIndex)).intValue()
+                : len;
             Type elementType = (dtype == LangObjType.constVectorType
                                 ? Type.objectType
                                 : ((ArrayType) dtype).getComponentType());

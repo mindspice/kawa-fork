@@ -1,3 +1,9 @@
+2019-07-09  Per Bothner  <per@bothner.com>
+
+	Fixes to handling of length keyword for native-array constructors.
+	* Invoke.java (applyToObject): Add (back) support for length keyword.
+	* CompileInvoke.java (validateApplyInvoke): Some keywork cleanup.
+
 2018-01-13  Per Bothner  <per@bothner.com>
 
 	For invoke-static and similarstatic, prefer static methods.

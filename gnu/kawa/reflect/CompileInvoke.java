@@ -51,12 +51,12 @@ public class CompileInvoke {
             Type elementType = atype.getComponentType();
             Expression sizeArg = null;
             boolean lengthSpecified = false;
-            if (args.length >= 3 && args[1] instanceof QuoteExp) {
-                Object arg1 = ((QuoteExp) args[1]).getValue();
-                if (arg1 instanceof Keyword
-                    && ("length".equals(name = ((Keyword) arg1).getName())
-                        || "size".equals(name))) {
-                    sizeArg = args[2];
+            for (int i = 0; i < exp.numKeywordArgs; i++) {
+                int ia = 2 * i + exp.firstKeywordArgIndex - 1;
+                String k =
+                    ((Keyword) ((QuoteExp) args[ia]).getValue()).getName();
+                if ("length".equals(k) || "size".equals(k)) {
+                    sizeArg = args[ia+1];
                     lengthSpecified = true;
                 }
             }
@@ -92,7 +92,8 @@ public class CompileInvoke {
             for (int i = lengthSpecified ? 3 : 1; i < args.length;  i++) {
                 Expression arg = args[i];
                 if (lengthSpecified && i+1 < args.length
-                    && arg instanceof QuoteExp) {
+                    && arg instanceof QuoteExp
+                    && arg.getFlag(QuoteExp.IS_KEYWORD)) {
                     Object key = ((QuoteExp) arg).getValue();
                     if (key instanceof Keyword) {
                         String kname = ((Keyword) key).getName();
