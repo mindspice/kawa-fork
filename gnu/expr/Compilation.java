@@ -167,7 +167,7 @@ public class Compilation implements SourceLocator
 		"Make all warnings into errors");
     public static Options.OptionInfo maxErrors =
         options.add("max-errors", Options.INT_OPTION, null,
-                    "maxium number of errors or warnings to print");
+                    "maximum number of errors or warnings to print");
 
   public Options currentOptions = new Options(options);
 
