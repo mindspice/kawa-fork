@@ -8,7 +8,7 @@ import java.io.*;
 /** Simple adjustable-length vector of 32-bit floats. */
 
 public  class F32Vector extends SimpleVector<Float>
-    implements Comparable
+    implements Comparable, GVector<Float>
 {
     float[] data;
     protected static float[] empty = new float[0];

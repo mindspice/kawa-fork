@@ -65,6 +65,7 @@ public class LangObjType extends SpecialObjectType implements TypeValue
   private static final int ARGVECTOR_TYPE_CODE = 34;
   private static final int JSTRING_TYPE_CODE = 35;
   private static final int ISTRING_TYPE_CODE = 36;
+  private static final int GVECTOR_TYPE_CODE = 37;
 
   public static final LangObjType pathType =
     new LangObjType("path", "gnu.kawa.io.Path",
@@ -107,8 +108,14 @@ public class LangObjType extends SpecialObjectType implements TypeValue
                     DFLONUM_TYPE_CODE);
 
   public static final LangObjType vectorType =
-    new LangObjType("vector", "gnu.lists.FVector",
+      new LangObjType("vector",
+                      "gnu.lists.FVector",
                     VECTOR_TYPE_CODE);
+
+  public static final LangObjType gvectorType =
+      new LangObjType("gvector",
+                      "gnu.lists.GVector",
+                      GVECTOR_TYPE_CODE);
 
   public static final LangObjType constVectorType =
     new LangObjType("constant-vector", "gnu.lists.FVector",
@@ -296,6 +303,7 @@ public class LangObjType extends SpecialObjectType implements TypeValue
                 return 1;
             break; 
         case VECTOR_TYPE_CODE:
+        case GVECTOR_TYPE_CODE:
             if (valueType instanceof ArrayType
                 && ((ArrayType) valueType).getComponentType() instanceof ObjectType)
                 return 1;
@@ -374,6 +382,7 @@ public class LangObjType extends SpecialObjectType implements TypeValue
       case JSTRING_TYPE_CODE:
       case LIST_TYPE_CODE:
       case VECTOR_TYPE_CODE:
+      case GVECTOR_TYPE_CODE:
       case BITVECTOR_TYPE_CODE:
       case C16VECTOR_TYPE_CODE:
       case S8VECTOR_TYPE_CODE:
@@ -588,6 +597,8 @@ public class LangObjType extends SpecialObjectType implements TypeValue
         return typeLangObjType.getDeclaredMethod("coerceToU8Vector", 1);
       case CONST_VECTOR_TYPE_CODE:
         return typeLangObjType.getDeclaredMethod("coerceToConstVector", 1);
+      case GVECTOR_TYPE_CODE:
+          return ClassType.make("gnu.lists.FVector").getDeclaredMethod("cast", 1);
       case VECTOR_TYPE_CODE:
       case BITVECTOR_TYPE_CODE:
       case C16VECTOR_TYPE_CODE:
@@ -671,6 +682,7 @@ public class LangObjType extends SpecialObjectType implements TypeValue
         mname = "asSequenceOrNull";
         break;
       case VECTOR_TYPE_CODE:
+      case GVECTOR_TYPE_CODE:
       case BITVECTOR_TYPE_CODE:
       case C16VECTOR_TYPE_CODE:
       case S8VECTOR_TYPE_CODE:
@@ -772,6 +784,7 @@ public class LangObjType extends SpecialObjectType implements TypeValue
       case ISTRING_TYPE_CODE:
           return IString.valueOf((CharSequence) obj);
       case VECTOR_TYPE_CODE:
+      case GVECTOR_TYPE_CODE:
           return FVector.cast(obj);
       case F32VECTOR_TYPE_CODE:
           return F32Vector.cast(obj);
@@ -921,6 +934,7 @@ public class LangObjType extends SpecialObjectType implements TypeValue
           toStringType.emitCoerceFromObject(code);
           break;
       case VECTOR_TYPE_CODE:
+      case GVECTOR_TYPE_CODE:
       case BITVECTOR_TYPE_CODE:
       case C16VECTOR_TYPE_CODE:
       case S8VECTOR_TYPE_CODE:
@@ -964,6 +978,7 @@ public class LangObjType extends SpecialObjectType implements TypeValue
         return new PrimProcedure("gnu.kawa.io.URIPath", "makeURI", 1);
       case VECTOR_TYPE_CODE:
         return new PrimProcedure("gnu.lists.FVector", "make", 1);
+      case GVECTOR_TYPE_CODE:
       case CONST_VECTOR_TYPE_CODE:
           return new PrimProcedure("gnu.lists.FVector", "makeConstant", 1); 
       case LIST_TYPE_CODE:
@@ -1058,6 +1073,7 @@ public class LangObjType extends SpecialObjectType implements TypeValue
     public CompileBuildObject getBuildObject() {
         switch (typeCode) {
         case VECTOR_TYPE_CODE:
+        case GVECTOR_TYPE_CODE:
         case BITVECTOR_TYPE_CODE:
         case C16VECTOR_TYPE_CODE:
         case S8VECTOR_TYPE_CODE:

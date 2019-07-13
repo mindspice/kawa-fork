@@ -1,3 +1,15 @@
+2019-07-12  Per Bothner  <per@bothner.com>
+
+	New GVector type for "generalized vector".
+        * GVector.java: New interface.
+	* BitVector.java: Implement GVector.
+        * F32Vector.java: Likewise.
+        * F64Vector.java: Likewise.
+        * PrimIntegerVector.java: Likewise.
+        * Range.java: Likewise.
+        * FVector.java: Likewise.
+	(copyFrom): Generalize source to GVector.
+
 2018-07-20  Per Bothner  <per@bothner.com>
 
 	* PrintConsumer.java: Add hooks for DomTerm show/hide buttons.
@@ -6,7 +18,7 @@
 
 2017-08-03  Per Bothner  <per@bothner.com>
 
-	* Sequences.java (subList, drop): Use coerceToSequence.
+	* Sequences.java (subList, dronop): Use coerceToSequence.
 	This extends the methods to Java arrays and other non-List sequences.
 
 2017-06-08  Per Bothner  <per@bothner.com>

@@ -8,7 +8,7 @@ import java.io.*;
 /** Simple adjustable-length vector of 64-bit doubles. */
 
 public  class F64Vector extends SimpleVector<Double>
-    implements Comparable
+    implements Comparable, GVector<Double>
 {
     double[] data;
     protected static double[] empty = new double[0];

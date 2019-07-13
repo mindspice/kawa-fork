@@ -8,7 +8,7 @@ import java.io.*;
 /** Simple adjustable-length vector of objects. */
 
 public  class FVector<E> extends SimpleVector<E>
-    implements Consumable, Comparable
+    implements Consumable, Comparable, GVector<E>
 {
     Object[] data;
     protected static Object[] empty = new Object[0];
@@ -64,16 +64,18 @@ public  class FVector<E> extends SimpleVector<E>
         this.info = VERY_SIMPLE_FLAG;
     }
 
-    public void copyFrom (int index, FVector<E> src, int start, int end) {
+    public void copyFrom (int index, GVector<E> src, int start, int end) {
         int count = end-start;
         int sz = size();
         int src_sz = src.size();
         if (count < 0 || index+count > sz || end > src_sz)
             throw new ArrayIndexOutOfBoundsException();
         int sseg, dseg;
-        if ((sseg = src.getSegmentReadOnly(start, count)) >= 0 &&
-            (dseg = getSegment(index, count)) >= 0) {
-            System.arraycopy(src.data, sseg, data, dseg, count);
+        FVector<E> fsrc;
+        if (src instanceof FVector
+            && (sseg = (fsrc = (FVector)src).getSegmentReadOnly(start, count)) >= 0
+            && (dseg = getSegment(index, count)) >= 0) {
+            System.arraycopy(fsrc.data, sseg, data, dseg, count);
         } else {
             for (int i = 0; i < count; i++)
                 set(index+i, src.get(start+i));

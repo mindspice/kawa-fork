@@ -8,7 +8,7 @@ import java.io.*;
 /** Simple adjustable-length vector of Boolean values. */
 
 public  class BitVector extends SimpleVector<Boolean>
-    implements Comparable
+    implements Comparable, GVector<Boolean>
 {
     boolean[] data;
     protected static boolean[] empty = new boolean[0];

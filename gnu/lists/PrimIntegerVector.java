@@ -6,7 +6,7 @@ package gnu.lists;
 import java.io.*;
 
 public abstract class PrimIntegerVector<E> extends SimpleVector<E>
-    implements Comparable
+    implements Comparable, GVector<E>
 {
     protected static int compareToInt(PrimIntegerVector v1,
                                       PrimIntegerVector v2) {
