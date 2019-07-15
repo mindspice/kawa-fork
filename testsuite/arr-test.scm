@@ -1,5 +1,5 @@
 ;; -*- coding: utf-8 -*-
-(test-begin "arrays" 231)
+(test-begin "arrays" 233)
 
 ;;; array test
 ;;; 2001 Jussi Piitulainen
@@ -222,6 +222,7 @@
 	(art (share-array (make-array shp) shp (lambda (k) k))))
     (array-set! shp 0 0 '?)
     (array-set! shp 0 1 '!)
+    (test-equal #2s32((10 12)) (array-shape arr))
     (test-equal 2 (array-rank shp))
     (test-equal 0 (array-start shp 0))
     (test-equal 1 (array-end shp 0))
@@ -562,8 +563,10 @@
 (test-equal "#2a@1:3:0 ()"
             (format-array #2a@1:3:0()))
 
-(test-equal "#2a@1:2:3((a -9 c) (d 153 ef))"
-            (format "~a" #2a@1:2:3((a -9 "c") (d 153 "ef"))))
+(let ((arr #2a@1:2:3((a -9 "c") (d 153 "ef"))))
+  (test-equal "#2a@1:2:3((a -9 c) (d 153 ef))"
+              (format "~a" arr))
+  (test-equal #2s32((1 3) (0 3)) (array-shape arr)))
 
 (test-equal &{#2a@1:2:3((a -9 "c") (d 153 "ef"))}
             (format "~w" #2a@1:2:3((a -9 "c") (d 153 "ef"))))

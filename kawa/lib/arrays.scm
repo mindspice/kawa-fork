@@ -31,6 +31,18 @@
 (define (array-end  (array :: <array>) (k :: <int>)) :: <int>
   (+ (invoke array 'getLowBound k) (invoke array 'getSize k)))
 
+(define (array-shape (arr :: array)) ::array
+  (let* ((rank (array-rank arr))
+         (iarr (int[] length: (* 2 rank)))
+         (ivec (gnu.lists.S32Vector iarr))
+         (result (gnu.lists.GeneralArray ivec (int[] rank 2) #!null)))
+    (do ((i ::int 0 (+ i 1)) (i2 ::int 0 (+ i2 2)))
+        ((>= i rank)
+         (ivec:setReadOnly)
+         result)
+      (set! (iarr i2) (array-start arr i))
+      (set! (iarr (+ i2 1)) (array-end arr i)))))
+
 (define (share-array (array :: <array>) (shape :: <array>)
 		     (mapper :: <procedure>))
   (invoke-static  <gnu.kawa.functions.Arrays> 'shareArray array shape mapper))
