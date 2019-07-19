@@ -1,3 +1,8 @@
+2019-07-19  Per Bothner  <per@bothner.com>
+
+	* LispFormat.java (LispObjectFormat:format): Handle padding
+	also if not readable.
+
 2019-01-18  Per Bothner  <per@bothner.com>
 
 	* ArrayPrint.java (useInitialBoxChar): New option field.

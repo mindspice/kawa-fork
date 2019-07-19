@@ -789,7 +789,7 @@ class LispObjectFormat extends ReportFormat
     if (this.minPad == LispFormat.PARAM_FROM_LIST)  start++;
     char padChar = getParam(this.padChar, ' ', args, start);
     if (this.padChar == LispFormat.PARAM_FROM_LIST)  start++;
-    if (base.readable && dst instanceof OutPort && minWidth == 0) {
+    if (dst instanceof OutPort && minWidth == 0) {
         // PadFormat formats to a temporary StringBuffer (i.e. not a
         // PrettyWriter) so we don't support sharing anyway.
         // FIXME in PadFormat.
