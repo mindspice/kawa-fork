@@ -1,5 +1,7 @@
 2019-07-19  Per Bothner  <per@bothner.com>
 
+	* Arrays.java (handleShapeSpecifier): New helper method.
+
 	* LispFormat.java (LispObjectFormat:format): Handle padding
 	also if not readable.
 

@@ -30,7 +30,7 @@
         *print-right-margin* *print-radix* *print-xml-indent*
         absolute-path? annotation arglist argvector
         array array? array-rank array-shape array-size array-start array-end
-        array-fill! array-copy! array-index-ref array-index-share
+        ->shape array-fill! array-copy! array-index-ref array-index-share
         array-transform array-reshape array-flatten array->vector
         index-array build-array format-array shape share-array
         arithmetic-shift ash

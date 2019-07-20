@@ -19,6 +19,20 @@
   (invoke-static <gnu.kawa.functions.Arrays> 'makeSimple
 		 shape (gnu.lists.FVector vals)))
 
+(define (->shape (shape ::array))::array
+  (! srank (shape:rank))
+  (cond ((and (= srank 2) (= (shape:getSize 1) 2))
+         shape)
+        ((= srank 1)
+         (! rank (shape:getSize 0))
+         (! ivec (gnu.kawa.functions.Arrays:handleShapeSpecifier
+                  shape rank #!null #t))
+         (gnu.lists.GeneralArray (gnu.lists.S32Vector ivec)
+                                 (int[] rank 2)
+                                 #!null))
+        (else
+         (error "array shape must be a sequence or a rank*2 array"))))
+
 (define (array-rank (array :: <array>)) :: <int>
   (invoke array 'rank))
 

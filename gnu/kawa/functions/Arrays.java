@@ -26,16 +26,21 @@ public class Arrays
     return new GeneralArray(new FVector(vals), dims, null, shapeStrides, 0);
   }
 
-    /** Convenience method for resolving shape specifiers.
+    /** Process a shape specifier.
+     * @param shape A canonical shape (rank*2 array)
+     * or a shape specifier (vector whose length is the rank).
+     * @param rank The rank of arrays of that shape.
+     * @param dimensions Ignored if toShape.  Otherwise,
+     *   must have length==rank, and is modified with (hi-lo).
+     * @param toShape: True if used by {@code ->shape}.
+     * @return If toShape: a rank*2 shape array as an int[];
+     *   otherwise: vector of low-bounds (or null if all zero).
      */
-    public static GeneralArray allocateArray(Array shape) {
+    public static int[] handleShapeSpecifier(Array shape, int rank,
+                                             int[] dimensions,
+                                             boolean toShape) {
         int srank = shape.rank();
-        int rank = shape.getSize(0);
-        if (srank != 1
-            && ! (srank == 2 && shape.getSize(1) == 2))
-            throw new RuntimeException("array shape must be a sequence or a rank*2 array");  
-        int[] dimensions = new int[rank];
-        int[] lowBounds = null;
+        int[] result = toShape ? new int[2 * rank] : null;
         for (int i = rank;  --i >= 0; ) {
             int lo, hi;
             if (srank == 2) {
@@ -47,6 +52,12 @@ public class Arrays
             } else {
                 Object dim = shape.get(i);
                 Sequence sdim;
+                if (LList.listLength(dim, false) == 2) {
+                    Pair p0 = (Pair) dim;
+                    lo = ((Number) p0.getCar()).intValue();
+                    Pair p1 = (Pair) p0.getCdr();
+                    hi = ((Number) p1.getCar()).intValue();
+                } else
                 if (dim instanceof Range.IntRange) {
                     Range.IntRange range = (Range.IntRange) dim;
                     if (range.getStepInt() != 1)
@@ -59,14 +70,32 @@ public class Arrays
                 }
             }
             if (lo > hi)
-                throw new RuntimeException("array dimension "+i+" has negative size"); 
-            dimensions[i] = hi - lo;
-            if (lo != 0) {
-                if (lowBounds == null)
-                    lowBounds = new int[rank];
-                lowBounds[i] = lo;
+                throw new RuntimeException("array dimension "+i+" has negative size");
+            if (toShape) {
+                result[2*i] = lo;
+                result[2*i+1] = hi;
+            } else {
+                dimensions[i] = hi - lo;
+                if (lo != 0) {
+                    if (result == null)
+                        result = new int[rank];
+                    result[i] = lo;
+                }
             }
         }
+        return result;
+    }
+
+    /** Convenience method for resolving shape specifiers.
+     */
+    public static GeneralArray allocateArray(Array shape) {
+        int srank = shape.rank();
+        int rank = shape.getSize(0);
+        if (srank != 1
+            && ! (srank == 2 && shape.getSize(1) == 2))
+            throw new RuntimeException("array shape must be a sequence or a rank*2 array");
+        int[] dimensions = new int[rank];
+        int[] lowBounds = handleShapeSpecifier(shape, rank, dimensions, false);
         return GeneralArray.make(null, dimensions, lowBounds, null, 0);
     }
 

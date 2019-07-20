@@ -1,3 +1,8 @@
+2019-07-19  Per Bothner  <per@bothner.com>
+
+	* arrays.scm (->shape): New procedure.
+	* kawa/base.scm: Export ->shape.
+
 2019-07-14  Per Bothner  <per@bothner.com>
 
 	* arrays.scm (array-shape): New function.
