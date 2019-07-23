@@ -525,12 +525,15 @@ public class ApplyExp extends Expression
                 arg.compileWithPosition(comp, Target.pushObject);
             if (mode == '@' || mode == ':') {
                 String mname = mode == '@' ? "addSequence" : "addArgList";
-                code.emitInvoke(typeArgListImpl.getDeclaredMethod(mname, 1));
+                code.emitInvoke(new Method(typeArgListImpl
+                                           .getDeclaredMethod(mname, 1),
+                                           Compilation.typeCallContext));
             } else if (mode == 'K' && ! useSetKeys) {
-                code.emitInvoke(Compilation.typeCallContext
-                                .getDeclaredMethod("addKey", 2));
+                code.emitInvoke(new Method(typeArgListImpl
+                                .getDeclaredMethod("addKey", 2),
+                                           Compilation.typeCallContext));
             } else {
-                code.emitInvoke(Compilation.typeCallContext
+              code.emitInvoke(Compilation.typeCallContext
                                 .getDeclaredMethod("addArg", 1));
             }
             if (mode == 'K' && useSetKeys

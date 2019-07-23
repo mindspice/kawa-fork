@@ -1,3 +1,7 @@
+2019-07-22  Per Bothner  <per@bothner.com>
+
+	* ApplyExp.java (compileArgsToContext): Fix NPE when using ArgListImpl.
+
 2019-01-01  Per Bothner  <per@bothner.com>
 
 	* ModuleExp.java: Use new Compilation.maxErrors option.
