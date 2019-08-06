@@ -1,3 +1,8 @@
+2019-08-06  Per Bothner  <per@bothner.com>
+
+	* conigure.ac: Change missing Posix find from error to warning.
+	This is an attempt to fix GitLab Continuous Integration.
+
 2018-09-29  Per Bothner  <per@bothner.com>
 
 	* bin/kawa.sh.in: Set kawa.command.pid property.
@@ -1335,7 +1340,7 @@
 	* kawa/standard/atan.java: Removed class, replaced by function atan
 	in kawa/lib/numbers.scm.
 	* kawa/standard/string2number.java: Removed class, replaced by function
-	string->number in kawa/lib/numbers.scm,	
+	string->number in kawa/lib/numbers.scm,
 	* kawa/standard/Makefile.am: Update accordingly.
 	* kawa/standard/Scheme.java (initScheme): Update accordingly.
 

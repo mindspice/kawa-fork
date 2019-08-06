@@ -175,7 +175,7 @@ AC_CACHE_CHECK([for Posix find command], [ac_cv_path_FIND],
               [[findout=`$ac_path_FIND . -maxdepth 0 -type d -exec echo '{}' ';'`
                 test "x$findout" = x"." \
                 && ac_cv_path_FIND=$ac_path_FIND ac_path_FIND_found=:]],
-              [AC_MSG_ERROR([could not find Posix find])])])
+              [AC_MSG_WARN([could not find Posix find]); ac_path_FIND=find])])
           AC_SUBST([FIND], [$ac_cv_path_FIND])
 
 AM_CONDITIONAL(ENABLE_ECHO2, test "$enable_echo2" = "yes")
