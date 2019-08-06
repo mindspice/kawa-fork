@@ -701,7 +701,7 @@ public class LispReader extends Lexer
 	      {
 		if (radix > 0)
 		  return "duplicate radix specifier";
-		if (value < 2 || value > 35)
+		if (value < 2 || value > 36)
 		  return "invalid radix specifier";
 		radix = value;
 		break;

@@ -1,3 +1,8 @@
+2019-08-06  John Smith <gitlab@mg.gitlab.com>
+
+	* LispReader.java (parseNumber): Fix off-by-one bug testing radix.
+	This fixes GitLab issue #56 "string->number not working with base 36".
+
 2019-07-12  Per Bothner  <per@bothner.com>
 
 	* LangObjType.java: New GVector type.

@@ -1,4 +1,4 @@
-(test-begin "num" 1909)
+(test-begin "num" 1911)
 
 (define-syntax jequals
   (syntax-rules ()
@@ -402,6 +402,9 @@ Not currently true, but perhaps it should be.
 (test-eqv #t (number? (string->number "#i1+0/0i")))
 (test-eqv #t (positive? 2147483648))
 (test-eqv #t (negative? (string->number "#i-1/0")))
+
+(test-eqv 35 (string->number "#36rz"))
+(test-eqv 37 (string->number "#36r11"))
 
 ;; From Sven.Hartrumpf@fernuni-hagen.de
 (define quotient-fix-1

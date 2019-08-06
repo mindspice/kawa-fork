@@ -1,3 +1,7 @@
+2019-08-06  Per Bothner  <per@bothner.com>
+
+	* num-test.scm: New tests for string->number with radix 36.
+
 2019-07-19  Per Bothner  <per@bothner.com>
 
 	* arr-test.scm: Add test for ->shape.
