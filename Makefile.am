@@ -72,9 +72,7 @@ kawa-jar.stamp: misc-classes.stamp kawa/Version.class
 	echo timestamp > kawa-jar.stamp
 
 classes.list: ./kawa-jar.stamp
-	echo building on $(build_triplet) version: `cat /proc/version`
-	echo PATH is $$PATH
-	lsb_release -a
+	echo building on $(build_triplet)
 	$(FIND) gnu kawa -name '*.class' -print >classes.list
 
 tmp-sources1.list: source-list Makefile.am
