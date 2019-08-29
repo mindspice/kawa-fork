@@ -309,25 +309,29 @@ public class ClassType extends ObjectType
   {
     if (member.getStaticFlag())
       receiver = null;
-    return isAccessible(member.getDeclaringClass(), receiver,
+    return isAccessible(this, member.getDeclaringClass(), receiver,
                         member.getModifiers());
   }
 
   /** Check if a component is accessible from this class.
+   * @param caller the class containing the calling method,
+   *   or null if unspecified class
    * @param declaring the class containing the component (a field, method,
    *   or inner class)
    * @param receiver the type of the receiver object, if applicable.
    * @param modifiers the access flags of the component
    * @return true if the specified component can be accessed from this class.
    */
-  public boolean isAccessible (ClassType declaring,
-                               ObjectType receiver, int modifiers)
+  public static boolean isAccessible(ClassType caller, ClassType declaring,
+                                     ObjectType receiver, int modifiers)
   {
     int cmods = declaring.getModifiers();
     // Fast, hopefully-common case.
     if ((modifiers & Access.PUBLIC) != 0 && (cmods & Access.PUBLIC) != 0)
       return true;
-    String callerName = getName();
+    if (caller == null)
+      return false;
+    String callerName = caller.getName();
     String className = declaring.getName();
     if (callerName.equals(className))
       return true;
@@ -339,12 +343,10 @@ public class ClassType extends ObjectType
     String classPackage = dot >= 0 ? className.substring(0, dot) : "";
     if (callerPackage.equals(classPackage))
       return true;
-    if ((cmods & Access.PUBLIC) == 0)
-      return false;
     if ((modifiers & Access.PROTECTED) != 0
-        && this.isSubclass(declaring)
+        && caller.isSubclass(declaring)
         && (!(receiver instanceof ClassType)
-            || ((ClassType) receiver).isSubclass(this)))
+            || ((ClassType) receiver).isSubclass(caller)))
       return true;
     return false;
   }

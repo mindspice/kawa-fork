@@ -1,3 +1,8 @@
+2019-08-29  Per Bothner  <per@bothner.com>
+
+	* ClassType.java (isAccessible): Make static.
+	Interpret caller==null as being "artibitrary caller".
+
 2018-09-07  Per Bothner  <per@bothner.com>
 
 	* ClassType.java (JAVA_10_VERSION): New magic number.

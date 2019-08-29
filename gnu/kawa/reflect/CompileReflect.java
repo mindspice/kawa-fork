@@ -179,8 +179,8 @@ public class CompileReflect
             if (isStatic && ! isStaticMethod)
               return new ErrorExp("cannot call non-static getter method `"
                                   + name + "' using `" + proc.getName() + '\'', comp);
-	    if (caller != null && ! caller.isAccessible(dtype, ctype, modifiers))
-	      return new ErrorExp( "method "+method +" is not accessible here", 
+	    if (! ClassType.isAccessible(caller, dtype, ctype, modifiers))
+	      return new ErrorExp("method "+method +" is not accessible here", 
                                    comp);
             rtype = method.getReturnType();
           }

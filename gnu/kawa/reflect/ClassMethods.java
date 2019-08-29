@@ -79,7 +79,10 @@ public class ClassMethods extends Procedure2
 	    }
 	  if (k >= 0)
 	    continue;
-	  if (class1.isSubtype(method2.getDeclaringClass()))
+          int comp = class1.compare(method2.getDeclaringClass());
+          if (comp == -1 // class1 is strict subtype of class2
+              || (comp == 0
+                  && ((method2.getModifiers() & Access.SYNTHETIC) != 0)))
               methods.set(j, method1);
 	  methods.set(i, methods.get(mlength - 1));
 	  mlength--;
@@ -139,13 +142,17 @@ public class ClassMethods extends Procedure2
                 ClassType mdclass = method.getDeclaringClass();
                 if (mdclass != dtype) {
                     Type itype = dtype.getImplementationType();
-                    if (itype instanceof ClassType
-                        && ! (((ClassType) itype).isInterface()
-                              && mdclass == Type.objectType)) {
-                        // Override declared type of method so it matches
-                        // receiver, like javac does, for improved binary
-                        // compatibility.
-                        pproc.setMethodForInvoke(new Method(method, (ClassType) itype));
+                    if (itype instanceof ClassType) {
+                        ClassType iclass = (ClassType) itype;
+                        if ((iclass.getModifiers() & Access.PUBLIC) != 0
+                            && ! (iclass.isInterface()
+                                  && mdclass == Type.objectType)) {
+                            // Override declared type of method so it matches
+                            // receiver, like javac does, for improved binary
+                            // compatibility.
+                            Method m = new Method(method, (ClassType) itype);
+                            pproc.setMethodForInvoke(m);
+                        }
                     }
                 }
             }
@@ -340,9 +347,7 @@ class MethodFilter implements gnu.bytecode.Filter
     gnu.bytecode.Method method = (gnu.bytecode.Method) value;
     String mname = method.getName();
     int mmods = method.getModifiers();
-    if ((mmods & modmask) != modifiers
-        || (mmods & Access.SYNTHETIC) != 0
-	|| ! mname.startsWith(name))
+    if ((mmods & modmask) != modifiers || ! mname.startsWith(name))
       return false;
     int mlen = mname.length();
     char c;
@@ -353,9 +358,7 @@ class MethodFilter implements gnu.bytecode.Filter
 	&& (mlen != nlen + 4
 	    || ! mname.endsWith("$V$X")))
       return false;
-    ClassType declaring = receiver instanceof ClassType ? (ClassType) receiver
-      : method.getDeclaringClass();
-    return caller == null
-      || caller.isAccessible(declaring, receiver, method.getModifiers());
+    return ClassType.isAccessible(caller, method.getDeclaringClass(),
+                                  receiver, method.getModifiers());
   }
 }

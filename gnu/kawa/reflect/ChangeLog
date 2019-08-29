@@ -1,3 +1,11 @@
+2019-08-29  Per Bothner  <per@bothner.com>
+
+	* ClassMethods.java (getMethod): Only override declared type
+	of method if implementationType is public.
+	(removeRedundantMethods): Remove SYNTHETIC if redundant.
+	It is not always redundant - consider StringBuilder.setLength,
+	which is a syntahic wrapper for AbstractStringBuilder.setLength.
+
 2019-07-09  Per Bothner  <per@bothner.com>
 
 	Fixes to handling of length keyword for native-array constructors.
