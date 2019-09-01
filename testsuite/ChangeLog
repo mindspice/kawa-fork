@@ -1,3 +1,7 @@
+2019-08-31  Per Bothner  <per@bothner.com>
+
+	* circlist.scm: Test for GitLab issue#57 "SRFI 1 circular-list problem".
+
 2019-08-06  Per Bothner  <per@bothner.com>
 
 	* num-test.scm: New tests for string->number with radix 36.

@@ -255,10 +255,8 @@ public class Lambda extends Syntax
 	  {
             decl.setFlag(Declaration.IS_REST_PARAMETER);
             if (! decl.getFlag(Declaration.TYPE_SPECIFIED)) {
-                if (key_args >= 0)
-                    decl.setType(LangObjType.listType);
-                else {
-                    decl.setType(LangObjType.argListType);
+                decl.setType(LangObjType.listType);
+                if (key_args < 0) {
                     decl.setFlag(Declaration.KEYWORDS_OK);
                     lexp.setFlag(LambdaExp.ALLOW_OTHER_KEYWORDS);
                 }
@@ -294,7 +292,7 @@ public class Lambda extends Syntax
             rest_args = 1;
             Declaration decl = addParam((Symbol) bindings,
                                         templateScopeRest, lexp, tr);
-            decl.setType(LangObjType.argListType);
+            decl.setType(LangObjType.listType);
             decl.setFlag(Declaration.IS_SINGLE_VALUE
                          |Declaration.IS_PARAMETER
                          |Declaration.IS_REST_PARAMETER);
