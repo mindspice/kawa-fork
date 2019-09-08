@@ -19,32 +19,28 @@ public class CharArrayOutPort extends OutPort
     super(null, printPretty, false, path);
   }
 
-  public int length ()
-  {
-    return bout.bufferFillPointer;
-  }
-  public int size()
-  {
-    return bout.bufferFillPointer;
-  }
+    public int length() {
+        return getFillIndex();
+    }
 
+    public int size() {
+        return getFillIndex();
+    }
 
-  public void setLength (int length)
-  {
-    bout.bufferFillPointer = length;
-  }
+    public void setLength(int length) {
+        bout.setFillIndex(length);
+    }
 
-  public void reset ()
-  {
-    bout.bufferFillPointer = 0;
-  }
+    public void reset() {
+        setLength(0);
+    }
 
   /** Returns the written data as a freshly copied {@code char} array. */
   public char[] toCharArray()
   {
-    int length = bout.bufferFillPointer;
+    int length = getFillIndex();
     char[] result = new char[length];
-    System.arraycopy(bout.buffer, 0, result, 0, length);
+    System.arraycopy(getBuffer(), 0, result, 0, length);
     return result;
   }
 
@@ -80,35 +76,36 @@ public class CharArrayOutPort extends OutPort
    */
   public String toSubString (int beginIndex, int endIndex)
   {
-    if (endIndex > bout.bufferFillPointer)
+    if (endIndex > getFillIndex())
       throw new IndexOutOfBoundsException();
-    return new String(bout.buffer, beginIndex, endIndex - beginIndex);
+    return new String(getBuffer(), beginIndex, endIndex - beginIndex);
   }
 
-  /** Returns a substring of the written data as a new {@code String}.
-   * Equivalent to {@code toString().substring(beginIndex)}
-   * but more efficient.
-   */
-  public String toSubString (int beginIndex)
-  {
-    return new String(bout.buffer, beginIndex,
-                      bout.bufferFillPointer - beginIndex);
-  }
+    /** Returns a substring of the written data as a new {@code String}.
+     * Equivalent to {@code toString().substring(beginIndex)}
+     * but more efficient.
+     */
+    public String toSubString (int beginIndex) {
+        return new String(getBuffer(), beginIndex,
+                          getFillIndex() - beginIndex);
+    }
 
     public void writeTo(Appendable out) {
-        writeTo(0, bout.bufferFillPointer, out);
+        writeTo(0, getFillIndex(), out);
     }
 
     public void writeTo (int start, int count, Appendable out) {
         if (out instanceof Consumer)
-            ((Consumer) out).write(bout.buffer, start, count);
+            ((Consumer) out).write(getBuffer(), start, count);
         else {
             try {
-                out.append(new FString(bout.buffer), start, start+count);
+                out.append(new FString(getBuffer()), start, start+count);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         }
     }
-}
 
+    private char[] getBuffer() { return bout.getBuffer(); }
+    private int getFillIndex() { return bout.getFillIndex(); }
+}

@@ -1,3 +1,9 @@
+2019-09-08  Per Bothner  <per@bothner.com>
+
+	* PrettyWriter.java (buffer, bufferFillPointer): Make private.
+	(getBuffer, getFillIndex, setFillIndex): New accessor methods.
+	* CharArrayOutPort.java: Update to use new accessor methods.
+
 2018-12-02  Per Bothner  <per@bothner.com>
 
 	* CheckConsole.java (forDomTerm): Generalize to PrintConsumer.

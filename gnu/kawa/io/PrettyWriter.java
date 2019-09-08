@@ -243,11 +243,14 @@ public class PrettyWriter extends PrintConsumer
         return buffer.length == 0 && out != null;
     }
 
-  /** Holds all the text that has been output but not yet printed. */
-  public /* FIXME */ char[] buffer = new char[2048];
+    /** Holds all the text that has been output but not yet printed. */
+    private char[] buffer = new char[2048];
+    char[] getBuffer() { return buffer; }
 
-  /** The index into BUFFER where more text should be put. */
-  public /* FIXME */ int bufferFillPointer;
+    /** The index into BUFFER where more text should be put. */
+    private int bufferFillPointer;
+    int getFillIndex() { return bufferFillPointer; }
+    void setFillIndex(int index) { bufferFillPointer = index; }
 
   /** Total amount of stuff that has been shifted out of the buffer.
    * Whenever we output stuff from the buffer, we shift the remaining noise
