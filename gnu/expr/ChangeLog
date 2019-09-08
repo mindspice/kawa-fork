@@ -1,3 +1,9 @@
+2019-09-08  Per Bothner  <per@bothner.com>
+
+	* Expression.java (print): Use closeThis instead of close.
+	This fixes GitLab issue "58 "Displaying objects of type
+	gnu.expr.Expression raises NullPointerException."
+
 2019-07-22  Per Bothner  <per@bothner.com>
 
 	* ApplyExp.java (compileArgsToContext): Fix NPE when using ArgListImpl.

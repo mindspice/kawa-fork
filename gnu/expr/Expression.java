@@ -95,7 +95,7 @@ public abstract class Expression extends Procedure
       {
 	OutPort port = new OutPort((PrintWriter) out);
 	print(port);
-	port.close();
+        port.closeThis();
       }
     else
       {
