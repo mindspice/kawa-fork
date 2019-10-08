@@ -1,3 +1,9 @@
+2019-10-07  Per Bothner  <per@bothner.com>
+
+	* LispLanguage.java (getPrimaryPrompt): Simplify prompt.
+	Don't include "hider button" in prompt for DomTerm, as it
+	is now added automatically by DomTerm.
+
 2019-08-06  John Smith <gitlab@mg.gitlab.com>
 
 	* LispReader.java (parseNumber): Fix off-by-one bug testing radix.

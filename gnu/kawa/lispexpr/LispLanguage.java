@@ -372,7 +372,7 @@ public abstract class LispLanguage extends Language
     }
 
     @Override
-    public String getPrimaryPrompt() { return "#|%H\u25BC\u25B6kawa:%N|# "; }
+    public String getPrimaryPrompt() { return "#|kawa:%N|# "; }
 
     @Override
     public String getSecondaryPrompt() { return "#|%P.%N|# "; }
