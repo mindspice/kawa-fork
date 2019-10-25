@@ -1,3 +1,10 @@
+2019-10-25  Per Bothner  <per@bothner.com>
+
+	* PrimProcedure.java (disassemble): Use MethodHandleInfo.
+	Fixes GitLab issue #61 "`disassemble` doesn't show attributes
+	for procedures with `#!rest` parameters."
+	* CompiledProc.java (getModuleClass): Try using MethodHandleInfo.
+
 2019-09-08  Per Bothner  <per@bothner.com>
 
 	* Expression.java (print): Use closeThis instead of close.

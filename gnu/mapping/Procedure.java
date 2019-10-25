@@ -118,6 +118,12 @@ public class Procedure extends PropertySet
         setName(n);
     }
 
+    public MethodHandle getApplyMethod() {
+        return applyToObjectMethod != applyToObjectDefault
+            ? applyToObjectMethod
+            : applyToConsumerMethod;
+    }
+
     public void checkBadCode(CallContext ctx) {
         int code = 0; // FIXME
 	//throw MethodProc.matchFailAsException(code, this, args);

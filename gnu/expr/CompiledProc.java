@@ -18,12 +18,18 @@ public class CompiledProc extends MethodProc {
     public Object getModule() { return module; }
 
     public Class getModuleClass() {
+        /* #ifdef JAVA8 */
+        try {
+            return java.lang.invoke.MethodHandles.lookup()
+                .revealDirect(getApplyMethod())
+                .getDeclaringClass();
+        } catch (Exception ex) {
+        }
+        /* #endif */
         if (module == null || module instanceof Class)
             return (Class) module;
         else
             return module.getClass();
-        // FIXME If Java 8 use MethodHandles.Lookup.revealDirect
-        // to get MethodHandleInfo, and then getDeclaringClass.
     }
 
     public CompiledProc(Object module, boolean resultGoesToConsumer, MethodHandle applyMethod, Object name, int numArgs) {

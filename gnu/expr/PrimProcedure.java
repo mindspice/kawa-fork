@@ -1079,10 +1079,30 @@ public class PrimProcedure extends MethodProc {
         return;
       }
     String pname = null;
+    String aname = null; // apply method name, or null
+    int alength = -1; // aname length, with ""$check"
     Class cl = proc.getClass();
-    if (proc instanceof CompiledProc)
-      cl = ((CompiledProc) proc).getModuleClass();
-    else if (proc instanceof PrimProcedure)
+    if (proc instanceof CompiledProc) {
+        CompiledProc cp = (CompiledProc) proc;
+        /* #ifdef JAVA8 */
+        try {
+            MethodHandleInfo minfo =
+                java.lang.invoke.MethodHandles.lookup()
+                .revealDirect(cp.getApplyMethod());
+            cl = minfo.getDeclaringClass();
+            pname = minfo.getName();
+            if (pname.endsWith("$check")) {
+                aname = pname;
+                alength = aname.length()-6;
+                pname = pname.substring(0, alength);
+            }
+        } catch (Exception ex) {
+            cl = cp.getModuleClass();
+        }
+        /* #else */
+        // cl = cp.getModuleClass();
+        /* #endif */
+    } else if (proc instanceof PrimProcedure)
       {
         Method pmethod = ((PrimProcedure) proc).methodForInvoke;
         if (pmethod != null)
@@ -1124,8 +1144,10 @@ public class PrimProcedure extends MethodProc {
          method != null; method = method.getNext())
       {
         String mname = method.getName();
-        if (mname.equals(pname)) {
-          cwriter.printMethod(method);
+        if ((aname != null && mname.length() >= alength
+             && mname.substring(0, alength).equals(pname))
+            || mname.equals(pname)) {
+            cwriter.printMethod(method);
         }
       }
     cwriter.flush();
