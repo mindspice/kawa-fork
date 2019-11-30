@@ -14950,7 +14950,7 @@ The array does not retain a reference to @var{shape}.
 @CompatibilityNote{} Guile has an incompatible @code{make-array} procedure.
 @end deffn
 
-@deffn Procedure build-array shape getter [setter[
+@deffn Procedure build-array shape getter [setter]
 Construct a ``virtual array'' of the given @var{shape},
 which uses no storage for the elements.
 Instead, elements are calculated on-demand by calling @var{getter},

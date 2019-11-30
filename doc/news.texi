@@ -9,7 +9,17 @@ changes}.
 
 @itemize
 @item
+Updates for Java 9 and newer.
+@item
 Revert 3.0 change in allocating closure objects for inlined functions.
+@item
+Tweak @code{format-array} to match @uref{http://srfi.schemers.org/srfi-163/srfi-163.html,SRFI 163}, including an optional port parameter.
+@item
+The @code{build-array} procedure takes an optional setter procedure.
+@item
+New @code{--max-errors} option.
+@item
+Many bug-fixes and minor improvements.
 @end itemize
 
 @subheading Kawa 3.0 (October 2, 2017)
