@@ -1,3 +1,10 @@
+2019-12-11  Per Bothner  <per@bothner.com>
+
+	* NamedPart.java: Make class public.
+	This fixes GitLab issue #64 "(Java 11) Using
+	<gnu.kawa.functions.NamedPart> in type declaration causes
+	java.lang.IllegalAccessError on subsequent usages of the variable".
+
 2019-07-19  Per Bothner  <per@bothner.com>
 
 	* Arrays.java (handleShapeSpecifier): New helper method.

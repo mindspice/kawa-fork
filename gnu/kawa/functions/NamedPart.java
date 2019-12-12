@@ -7,7 +7,7 @@ import java.io.*;
 
 /** A reference to a named feature/part of a specific object. */
 
-class NamedPart extends ProcedureN
+public class NamedPart extends ProcedureN
   implements HasSetter, Externalizable
 {
   Object container;
