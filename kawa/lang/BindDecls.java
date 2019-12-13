@@ -123,7 +123,8 @@ public class BindDecls {
                 setInitializer(decl, init, scope, comp);
             if (scope instanceof ModuleExp
                 && (patval == underScoreSymbol
-                    || ! scope.getFlag(ModuleExp.INTERACTIVE)))
+                    || ! (scope.getFlag(ModuleExp.INTERACTIVE)
+                          || comp.sharedModuleDefs())))
                 decl.setPrivate(true);
             if (makeConstant)
                 decl.setFlag(Declaration.IS_CONSTANT);
