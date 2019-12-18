@@ -369,7 +369,8 @@ public class Method implements AttrContainer, Member {
         sbuf.append(name);
         if (arg_types != null) {
             listParameters(sbuf);
-            sbuf.append(return_type.getName());
+            if (return_type != null)
+                sbuf.append(return_type.getName());
         }
         return sbuf.toString();
     }
