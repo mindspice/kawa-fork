@@ -9,7 +9,7 @@ import java.util.*;
   * <p>
   * Extended by ClassType and ArrayType. */
 
-public class ObjectType extends Type
+public abstract class ObjectType extends Type
 {
   protected ObjectType ()
   {
@@ -131,6 +131,9 @@ public class ObjectType extends Type
       return obj == null;
     return super.isInstance(obj);
   }
+
+    public ClassType getSuperclass() { return null; }
+    public ClassType[] getInterfaces() { return null; }
 
   public Field getField(String name, int mask)
   {

@@ -61,6 +61,13 @@ public class ArrayType extends ObjectType
 
     public String getInternalName() { return getSignature(); }
 
+    public ClassType getSuperclass() { return Type.objectType; }
+    static final ClassType[] interfaces = {
+        ClassType.make("java.lang.Cloneable"),
+        ClassType.make("java.io.Serializable")
+    };
+    public ClassType[] getInterfaces() { return interfaces; }
+
     public Class getReflectClass() {
         try {
             if (reflectClass == null) {

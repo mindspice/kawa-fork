@@ -1,5 +1,10 @@
 2019-12-18  Per Bothner  <per@bothner.com>
 
+	* ObjectType.java (getSuperclass, getInterfaces): New methods.
+	Moved "up" from ClassType.
+	* ArrayType.java (getSuperclass, getInterfaces): Implemented.
+	* SpecialObjectType.java: Likewise.
+
 	* Method.java (toString): Check that return_type isn't null.
 
 2019-08-29  Per Bothner  <per@bothner.com>

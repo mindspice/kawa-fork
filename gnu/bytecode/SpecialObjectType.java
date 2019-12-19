@@ -17,6 +17,16 @@ public class SpecialObjectType extends ObjectType {
     }
 
     @Override
+    public ClassType getSuperclass() {
+        return implementationType.getSuperclass();
+    }
+
+    @Override
+    public ClassType[] getInterfaces() {
+        return implementationType.getInterfaces();
+    }
+
+    @Override
     public Field getField(String name, int mask) {
         return implementationType.getField(name, mask);
     }
