@@ -1,3 +1,9 @@
+2019-12-18  Per Bothner  <per@bothner.com>
+
+	* quote1.scm: Some tests for quote.
+	Specifically, for GitLab issue #62 "Unquoteable (this) if followed
+	by colon notation" plus someother tests.
+
 2019-12-13  spellcard99
 
 	* eval1.scm: Test for GitLab issue #63 "Passing expression using pattern

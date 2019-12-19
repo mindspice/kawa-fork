@@ -780,7 +780,7 @@ public class Translator extends Compilation
 
     /** Re-write a Scheme expression in S-expression format into internal form.
      * @param mode either 'N' (normal), 'F' (function application context),
-     *  or 'M' (macro-checking).
+     *  'M' (macro-checking) or 'Q' (colon-form in quote).
      */
     public Expression rewrite(Object exp, char mode) {
         if (exp instanceof SyntaxForm) {
@@ -794,7 +794,7 @@ public class Translator extends Compilation
             }
         }
         boolean function = mode != 'N';
-        if (exp instanceof Pair) {
+        if (exp instanceof Pair && mode != 'Q') {
             Expression e = rewrite_pair((Pair) exp, function);
             setLineOf(e);
             return e;
@@ -988,8 +988,9 @@ public class Translator extends Compilation
             }
 
             if (decl == null && function
-                && nameToLookup==LispLanguage.lookup_sym)
+                && nameToLookup==LispLanguage.lookup_sym) {
                 decl = getNamedPartDecl;
+            }
             int scanNesting = decl == null ? 0
                 : Declaration.followAliases(decl).getScanNesting();
             if (scanNesting > 0) {
@@ -1443,8 +1444,7 @@ public class Translator extends Compilation
 	       error('e', "unknown type name '"
 		     + ((ReferenceExp) texp).getName() + '\'');
 	     else
-	       error('e',
-		 "invalid type spec");
+               error('e', "invalid type spec");
              type = Type.errorType;
 	   }
         if (decl != null)

@@ -118,7 +118,7 @@ public class Quote extends Syntax {
                 && (p1 = (Pair) pair.getCdr()) instanceof Pair
                 && (p2 = (Pair) p1.getCdr()) instanceof Pair
                 && p2.getCdr() == LList.Empty) {
-                Expression part1 = tr.rewrite_car(p1, false);
+                Expression part1 = tr.rewrite(p1.getCar(), 'Q');
                 Expression part2 = tr.rewrite_car_for_lookup(p2);
                 Namespace ns = tr.namespaceResolvePrefix(part1);
                 Symbol sym = tr.namespaceResolve(ns, part2);
