@@ -15,7 +15,7 @@ java-classes.stamp: $(java_Java)
 	echo timestamp > java-classes.stamp
 	echo timestamp > $(TO_TOPDIR)/kawa-jar.stamp
 
-KAWA_COMPILER = $(JAVA) -classpath "$(CLASSPATH)" kawa.repl -d $(top_builddir) \
+KAWA_COMPILER = $(JAVA) -classpath "$(CLASSPATH)" $(KAWA_COMPILER_JAVA_FLAGS) kawa.repl -d $(top_builddir) \
   -P `echo $(PACKAGE_FNAME)|sed -e s/-/./g`.
 
 scm-classes.stamp: $(java_SCM)

@@ -34,6 +34,9 @@ else
     JAVA=${JAVA-java}
 fi
 
+@WITH_JAVAFX_MODULE_TRUE@ JAVAFX_HOME=${JAVAFX_HOME:=@WITH_JAVAFX_ARG@}
+JVM_FLAGS=${JAVAFX_HOME:+"--module-path=${JAVAFX_HOME}/lib" --add-modules=javafx.web}
+
 # This ugly duplication is so we only have to use arrays and substrings
 # (which are non-Posix and non-portable) if there is a -D or -J option.
 case "$1" in
@@ -53,9 +56,9 @@ case "$1" in
                 ;;
             esac
         done
-        exec ${JAVA} -Dkawa.command.line="${command_line}" -Dkawa.command.pid="$$" -Dkawa.home="${kawadir}" "${jvm_args[@]}" kawa.repl ${no_console} "$@"
+        exec ${JAVA} ${JVM_FLAGS} -Dkawa.command.line="${command_line}" -Dkawa.command.pid="$$" -Dkawa.home="${kawadir}" "${jvm_args[@]}" kawa.repl ${no_console} "$@"
         ;;
     *)
-        exec ${JAVA} -Dkawa.command.line="${command_line}" -Dkawa.command.pid="$$" -Dkawa.home="${kawadir}" kawa.repl ${no_console} "$@"
+        exec ${JAVA} ${JVM_FLAGS} -Dkawa.command.line="${command_line}" -Dkawa.command.pid="$$" -Dkawa.home="${kawadir}" kawa.repl ${no_console} "$@"
         ;;
 esac

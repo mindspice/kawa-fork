@@ -28,7 +28,7 @@ AC_ARG_WITH(android,
   AS_HELP_STRING(--with-android@<:@=android.jar@:>@,Build for the Android platform))
 
 AC_ARG_WITH(javafx,
-  AS_HELP_STRING(--with-javafx@<:@=jfxrt.jar@:>@,Enable support for JavaFX))
+ AS_HELP_STRING(--with-javafx@<:@=javafx-sdk-home@:>@,Enable support for JavaFX))
 WITH_JAVAFX_ARG="${with_javafx}"
 
 AC_ARG_WITH(lsp4j,
@@ -196,6 +196,9 @@ AM_CONDITIONAL(WITH_DOMTERM,
   test "$with_domterm" != "" -a "$with_domterm" != "no")
 AM_CONDITIONAL(WITH_JAVAFX,
   test "$with_javafx" != "" -a "$with_javafx" != "no")
+AM_CONDITIONAL(WITH_JAVAFX_MODULE,
+  test "$with_javafx" != "" -a "$with_javafx" != "no" -a "$with_javafx" != "yes")
+
 AM_CONDITIONAL(WITH_SWT, test "$with_swt" = "yes")
 AM_CONDITIONAL(WITH_AWT, test "$with_awt" != "no")
 AM_CONDITIONAL(WITH_SAX2, test "$with_sax2" != "no")
@@ -264,6 +267,7 @@ AC_SUBST(pathsep)
 AC_SUBST(filesep)
 AC_SUBST(WITH_SERVLET_ARG)
 AC_SUBST(WITH_JAVAFX_ARG)
+AC_SUBST(WITH_JAVAFX_MODULE)
 AC_SUBST(WITH_JLINE3)
 AC_SUBST(WITH_GSON_PATH)
 AC_SUBST(WITH_JLINE_PATH)

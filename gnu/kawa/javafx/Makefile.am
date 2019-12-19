@@ -2,6 +2,10 @@
 
 include $(top_srcdir)/Make-rules
 
+if WITH_JAVAFX_MODULE
+KAWA_COMPILER_JAVA_FLAGS=--module-path $(WITH_JAVAFX_ARG)/lib --add-modules javafx.web
+endif
+
 java_sources=
 
 java_SCM = GroupObjectBuilder.scm MakeScene.scm defs.scm

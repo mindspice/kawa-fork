@@ -1,3 +1,9 @@
+2019-12-16  Michael Zucchi  <notzed@gmail.com>
+
+    * kawa.sh.in (JAVAFX_HOME, JVM_FLAGS): If JAVAFX_HOME is defined
+    or configure was compiled using --with-javafx=path then add javafx
+    modules to module path.
+
 2017-05-03  Per Bothner  <per@bothner.com>
 
 	* kawa.sh.in:  Avoid needless bash-specific 'type' command.

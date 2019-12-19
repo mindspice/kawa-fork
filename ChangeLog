@@ -1,3 +1,11 @@
+2019-12-16  Michael Zucchi  <notzed@gmail.com>
+
+	* Make-rules (KAWA_COMPILER): Add KAWA_COMPILER_JAVA_FLAGS for jvm
+	flags for compiler.
+	* Makefile.am: Enable JAVAFX_SUBDIRS if --with=javafx-sdk used.
+	* configure.ac: Changed --with-javafx=non-empty-path to enable modular
+        java sdk.
+
 2019-08-06  Per Bothner  <per@bothner.com>
 
 	* conigure.ac: Change missing Posix find from error to warning.

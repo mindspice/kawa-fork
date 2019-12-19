@@ -1747,15 +1747,13 @@ the Emacs Lisp language.  JEmacs is a proof of concept - not really
 usable or maintained.
 
 @item @code{--with-javafx}
-@itemx @code{--with-javafx=@var{javafx-jar}}
-@itemx @code{--with-javafx=@var{java-home}}
+@itemx @code{--with-javafx=@var{javafx-home}}
 Set this flag to enable the convenience features
 for @ref{Building JavaFX applications,JavaFX}.
 The JavaFX classes are included in JDK 8 (but not OpenJDK 8),
-and you don't need to specify @code{@var{javafx-jar}} or @code{@var{java-home}}.
-For JDK 7 you need to specify @code{@var{javafx-jar}}
-(the path to @code{javafx.rt}) or @code{@var{java-home}}
-(the value of the @code{$JAVA_HOME}).
+and you don't need to specify @code{@var{javafx-home}}.
+JDK 11 or later does not include JavaFX, so you need to specify
+the location of the modular OpenJFX SDK as @code{@var{javafx-home}}.
 
 @item @code{--with-android=@var{android-jar}}
 Build for the Android platform.
@@ -23119,21 +23117,26 @@ and
 The @code{browse-kawa-manual} script in the @code{doc} directory (source only)
 uses JavaFX WebView to create a window for browsing the Kawa documentation.
 
-@subsection Using JavaFX with JDK 7
-JDK 8 ships with JavaFX, and it is in the default @code{CLASSPATH}.
-JDK 7 update 9 or later does have JavaFX included, but it is a separate
-@code{jfxrt.jar} which not in the default @code{CLASSPATH}.
-Thus you have to explicitly add @code{jfxrt.jar}.
+@subsection Using JavaFX with JDK 11+
+Starting with JDK 11, JavaFX has been moved to a separate project and
+is no longer included in the JDK.  The separate project OpenJFX
+provides an SDK that includes modular jar files which can be added to
+the @code{CLASSPATH} or via the @code{--module-path} parameter to
+@code{javac} and @code{java}.
+
 To run the previous @code{HelloButton1.scm} you can do:
 @example
-java -cp $JAVA_HOME/lib/jfxrt.jar:$KAWA_HOME/kawa.jar HelloButton1.scm
+$ java -cp $KAVA_HOME/kawa.jar --module-path $JAVAFX_HOME/lib \
+  --add-modules javafx.web HelloButton1.scm
 @end example
 
-If you build Kawa from source, do:
+If you build Kawa from source you must use an appropriate JDK version
+and enable the modular OpenJFX SDK:
 @example
-$ ./configure --with-javafx=$JAVA_HOME --enable-kawa-frontend ...other-args...
+$ ./configure --with-javafx=path-to-sdk ...other-args...
 @end example
-The resulting Kawa binary sets up the path to @code{jfxrt.jar} so you just need to do:
+The resulting Kawa binary sets up the module path and the boostrap
+module so you just need to do:
 @example
 $ kawa HelloButton1.scm
 @end example
