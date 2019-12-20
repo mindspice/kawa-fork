@@ -564,6 +564,7 @@
     <copy file="${src.dir}/bin/kawa.sh.in" tofile="bin/kawa.sh">
       <filterset>
         <filter token="ENABLE_KAWA_FRONTEND_TRUE" value="#"/>
+        <filter token="WITH_JAVAFX_MODULE_TRUE" value="#"/>
         <filter token="VERSION" value="${version}"/>
         <filter token="CLASSPATH_SEPARATOR" value="${classpath.separator}"/>
         <filter token="KAWAJAR" value="kawa.jar"/>
