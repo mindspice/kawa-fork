@@ -1683,7 +1683,7 @@ like @uref{http://retroweaver.sourceforge.net/, Retroweaver}
 on the Kawa @code{.jar} to fix up Java 5 dependencies.
 Contact the Kawa author if you want to be a tester for this.
 
-@item @code{--with-docbook-stylesheet[=@var{path}]}
+@item @code{--with-docbook-stylesheets[=@var{path}]}
 Build the documentation (this manual) as an electronic book
 (in ebook format) or a website, using
 the DocBook xslt stylesheets.
@@ -1835,7 +1835,7 @@ In this case, point your browser at
 To build the documentation in a nicer form suitable for a web-site
 you need @code{makeinfo} @emph{and} the DocBook XSLT tools
 (and to have run @code{configure} with
-the @code{--with-docbook-stylesheet} option):
+the @code{--with-docbook-stylesheets} option):
 @example
 cd doc && make web/index.html
 @end example

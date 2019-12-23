@@ -1,5 +1,6 @@
 2019-12-22  Per Bothner  <per@bothner.com>
 
+	* kawa.texi: Fix typo --with-docbook-stylesheet to plural.
 	* kawa.texi: Various updates includeing array ->shape procedure.
 
 2019-12-16  Michael Zucchi  <notzed@gmail.com>
