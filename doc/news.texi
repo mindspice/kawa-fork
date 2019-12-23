@@ -13,9 +13,25 @@ Updates for Java 9 and newer.
 @item
 Revert 3.0 change in allocating closure objects for inlined functions.
 @item
-Tweak @code{format-array} to match @uref{http://srfi.schemers.org/srfi-163/srfi-163.html,SRFI 163}, including an optional port parameter.
+Enhancements to arrays to match
+@uref{http://srfi.schemers.org/srfi-163/srfi-163.html,SRFI 163}
+and @uref{http://srfi.schemers.org/srfi-163/srfi-164.html,SRFI 164}:
+@itemize @bullet
+@item
+The type @code{gvector} is a ``generalized vector''.
+@item
+Add optional port parameter to @code{format-array}.
 @item
 The @code{build-array} procedure takes an optional setter procedure.
+@item
+New procedures @code{array-shape}, @code{->shape}.
+@end itemize
+@item
+In array constructors, index keywords must be all or none:
+@code{[int[] length: 5 11 22]} or @code{[int[] length: 5 1: 22 0: 11]}.
+@item
+Various improvements in the Common Lisp implementation,
+by Helmut Eller.
 @item
 New @code{--max-errors} option.
 @item
@@ -49,7 +65,7 @@ It is like @code{define-constant} but generalized to patterns.
 The conditional match form @code{(? @var{pattern} @var{expression})}
 is similar to @code{!} but can only be
 used @ref{Conditionals,in conditional context}.
-If the match fails, the condition is true.
+If the match fails, the condition is false.
 
 @item
 @ref{Repeat forms,Repeat patterns and forms} is a

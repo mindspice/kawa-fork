@@ -1,3 +1,7 @@
+2019-12-23  Per Bothner  <per@bothner.com>
+
+	* news.texi: Updates, mostly relating to arrays.
+
 2019-12-22  Per Bothner  <per@bothner.com>
 
 	* kawa.texi: Fix typo --with-docbook-stylesheet to plural.
