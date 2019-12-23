@@ -9,7 +9,7 @@ AC_CANONICAL_HOST
 AM_INIT_AUTOMAKE([info-in-builddir foreign])
 
 AC_ARG_WITH(docbook-stylesheets,
-  AS_HELP_STRING(--with-docbook-stylesheets=path,Building icely-formatted documentation))
+  AS_HELP_STRING(--with-docbook-stylesheets=path,Building nicely-formatted documentation))
 
 dnl AC_ARG_WITH(classpath,[  --with-classpath          Path to Java classes], classpath=$withval, classpath=$$CLASSPATH)
 AC_ARG_ENABLE(kawa-frontend,
