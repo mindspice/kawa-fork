@@ -404,6 +404,12 @@ The @code{read-with-shared-structure} is missing, but subsumed by @code{read}.
 @uref{http://srfi.schemers.org/srfi-109/srfi-109.html, SRFI-109}: Extended string quasi-literals - @pxref{string quasi-literals}.
 @item
 @uref{http://srfi.schemers.org/srfi-118/srfi-118.html, SRFI-118}: Simple adjustable-size strings (@code{string-append!} and @code{string-replace!}).
+@item
+@uref{http://srfi.schemers.org/srfi-140/srfi-140.html, SRFI-140}: Immutable Strings.
+@item
+@uref{http://srfi.schemers.org/srfi-163/srfi-163.html, SRFI-163}: Enhanced array literals.
+@item
+@uref{http://srfi.schemers.org/srfi-164/srfi-164.html, SRFI-164}: Enhanced multi-dimensional Arrays
 @end itemize
 
 @node Compatibility
@@ -642,8 +648,9 @@ Matthieu Vachon;
 Vasantha Ganesh;
 Phil Walker;
 Knut Wannheden;
-Chris Wegrzyn,
-Kay Zheng,
+Chris Wegrzyn;
+Kay Zheng;
+Michael Zucchi.
 
 @subsubheading Bug reports and test cases
 
@@ -14695,31 +14702,59 @@ The length of the array along the dimension is the difference
 @code{(- @var{e} @var{b})}.
 The size of an array is the product of the lengths of its dimensions.
 
-A procedure that requires a @var{shape} accepts any of the following:
-@itemize
+There is no separate data type for a shape. The canonical representation for a shape (a @dfn{canonical shape}) is a rank-2 array where the first index
+is the dimension (zero-based), and the second index is 0 or 1:
+Elements (@var{i} 0) and (@var{i} 1) are respectively the lower bound
+and upper bound of dimension @var{i}.
+
+For convenience, the procedures that require a shape can accept a
+@var{shape-specifier}, as if converted by the procedure @code{->shape}.
+For example @code{(array-reshape @var{array} @var{shape})} is equivalent to
+@code{(array-reshape @var{array} (->shape @var{shape}))}.
+
+@deffn Procedure ->shape specifier
+Convert the shape specifier @var{specifier} to a canonical shape.
+The @var{specifier} must be either a canonical shape,
+or vector with one element for each dimension, as described below.
+We use as examples a 2*3 array with lower bounds 0 and a 3*4 array
+with lower bounds 1.
+@itemize @bullet
+@item
+A vector of simple integers.
+Each integer @var{e} is an upper bound, with a zero lower bound.
+Equivalent to the range @code{[0 <: @var{e}]}.
+
+A specifier for the first examples is @code{#(2 3)},
+and the second is not expressible.
+@item
+A vector of lists of length 2.
+The first element of each list is the lower bound, and the second is the upper bound.
+
+Examples: @code{#((0 2) (0 3))} and @code{#((1 3) (1 4))}.
 @item
 A vector of simple @ref{Ranges,ranges}, one for each
 dimension, all of who are
 bounded (finite), consist of integer values,
 and have a @var{step} of 1.
 Each range, which is usually written as @code{[@var{b} <: @var{e}]},
-expresses the bounds of the corresponding dimension.
-For example @code{[[0 <: 5] [2 <=: 6]]} is the shape
-of a rank-2 array, where the first index can be from 0 to 5 (exclusive),
-while the second index can be from 2 to 6 (inclusive).
+expresses the bounds of the corresponding dimension
+For the first example you can use @code{[[0 <: 2] [0 <=: 2]]};
+for the second you can use @code{[[1 <: 3] [1 size: 4]]}.
 @item
-A vector of simple integers.
-Each integer @var{e} is an upper bound,
-and is equivalent to the range @code{[0 <: @var{e}]}.
+A vector consisting of a mix of integers, length-2 lists, and ranges.
+
+Examples: @code{#(2 (0 3))} and @code{['(1 3) [1 size: 4]]}.
 @item
-A vector consisting of a mix of integers and ranges.
-@item
+A canonical shape:
 A rank-2 array @var{S} whose own shape is @code{[@var{r} 2]}.
 For each dimension @var{k}
 (where @code{(<= @var{k} 0)} and @code{(< @var{k} @var{r})}),
 the lower bound @var{b@sub{k}} is @code{(S @var{k} 0)},
 and the upper bound @var{e@sub{k}} is @code{(S @var{k} 1)}.
+
+Examples: @code{#2a((0 2) (0 3))} and @code{#2a((1 3) (1 4))}.
 @end itemize
+@end deffn
 
 @deffn Procedure shape bound ...
 Returns a shape. The sequence @var{bound} ... must consist of an even number
@@ -14741,6 +14776,11 @@ and @code{(< @var{k} @var{d})}.
 @code{(shape @@@var{bounds})}
 is equivalent to:
 @code{(array [2 (/ (length @var{bounds}) 2)] @@@var{bounds})}
+@end deffn
+
+@deffn Procedure array-shape array
+Return the shape of @var{array} in the canonical (r 2) form.
+It is an error to attempt to modify the shape array.
 @end deffn
 
 @deffn Procedure array-rank array
