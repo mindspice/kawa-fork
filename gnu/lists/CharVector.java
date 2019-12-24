@@ -13,7 +13,7 @@ import gnu.text.Char;
  * @author Per Bothner
  */
 
-public class CharVector extends AbstractCharVector<Character>
+public class CharVector extends AbstractCharVector<Character> implements GVector<Character>
 {
     /** Create an CharVector from a char[].
      * Note that this contructor does *not* copy the argument. */
