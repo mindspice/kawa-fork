@@ -6,12 +6,10 @@ import java.util.*;
 import java.lang.reflect.Array;
 
 public class Sequences {
-    public static List asSequenceOrNull(Object value) {
-        if (value instanceof List)
-            return (List) value;
-        if (value instanceof CharSequence) { // FIXME?
-            return new IString(value.toString());
-        }
+
+    public static GVector asGVectorOrNull(Object value) {
+        if (value instanceof GVector)
+            return (GVector) value;
         if (value instanceof Object[])
             return new FVector((Object[]) value);
         SimpleVector vec = null;
@@ -34,10 +32,32 @@ public class Sequences {
                 vec = new CharVector((char[]) value);
             if (vec != null) {
                 vec.info |= SimpleVector.SHARED_FLAG;
-                return vec;
+                return (GVector) vec;
             }
         }
         return null;
+    }
+
+    public static GVector asGVector(Object value) {
+        GVector vec = asGVectorOrNull(value);
+        if (vec == null) {
+            String msg;
+            if (value == null)
+                msg = "cannot convert null to gvector";
+            else
+                msg = "cannot convert a "+value.getClass().getName()+" to gvector<E>";
+            throw new ClassCastException(msg);
+        }
+        return vec;
+    }
+
+    public static List asSequenceOrNull(Object value) {
+        if (value instanceof List)
+            return (List) value;
+        if (value instanceof CharSequence) { // FIXME?
+            return new IString(value.toString());
+        }
+        return asGVectorOrNull(value);
     }
 
     public static IntSequence asIntSequenceOrNull(Object value) {

@@ -598,7 +598,8 @@ public class LangObjType extends SpecialObjectType implements TypeValue
       case CONST_VECTOR_TYPE_CODE:
         return typeLangObjType.getDeclaredMethod("coerceToConstVector", 1);
       case GVECTOR_TYPE_CODE:
-          return ClassType.make("gnu.lists.FVector").getDeclaredMethod("cast", 1);
+          return ClassType.make("gnu.lists.Sequences")
+              .getDeclaredMethod("asGVector", 1);
       case VECTOR_TYPE_CODE:
       case BITVECTOR_TYPE_CODE:
       case C16VECTOR_TYPE_CODE:
@@ -677,12 +678,13 @@ public class LangObjType extends SpecialObjectType implements TypeValue
         methodDeclaringClass = implementationType;
         mname = "asIntNumOrNull";
         break;
+      case GVECTOR_TYPE_CODE:
       case SEQUENCE_TYPE_CODE:
         methodDeclaringClass = ClassType.make("gnu.lists.Sequences");
-        mname = "asSequenceOrNull";
+        mname = typeCode == GVECTOR_TYPE_CODE ? "asGVectorOrNull"
+            : "asSequenceOrNull";
         break;
       case VECTOR_TYPE_CODE:
-      case GVECTOR_TYPE_CODE:
       case BITVECTOR_TYPE_CODE:
       case C16VECTOR_TYPE_CODE:
       case S8VECTOR_TYPE_CODE:
