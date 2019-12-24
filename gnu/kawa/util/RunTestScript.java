@@ -141,7 +141,7 @@ public class RunTestScript implements Runnable
               {
                 matcher = outPattern.matcher(line);
                 if (matcher.matches())
-                  expectedOut.add(Pattern.quote(matcher.group(1)));
+                  expectedOut.add(" *"+Pattern.quote(matcher.group(1)));
                 matcher = outRegexPattern.matcher(line);
                 if (matcher.matches())
                   expectedOut.add(matcher.group(1));

@@ -1,3 +1,7 @@
+2019-12-24  Per Bothner  <per@bothner.com>
+
+	* RunTestScript.java: When matching, ignore initial spaces in output.
+
 2018-09-08  Per Bothner  <per@bothner.com>
 
 	* PreProcess.java: Have %java10 and %java11 define JAVA10 and JAVA11.
