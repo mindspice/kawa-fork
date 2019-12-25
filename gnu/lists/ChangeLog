@@ -1,5 +1,7 @@
 2019-12-24  Per Bothner  <per@bothner.com>
 
+	* FVector.java, ...: Remove generated files from repository.
+
 	* Sequences.java (asGVectorOrNull, asGVector): New static methods.
 
 	* CharVector.java: Immplement GVector<Character>.
