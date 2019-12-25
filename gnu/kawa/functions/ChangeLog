@@ -1,3 +1,9 @@
+2019-12-24  Per Bothner  <per@bothner.com>
+
+	* DivideOp.java: Disallow with no arguments.
+	Also disallow other than 2 arguments except DIVIDE_GENERIC.
+	* AddOp.java: Disallow (-) with no arguments.
+
 2019-12-11  Per Bothner  <per@bothner.com>
 
 	* NamedPart.java: Make class public.

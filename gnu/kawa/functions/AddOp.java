@@ -146,8 +146,11 @@ public class AddOp extends ArithOp
   public static Object applyN(int plusOrMinus, Object[] args)
   {
     int len = args.length;
-    if (len == 0)
+    if (len == 0) {
+      if (plusOrMinus < 0)
+        throw new WrongArguments(MINUS, 0);
       return IntNum.zero ();
+    }
     Object result = args[0];
     if (len == 1 && plusOrMinus < 0)
       return MINUS(result);
@@ -168,5 +171,10 @@ public class AddOp extends ArithOp
   public Object applyN (Object[] args)
   {
     return applyN(plusOrMinus, args);
+  }
+
+  public int numArgs()
+  {
+    return plusOrMinus < 0 ? 0xfffff001 : 0xfffff000;
   }
 }

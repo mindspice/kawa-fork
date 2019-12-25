@@ -52,11 +52,13 @@ public class DivideOp extends ArithOp
     throws Throwable
   {
     int len = args.length;
-    if (len == 0)
-      return IntNum.one ();
+    if (len != 2) {
+        if (len == 1 && op == DIVIDE_GENERIC)
+            return apply2(IntNum.one(), args[0]);
+        if (len == 0 || op != DIVIDE_GENERIC)
+            throw new WrongArguments(this, len);
+    }
     Object result = args[0];
-    if (len == 1)
-      return apply2(IntNum.one(), result);
     for (int i = 1; i < len; i++)
         result = apply2(result, args[i]);
     return result;

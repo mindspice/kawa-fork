@@ -1,4 +1,4 @@
-(test-begin "num" 1911)
+(test-begin "num" 1916)
 
 (define-syntax jequals
   (syntax-rules ()
@@ -44,6 +44,7 @@ Not currently true, but perhaps it should be.
 (test-equal -1 (- 3 4))
 (test-equal -6 (- 3 4 5))
 (test-equal -3 (- 3))
+(test-error (apply - '()))
 (test-equal +nan.0 (- +inf.0 +inf.0))
 
 (test-equal -0.0 (-  0.0))
@@ -65,6 +66,7 @@ Not currently true, but perhaps it should be.
 (test-equal 0.0 (/ +inf.0))
 ;(test-error (/ 0 0))
 ;(test-error (/ 3 0))
+(test-error (apply / '()))
 (test-equal 0.0 (/ 0 3.5))
 (test-equal +nan.0 (/ 0 0.0))
 (test-equal +nan.0 (/ 0.0 0))
@@ -74,6 +76,9 @@ Not currently true, but perhaps it should be.
 (test-equal -12 (div 123 -10))
 (test-equal -13 (div -123 10))
 (test-equal 13 (div -123 -10))
+(test-equal 12 (apply div '(123 10)))
+(test-error (apply div '(3 4 5)))
+(test-error (apply div '()))
 (test-equal 3 (mod 123 10))
 (test-equal 3 (mod 123 -10))
 (test-equal 7 (mod -123 10))
