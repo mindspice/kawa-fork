@@ -35,6 +35,13 @@ by Helmut Eller.
 @item
 New @code{--max-errors} option.
 @item
+The classes created by @code{define-record-type} now extends
+@code{kawa.lang.Record}, which adds some conveniences, such as printing.
+@item
+Support for source locaton ranges with an end position.
+@item
+Various improvements when running under DomTerm include clickable error message locations.
+@item
 Many bug-fixes and minor improvements.
 @end itemize
 
