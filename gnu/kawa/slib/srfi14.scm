@@ -111,12 +111,23 @@
  char-set-difference char-set-xor char-set-diff+intersection
  char-set-difference! char-set-xor! char-set-diff+intersection!
  ;; Standard character sets
- ;; char-set:lower-case  char-set:upper-case  char-set:title-case
- ;; char-set:letter      char-set:digit       char-set:letter+digit
- ;; char-set:graphic     char-set:printing    char-set:whitespace
- ;; char-set:iso-control char-set:punctuation char-set:symbol
- ;; char-set:hex-digit   char-set:blank       char-set:ascii
- ;; char-set:empty       char-set:full
+ |char-set:lower-case|
+ |char-set:upper-case|
+ |char-set:title-case|
+ |char-set:letter|
+ |char-set:digit|
+ |char-set:letter+digit|
+ |char-set:graphic|
+ |char-set:printing|
+ |char-set:whitespace|
+ |char-set:iso-control|
+ |char-set:punctuation|
+ |char-set:symbol|
+ |char-set:hex-digit|
+ |char-set:blank|
+ |char-set:ascii|
+ |char-set:empty|
+ |char-set:full|
 )
 
 ;;; char-set? and char-set:* are implicitly provided by the char-set
@@ -1064,3 +1075,21 @@ allowed, but not required, to side-effect its first argument."
           (cdr l2) `((,(caar l1) . ,(- (caar l2) 1)) ,@(cdr l1))))
         ;; otherwise (car l1) == (car l2). (xor x x) => ()
         (else (%boundary-pairs-xor (cdr l1) (cdr l2)))))
+
+(define-constant |char-set:lower-case| (static-field char-set 'lower-case))
+(define-constant |char-set:upper-case| (static-field char-set 'upper-case))
+(define-constant |char-set:title-case| (static-field char-set 'title-case))
+(define-constant |char-set:letter| (static-field char-set 'letter))
+(define-constant |char-set:digit| (static-field char-set 'digit))
+(define-constant |char-set:letter+digit| (static-field char-set 'letter+digit))
+(define-constant |char-set:graphic| (static-field char-set 'graphic))
+(define-constant |char-set:printing| (static-field char-set 'printing))
+(define-constant |char-set:whitespace| (static-field char-set 'whitespace))
+(define-constant |char-set:iso-control| (static-field char-set 'iso-control))
+(define-constant |char-set:punctuation| (static-field char-set 'punctuation))
+(define-constant |char-set:symbol| (static-field char-set 'symbol))
+(define-constant |char-set:hex-digit| (static-field char-set 'hex-digit))
+(define-constant |char-set:blank| (static-field char-set 'blank))
+(define-constant |char-set:ascii| (static-field char-set 'ascii))
+(define-constant |char-set:empty| (static-field char-set 'empty))
+(define-constant |char-set:full| (static-field char-set 'full))

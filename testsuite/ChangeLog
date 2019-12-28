@@ -1,5 +1,8 @@
 2019-12-24  Per Bothner  <per@bothner.com>
 
+	* charset1.scm: New tests for GitLab issue #63
+	"SRFI 14 char-set:digit etc. symbols not recognized during import".
+
 	* num-test.scm: Test for GitLab issue #40 "(-) evaluates to 0".
 
 	* array1.scm: New test for  GitLab issue #50
