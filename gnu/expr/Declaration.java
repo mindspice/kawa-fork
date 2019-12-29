@@ -1245,38 +1245,7 @@ public class Declaration extends SourceLocator.Simple
         }
         if (haveName)
           {
-            Object fsymbol = getSymbol();
-            String uri, prefix;
-            boolean haveUri, havePrefix; 
-            // If name is a non-simple Symbol (i.e. with uri or prefix)
-            // or the field name doesn't demangle to name, then emit
-            // a SourceName annotation so we can recover the correct name.
-            if (fsymbol instanceof Symbol)
-              {
-                uri = ((Symbol) fsymbol).getNamespaceURI();
-                prefix = ((Symbol) fsymbol).getPrefix();
-                if (uri == null)
-                  uri = "";
-                haveUri = ! "".equals(uri);
-                havePrefix = ! "".equals(prefix);
-              }
-            else
-              {
-                uri = prefix = "";
-                haveUri = havePrefix = false;
-              }
-            // FIXME should optimize if uri == module.getNamespaceUri()
-            if (haveUri || havePrefix
-                || ! Mangling.demangleField(fname).equals(dname))
-              {
-                AnnotationEntry ae = new AnnotationEntry(ClassType.make("gnu.expr.SourceName"));
-                ae.addMember("name", dname, Type.javalangStringType);
-                if (haveUri)
-                  ae.addMember("uri", uri, Type.javalangStringType);
-                if (havePrefix)
-                  ae.addMember("prefix", prefix, Type.javalangStringType);
-                RuntimeAnnotationsAttr.maybeAddAnnotation(getField(), ae);
-              }
+              this.maybeSourceName(getField(), Mangling.demangleField(fname));
           }
         if (value instanceof QuoteExp)
           {
@@ -1308,6 +1277,40 @@ public class Declaration extends SourceLocator.Simple
 	BindingInitializer.create(this, value, comp);
       }
   }
+
+    /** Add SourceName annotation to member, if needed.
+     */
+    public void maybeSourceName(AttrContainer member, String expName) {
+        Object fsymbol = getSymbol();
+        String dname = getName();
+        String uri, prefix;
+        boolean haveUri, havePrefix;
+        // If name is a non-simple Symbol (i.e. with uri or prefix)
+        // or the field name doesn't demangle to name, then emit
+        // a SourceName annotation so we can recover the correct name.
+        if (fsymbol instanceof Symbol) {
+            uri = ((Symbol) fsymbol).getNamespaceURI();
+            prefix = ((Symbol) fsymbol).getPrefix();
+            if (uri == null)
+                uri = "";
+            haveUri = ! "".equals(uri);
+            havePrefix = ! "".equals(prefix);
+        } else {
+            uri = prefix = "";
+            haveUri = havePrefix = false;
+        }
+        // FIXME should optimize if uri == module.getNamespaceUri()
+        if (haveUri || havePrefix
+            || expName == null || ! expName.equals(dname)) {
+            AnnotationEntry ae = new AnnotationEntry(ClassType.make("gnu.expr.SourceName"));
+            ae.addMember("name", dname, Type.javalangStringType);
+            if (haveUri)
+                ae.addMember("uri", uri, Type.javalangStringType);
+            if (havePrefix)
+                ae.addMember("prefix", prefix, Type.javalangStringType);
+            RuntimeAnnotationsAttr.maybeAddAnnotation(member, ae);
+        }
+    }
 
   /* Used when evaluating for an indirect binding. */
   gnu.mapping.Location makeIndirectLocationFor ()

@@ -1,3 +1,9 @@
+2019-12-28  Per Bothner  <per@bothner.com>
+
+	* Declaration.java (maybeSourceName): New method.
+	(makeField): Use it.
+	* ClassExp.java (setTypes): Use maybeSourceName.
+
 2019-10-25  Per Bothner  <per@bothner.com>
 
 	* PrimProcedure.java (disassemble): Use MethodHandleInfo.

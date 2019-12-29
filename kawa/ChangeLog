@@ -1,3 +1,9 @@
+2019-12-28  Per Bothner  <per@bothner.com>
+
+	* lang/Translator.java (rewrite): Improve search for field in class.
+	When searching for a field in the current or inherited class matching
+	a symbol, make use of SourceName annotation.
+
 2019-12-18  Per Bothner  <per@bothner.com>
 
 	* lang/Translator.java (rwrite): Don't expand Pair in new 'Q' mode.

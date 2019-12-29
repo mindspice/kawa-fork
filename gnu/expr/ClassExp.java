@@ -249,6 +249,7 @@ public class ClassExp extends LambdaExp
                     decl.getterMethod =
                         compiledType.addMethod(gname,
                                                fflags, Type.typeArray0, null);
+                    decl.maybeSourceName(decl.getterMethod, null);
                     String sname = slotToMethodName("set", decl.getName());
                     Type[] stypes = { null };
                     decl.setterMethod =

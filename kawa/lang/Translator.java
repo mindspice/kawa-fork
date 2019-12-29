@@ -868,8 +868,13 @@ public class Translator extends Compilation
                                                       ctype, language);
                         if (methods.length == 0)
                             continue;
-                    } else if (decl != null && ! dname.equals(part.getName())) {
-                        continue;
+                    } else {
+                        gnu.expr.SourceName snameAnn =
+                            part.getAnnotation(gnu.expr.SourceName.class);
+                        String pname = snameAnn == null ? part.getName()
+                            : snameAnn.name();
+                        if (! dname.equals(pname))
+                            continue;
                     }
                     Expression part1;
                     // FIXME We're throwing away 'part', which is wasteful.
