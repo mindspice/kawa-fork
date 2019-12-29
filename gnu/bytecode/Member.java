@@ -14,4 +14,7 @@ public interface Member
   int getModifiers ();
 
   boolean getStaticFlag ();
+
+    public <T extends java.lang.annotation.Annotation>
+    T getAnnotation(Class<T> clas);
 }

@@ -1,3 +1,7 @@
+2019-12-28  Per Bothner  <per@bothner.com>
+
+	* Member.java (getAnnotation): New method.
+
 2019-12-18  Per Bothner  <per@bothner.com>
 
 	* ObjectType.java (getSuperclass, getInterfaces): New methods.
