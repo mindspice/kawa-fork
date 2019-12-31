@@ -1,3 +1,10 @@
+2019-12-30  Per Bothner  <per@bothner.com>
+
+	* DomTermServer.java: New file extracted from DomTermBackend.java.
+	* DomTermBackend.java (class Server, startDomTermConsole):
+	Move to DomTermServer.
+	* repl.java (startGuiConsole): Use DomTermServer.
+
 2019-12-28  Per Bothner  <per@bothner.com>
 
 	* lang/Translator.java (rewrite): Improve search for field in class.

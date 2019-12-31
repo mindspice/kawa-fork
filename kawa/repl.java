@@ -904,7 +904,7 @@ public class repl extends Procedure0or1 {
             }
             if ("qtdomterm".equals(command))
                 command = "browser=qtdomterm --connect localhost:%W";
-            Object result = Class.forName("kawa.DomTermBackend")
+            Object result = Class.forName("kawa.DomTermServer")
                 .getMethod("startDomTermConsole", String.class)
                 .invoke(null, command);
             return result == null ? null : result.toString();

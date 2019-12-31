@@ -814,7 +814,8 @@ KAWA_WITH_SCRIPT =\
   kawa/standard/SchemeScriptEngineFactory.java
 
 KAWA_WITH_DOMTERM =\
-  kawa/DomTermBackend.java
+  kawa/DomTermBackend.java \
+  kawa/DomTermServer.java
 
 sources_gnu_core = \
   $(GNU_LISTS_JSOURCES) \
