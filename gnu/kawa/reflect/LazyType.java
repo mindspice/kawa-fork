@@ -58,6 +58,25 @@ public class LazyType extends ObjectType
         return rawType.toString()+'['+valueType.toString()+']'; // FIXME
     }
 
+    /* MAYBE FUTURE use
+    public static Type maybeValueType(Type type) {
+        if (type instanceof LazyType)
+            return ((LazyType) type).getValueType();
+        Type itype = type.getImplementationType();
+        if (type != itype)
+            return maybeValueType(itype);
+        if (type instanceof ClassType) {
+            ClassType[] ifaces = ((ClassType) type).getInterfaces();
+            for (int i = ifaces.length; --i >= 0; ) {
+                Type v = maybeValueType(ifaces[i]);
+                if (v != null)
+                    return v;
+            }
+        }
+        return null;
+    }
+    */
+
     public static boolean maybeLazy (Type type) {
         type = type.getRawType();
         if (type instanceof ClassType
