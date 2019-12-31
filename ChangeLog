@@ -1,5 +1,7 @@
 2019-12-31  Per Bothner  <per@bothner.com>
 
+	* Makefile.am (EXTRA_DIST): Some files are now in build-aux.
+
 	* source-list (GNU_LISTS_JSOURCES): Add GVector.java, belatedly.
 
 2019-12-19  Per Bothner  <per@bothner.com>

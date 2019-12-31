@@ -187,7 +187,7 @@ jemacs.jar: lib/jemacs.jar
 bytecode.jar: lib/bytecode.jar
 
 EXTRA_DIST = debian/control debian/rules debian/changelog debian/dirs \
-  config.guess config.sub install-sh ./mkinstalldirs \
+  build-aux/config.guess build-aux/config.sub build-aux/install-sh \
   patch-source-list selected-java-source \
   build.xml build.properties \
   $(MISC_EXTRA_DIST) \
