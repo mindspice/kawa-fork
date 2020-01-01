@@ -40,7 +40,7 @@ public class RunProcess extends ProcedureN {
     public RunProcess(String name) {
         setName(name);
         applyToConsumerMethod = applyToConsumerRP;
-        setProperty(Procedure.validateApplyKey,
+        setProperty(Procedure.validateXApplyKey,
                     "gnu.kawa.functions.CompileProcess:validateApplyRunProcess");
     }
 
