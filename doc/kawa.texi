@@ -3692,6 +3692,11 @@ or @code{syntax-case} pattern matches.
 Prints a stack trace with any error found during compilation.
 @item --debug-warning-prints-stack-trace
 Prints a stack trace with any warning found during compilation.
+@item --langserver
+Starts Kawa in server mode, responding to requests
+in the @uref{https://langserver.org.Language Server Protocol}.
+This is used by editors and IDEs for on-the-fly syntax checking and more.
+Highly experimental.
 @end table
 
 @subsection Options for web servers
@@ -17821,6 +17826,12 @@ aborts if @var{n} = @var{m}
 @item @code{~@var{n},@var{m},@var{k}^}
 aborts if @var{n} <= @var{m} <= @var{k}
 @end table
+@item @code{~<}@var{mincol}
+Start justification: spacing is evenly distributed between
+text segments with a width of @var{mincol}.
+This enables an even right margin.
+@item @code{~>}
+End of segments to justify.
 @end table
 
 @subsection Unimplemented CL Format Control Directives
@@ -17830,8 +17841,6 @@ aborts if @var{n} <= @var{m} <= @var{k}
 print @code{#f} as an empty list (see below).
 @item @code{~:S}
 print @code{#f} as an empty list (see below).
-@item @code{~<~>}
-Justification.
 @item @code{~:^}
 @end table
 

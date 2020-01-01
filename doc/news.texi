@@ -11,6 +11,11 @@ changes}.
 @item
 Updates for Java 9 and newer.
 @item
+Support justification ~@code{<}...@code{~>} in @code{format}
+(thanks to Helmut Eller).
+@item
+Some support for Language Server Protocol.
+@item
 Revert 3.0 change in allocating closure objects for inlined functions.
 @item
 Enhancements to arrays to match
