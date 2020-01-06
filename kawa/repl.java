@@ -639,7 +639,7 @@ public class repl extends Procedure0or1 {
                 System.out.print("Kawa ");
                 System.out.print(Version.getVersion());
                 System.out.println();
-                System.out.println("Copyright (C) 2019 Per Bothner");
+                System.out.println("Copyright (C) 2020 Per Bothner");
                 something_done = true;
             } else if (arg.startsWith("-D")) {
                 int eq = arg.indexOf('=');

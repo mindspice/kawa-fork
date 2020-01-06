@@ -1,3 +1,7 @@
+2020-01-05  Per Bothner  <per@bothner.com>
+
+	* repl.java: Update Copyright year printed by --version.
+
 2019-12-30  Per Bothner  <per@bothner.com>
 
 	* DomTermServer.java: New file extracted from DomTermBackend.java.

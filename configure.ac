@@ -1,5 +1,5 @@
 qdnl Process this with autoconf to create configure
-AC_INIT([kawa],[3.0]) dnl Also update bin/configure.ac and build.xml.
+AC_INIT([kawa],[3.1]) dnl Also update bin/configure.ac and build.xml.
 AC_CONFIG_SRCDIR([doc/kawa.texi])
 AC_CONFIG_AUX_DIR([build-aux])
 
