@@ -963,7 +963,6 @@ public class InlineCalls extends ExpExpVisitor<Type> {
 
     /** Attempt to inline a function call.
      * @param lexp function to inline
-     * @param args list of actual arguments of function call
      * @param makeCopy true if the body of lexp should of copied; false
      *   if we can re-use lexp because it is no longer needed.
      * @return the inlined expression (a LetExp), or null if we
