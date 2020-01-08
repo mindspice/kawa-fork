@@ -7,7 +7,7 @@ changes}.
 @c @subheading In Git repository (master branch) since last release
 @c @anchor{#in-git-repository-since-last-release}
 
-@subheading Kawa 3.1 (January 6, 2020)
+@subheading Kawa 3.1 (January 7, 2020)
 
 @itemize
 @item
@@ -16,7 +16,9 @@ Updates for Java 9 and newer.
 Support justification ~@code{<}...@code{~>} in @code{format}
 (thanks to Helmut Eller).
 @item
-Some support for Language Server Protocol.
+Partial (and highly experimental) support for the
+@uref{https://langserver.org.Language Server Protocol}
+(used by editors and IDEs for on-the-fly syntax checking and more).
 @item
 Revert 3.0 change in allocating closure objects for inlined functions.
 @item
@@ -45,7 +47,7 @@ New @code{--max-errors} option.
 The classes created by @code{define-record-type} now extends
 @code{kawa.lang.Record}, which adds some conveniences, such as printing.
 @item
-Support for source locaton ranges with an end position.
+Support for source location ranges with an end position.
 @item
 Various improvements when running under DomTerm include clickable error message locations.
 @item
