@@ -3694,7 +3694,7 @@ Prints a stack trace with any error found during compilation.
 Prints a stack trace with any warning found during compilation.
 @item --langserver
 Starts Kawa in server mode, responding to requests
-in the @uref{https://langserver.org.Language Server Protocol}.
+using the @uref{https://langserver.org,Language Server Protocol}.
 This is used by editors and IDEs for on-the-fly syntax checking and more.
 Highly experimental.
 @end table

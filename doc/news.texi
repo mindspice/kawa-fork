@@ -17,7 +17,7 @@ Support justification ~@code{<}...@code{~>} in @code{format}
 (thanks to Helmut Eller).
 @item
 Partial (and highly experimental) support for the
-@uref{https://langserver.org.Language Server Protocol}
+@uref{https://langserver.org,Language Server Protocol}
 (used by editors and IDEs for on-the-fly syntax checking and more).
 @item
 Revert 3.0 change in allocating closure objects for inlined functions.
