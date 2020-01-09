@@ -25,7 +25,10 @@ KAWALIB = $(datadir)/kawa/lib/$(KAWAJAR)
 CDEFS = -DJAVA='"$(JAVA)"' -DKAWALIB='"$(KAWALIB)"' -DKAWAJAR='"$(KAWAJAR)"' -DEXTRAPATH='"@conf_classpath@"'
 DEFS = $(CDEFS)
 
-CLEANFILES = kawa$(EXEEXT) tmp *.stamp
+CLEANFILES = tmp *.stamp
+if ENABLE_KAWA_FRONTEND
+CLEANFILES += kawa$(EXEEXT)
+endif
 
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 

@@ -130,7 +130,7 @@ kawa.zip: kawa-$(ZIP_VERSION).zip
 kawa-snapshot.zip:
 	$(MAKE) kawa.zip ZIP_VERSION=$(VERSION)-`date +%Y%m%d`
 kawa-$(ZIP_VERSION).zip: dist-kawa.jar doc/kawa-manual.epub bin/kawa.bat
-	mkdir -p kawa-$(VERSION) kawa-$(VERSION)/lib  kawa-$(VERSION)/bin kawa-$(VERSION)/doc
+	mkdir -p kawa-$(VERSION) kawa-$(VERSION)/lib kawa-$(VERSION)/bin kawa-$(VERSION)/doc
 	cd kawa-$(VERSION)/lib; \
 	  $(LN_S) ../../dist-kawa.jar kawa.jar; \
 	  $(LN_S) $(DOMTERM_JAR) domterm.jar; \
@@ -145,7 +145,7 @@ kawa-$(ZIP_VERSION).zip: dist-kawa.jar doc/kawa-manual.epub bin/kawa.bat
 	cd kawa-$(VERSION)/bin; \
 	  $(LN_S) ../../bin/@KAWA_SCRIPT@ kawa; \
 	  $(LN_S) ../../bin/kawa.bat kawa.bat
-	zip $@ kawa-$(VERSION)/bin/kawa -r kawa-$(VERSION)
+	zip $@ -r kawa-$(VERSION)
 
 upload-kawa.snapshot.zip:
 	gnupload --replace --to ftp.gnu.org:kawa --symlink-regex kawa-$(VERSION)-`date +%Y%m%d`.zip
@@ -198,7 +198,7 @@ EXTRA_DIST = debian/control debian/rules debian/changelog debian/dirs \
   bin/kawa.sh.in bin/qexo.in
 
 MOSTLYCLEANFILES = tmp* *.o bin/*.o *.stamp */*.class */*/*.class */*/*/*.class classes.list classes-rt.list
-CLEANFILES = *.jar lib/*.jar *.zip bin/kawa bin/qexo kawa/Version.java $(META_ScriptEngineFactory)
+CLEANFILES = *.jar lib/*.jar *.zip bin/qexo kawa/Version.java $(META_ScriptEngineFactory)
 DISTCLEANFILES = selected-java-source bin/kawa.sh bin/kawa bin/kawa.bat
 MAINTAINERCLEANFILES = \
   $(GENERATED_SIMPLEVECTOR_FILES) $(srcdir)/patch-source-list
