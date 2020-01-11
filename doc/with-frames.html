@@ -1,10 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
   <head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
     <title>Kawa manual</title>
     <link rel="up" href="../index.html">
     <link rel="top" href="../../index.html">
-<script type="text/javascript">
+    <script type="text/javascript">
+// FIXME this needs some work to get working (again).
+// (Clicking on links does not work properly.)
+// However, it's not clear it's needed (or even useful) anymore.
 var sliderBgcolor = "#60ECEC";
 function setHash(pathname) {
     var contextLength = location.pathname.indexOf("with-frames");
@@ -12,12 +16,16 @@ function setHash(pathname) {
         pathname = pathname.substring(contextLength);
     history.replaceState(null, null, "#"+pathname);
 };
+  function receiveMessage(event) {
+      frames['slider'].postMessage(event.data);
+}
 function framesetLoaded() {
     var hash=top.location.hash;
     var main=top.main;
     if (hash && main) {
         // FUTURE: load specified file into main frame
     }
+    window.addEventListener("message", receiveMessage, false);
 }
 function framesetUnloaded() {
     var request = new XMLHttpRequest();
@@ -28,6 +36,6 @@ function framesetUnloaded() {
   </head>
   <frameset cols="280,*" onload="top.framesetLoaded()" onunload="framesetUnloaded()">
     <frame name="slider" src="ToC.xhtml">
-    <frame name="main" src="index.xhtml">
+    <frame name="main" src="index.html">
   </frameset>
 </html>

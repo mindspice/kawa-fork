@@ -33,8 +33,5 @@ exec ${JAVA-"java"} -jar ${KAWA_HOME}/lib/kawa.jar $thisfile
  (let* ((browser (javafx.scene.web.WebView))
         (web-engine (browser:getEngine))
         (manual-url (resource-url "../doc/kawa-manual.epub")))
-   ;; Using an <iframe> for the sidebar on WebView doesn't work for some
-   ;; unknown reason so we use the <frameset> version instead.
-   ;; (web-engine:load &{jar:&[manual-url]!/OEBPS/index.xhtml})
-   (web-engine:load &{jar:&[manual-url]!/OEBPS/with-frames.html})
+   (web-engine:load &{jar:&[manual-url]!/OEBPS/index.html})
    browser))

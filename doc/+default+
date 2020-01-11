@@ -29,15 +29,13 @@
    ((local-path:endsWith ".js") 'application/javascript)
    (else 'application/xhtml+xml)))
 
-(cond ((string=? local-path "") ;; translate default "" to "index.xhtml"
-       (values
-        (response-status 301)
-        (response-header '|Location| "index.xhtml")))
-      (else
-       (values
-        (response-content-type response-type)
-        (try-catch
-         &<{jar:&(resource-url "kawa-manual.epub")!/OEBPS/&[local-path]}
-         (ex java.lang.Throwable
-             (error-response 404 (format #f "NOT FOUND ~w: ~w"
-                                         local-path ex:message)))))))
+(if (string=? local-path "")
+    (set! local-path "index.html"))
+
+(values
+ (response-content-type response-type)
+ (try-catch
+  &<{jar:&(resource-url "kawa-manual.epub")!/OEBPS/&[local-path]}
+  (ex java.lang.Throwable
+      (error-response 404 (format #f "NOT FOUND ~w: ~w"
+                                  local-path ex:message)))))

@@ -1552,7 +1552,7 @@ cd $KAWA_HOME/doc
 unzip kawa-manual.epub
 @end example
 Then you can use a plain browser
-with the URL @code{file:$KAWA_HOME/doc/OEBPS/index.xhtml}.
+with the URL @code{file:$KAWA_HOME/doc/OEBPS/index.html}.
 
 @node Source distribution,  , Binary distribution, Installation
 @section Installing and using the source distribution

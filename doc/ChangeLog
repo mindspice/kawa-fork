@@ -1,3 +1,12 @@
+2020-01-10  Per Bothner  <per@bothner.com>
+
+	Fixes to documentation browsing.
+	* +default+: Treat empty local-path as index.html (not index.xhtml).
+	Also, don't bother sending a 301 re-direct - just handle it.
+	* browse-kawa-manual: No longer use flakey frameset version.
+	* kawa.texi: Update url for manual.
+	* with-frames.html: Incomplete fix/update. Probably obsolete.
+
 2019-12-31  Per Bothner  <per@bothner.com>
 
 	* kawa.texi: Document --langserver option, justification format.
