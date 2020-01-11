@@ -11,7 +11,7 @@ public abstract class AbstractCharVector<E>
     protected char[] data;
     protected static char[] empty = new char[0];
 
-    public int length() { return super.length(); }
+    public int length() { return vsize(); }
 
     /** Get the allocated length of the data buffer. */
     public int getBufferLength() {

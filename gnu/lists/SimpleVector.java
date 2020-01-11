@@ -76,9 +76,9 @@ public abstract class SimpleVector<E> extends AbstractSequence<E>
         info |= READ_ONLY_FLAG;
     }
 
-    public int size() { return length(); }
+    public int size() { return vsize(); }
 
-    protected int length() {
+    protected int vsize() {
         int len = getBufferLength();
         if (isVerySimple())
             return len;
@@ -225,7 +225,7 @@ public abstract class SimpleVector<E> extends AbstractSequence<E>
      *   but we try to do better.
      */
     public long getSegment(int index) {
-        int sz = length();
+        int sz = vsize();
         int where, size;
         if (isVerySimple()) {
             where = index;
@@ -251,7 +251,7 @@ public abstract class SimpleVector<E> extends AbstractSequence<E>
 
     public int getSegment(int index, int len) {
         if (isGapBuffer()) {
-            int sz = length();
+            int sz = vsize();
             if (index < 0 || index > sz)
                 return -1;
             if (index < 0)
@@ -280,7 +280,7 @@ public abstract class SimpleVector<E> extends AbstractSequence<E>
     }
 
     public int getSegmentReadOnly(int start, int len) {
-        int sz = length();
+        int sz = vsize();
         if (start < 0 || len < 0 || start + len > sz)
             return -1;
         long result = getSegment(start);

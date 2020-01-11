@@ -1,3 +1,11 @@
+2020-01-10  Per Bothner  <per@bothner.com>
+
+	Fix Blob.size method to return number of bytes, not chars.
+	* SimpleVector.java (length): Rename protected method to ...
+	(vsize): ... new name, to avoid conflicts.
+	(size): Re-implement using vsize.
+	* AbstractCharVector.java (length): Implement using vsize.
+
 2019-12-24  Per Bothner  <per@bothner.com>
 
 	* FVector.java, ...: Remove generated files from repository.
