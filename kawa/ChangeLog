@@ -1,3 +1,8 @@
+2020-01-10  Per Bothner  <per@bothner.com>
+
+	* standard/require.java (importDefinitions): Set type of alias.
+	This allows better compile-time followng of aliases in ModuleInfo.
+
 2020-01-05  Per Bothner  <per@bothner.com>
 
 	* repl.java: Update Copyright year printed by --version.

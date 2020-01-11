@@ -391,6 +391,7 @@ public class require extends Syntax
                 adecl = defs.addDeclaration(aname);
                 if (old != null)
                     ScopeExp.duplicateDeclarationError(old, adecl, tr);
+                adecl.setType(Compilation.typeFieldLocation);
             }
 
             adecl.setAlias(true);
