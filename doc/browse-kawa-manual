@@ -24,14 +24,33 @@ fi
 exec ${JAVA-"java"} -jar ${KAWA_HOME}/lib/kawa.jar $thisfile
 |#
 
-(require 'javafx-defs)
-(javafx-application)
+(module-extends javafx.application.Application)
+(define (start (stage ::javafx.stage.Stage))::void
+  (stage:setTitle "Kawa documentation")
+  (let* ((browser (javafx.scene.web.WebView))
+         (box (javafx.scene.layout.VBox browser))
+         (web-engine (browser:getEngine))
+         (manual-url (resource-url "../doc/kawa-manual.epub")))
+    (web-engine:load &{jar:&[manual-url]!/OEBPS/index.html})
+    (box:setVgrow browser javafx.scene.layout.Priority:ALWAYS)
+    (stage:setScene (javafx.scene.Scene box))
+    (stage:show)))
+(javafx.application.Application:launch (module-class))
 
+#|
+;; This equivalent code mostly works, but for some reason
+;; window resizing doesn't resize the browser.
+(require 'javafx-defs)
+
+(javafx-application)
 (javafx-scene
  title: "Kawa documentation"
- width: 800 height: 700  ;;fill: Color: "#666970"
+ ;; width: 800 height: 700  ;;fill: Color: "#666970"
  (let* ((browser (javafx.scene.web.WebView))
+        (box (javafx.scene.layout.VBox browser))
         (web-engine (browser:getEngine))
         (manual-url (resource-url "../doc/kawa-manual.epub")))
    (web-engine:load &{jar:&[manual-url]!/OEBPS/index.html})
-   browser))
+   (box:setVgrow browser javafx.scene.layout.Priority:ALWAYS)
+   box))
+|#

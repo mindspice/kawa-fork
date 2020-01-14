@@ -1,3 +1,8 @@
+2020-01-13  Per Bothner  <per@bothner.com>
+
+	* browse-kawa-manual: Rewrite to "raw" JavaFX without javafx-defs.
+	This (for unknown reason) fixes a problem with re-sizing windows.
+
 2020-01-10  Per Bothner  <per@bothner.com>
 
 	Fixes to documentation browsing.
