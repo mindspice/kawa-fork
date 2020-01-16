@@ -922,12 +922,12 @@ public class repl extends Procedure0or1 {
                 return manualFile+" does not exist";
             if (browserCommand == null || browserCommand.length() == 0) {
                 try {
-                    Class.forName("gnu.kawa.servlet.KawaHttpHandler");
-                    browserCommand = "browser";
+                    Class.forName("gnu.kawa.javafx.KawaJavafxApplication");
+                    browserCommand = "javafx";
                 } catch (Throwable ex1) {
                     try {
-                        Class.forName("gnu.kawa.javafx.KawaJavafxApplication");
-                        browserCommand = "javafx";
+                        Class.forName("gnu.kawa.servlet.KawaHttpHandler");
+                        browserCommand = "browser";
                     } catch (Throwable ex2) {
                         return "don't know how to display manual (neither JavaFX or HttpServer classes found)";
                     }

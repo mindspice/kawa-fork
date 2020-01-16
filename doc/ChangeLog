@@ -1,3 +1,7 @@
+2020-01-15  Per Bothner  <per@bothner.com>
+
+	* kawa.texi (Options): --browse-manual now defaults to javafx.
+
 2020-01-13  Per Bothner  <per@bothner.com>
 
 	* browse-kawa-manual: Rewrite to "raw" JavaFX without javafx-defs.

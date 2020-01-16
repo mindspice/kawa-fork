@@ -3349,8 +3349,9 @@ This creates a mini web-server that reads
 from @code{doc/kawa-manual.epub}, which is
 included in the binary distributions, but not built by default from source.
 
-If no @var{command} is specified, creates a new window or tab
-in your default web browser.
+If no @var{command} is specified, creates a
+new mini-browser-window using JavaFX (if the JavaFX modules are available),
+or creates a new window or tab in your default web browser (otherwise).
 If @var{command} is a string containing @code{%U},
 then Kawa replaces @code{%U} with a URL that references itself,
 and then executes the resulting command.
