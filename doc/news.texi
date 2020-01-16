@@ -7,6 +7,13 @@ changes}.
 @c @subheading In Git repository (master branch) since last release
 @c @anchor{#in-git-repository-since-last-release}
 
+@subheading Kawa 3.1.1 (January 16, 2020)
+
+@itemize
+@item
+Various bug-fixes, mostly related to packaging and @code{--browse-manual}.
+@end itemize
+
 @subheading Kawa 3.1 (January 7, 2020)
 
 @itemize
