@@ -1,3 +1,7 @@
+2020-03-04  Per Bothner  <per@bothner.com>
+
+	* GeneralArray1.java: Implement GVector.
+
 2020-01-10  Per Bothner  <per@bothner.com>
 
 	Fix Blob.size method to return number of bytes, not chars.
