@@ -10,8 +10,8 @@ import static gnu.lists.AbstractSequence.noInts;
  * a class that implements Sequence.
  * GeneralArray uses a SimpleVector 'base' to store the actual data, and
  * provides general linear mapping from the array indexes to an
- * element index in the 'base' SimpleVector.  Thus such uperations as
- * transposing an array can be implement as just creating a simple
+ * element index in the 'base' SimpleVector.  Thus such operations as
+ * transposing an array can be implemented as just creating a simple
  * re-mapping of the indexes. */
 
 public class GeneralArray<E> extends TransformedArray<E>
