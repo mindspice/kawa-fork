@@ -1,5 +1,8 @@
 2020-03-04  Per Bothner  <per@bothner.com>
 
+	* FlattenedArray.java (flatten): Check for 'simple' array first.
+	Fixes GitLab issue #66 "array->vector returns non-vector?".
+
 	* GeneralArray1.java: Implement GVector.
 
 2020-01-10  Per Bothner  <per@bothner.com>

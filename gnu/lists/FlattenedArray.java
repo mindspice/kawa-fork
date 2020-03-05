@@ -31,13 +31,13 @@ public class FlattenedArray<E> extends TransformedArray<E> implements AVector<E>
     /** Created a shared flattened view of the argument.
      */
     public static <E> AVector<E> flatten(Array<E> array) {
-        if (array instanceof AVector)
-            return (AVector) array;
         if (array instanceof GeneralArray) {
             GeneralArray<E> garr = (GeneralArray<E>) array;
             if (garr.simple && garr.base instanceof AVector)
                 return (AVector<E>) garr.base;
         }
+        if (array instanceof AVector)
+            return (AVector) array;
         return new FlattenedArray(array);
     }
 }
