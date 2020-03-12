@@ -1,3 +1,7 @@
+2020-03-11  Per Bothner  <per@bothner.com>
+
+	* IsEqual.java (match): Fix thinko comparing arrays.
+
 2019-12-24  Per Bothner  <per@bothner.com>
 
 	* DivideOp.java: Disallow with no arguments.

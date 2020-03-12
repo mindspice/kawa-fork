@@ -220,7 +220,7 @@ public class IsEqual extends gnu.mapping.Procedure2
                 indexes[r] = low;
                 size = size * dim;
                 if (dim != arr2.getSize(r)
-                    || low != arr1.getLowBound(r))
+                    || low != arr2.getLowBound(r))
                     return false;
             }
             if (noteEqual(arg1, arg2, map))
