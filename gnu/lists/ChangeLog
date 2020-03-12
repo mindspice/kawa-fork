@@ -1,3 +1,9 @@
+2020-03-11  Per Bothner  <per@bothner.com>
+
+	* GeneralArray.java: Fix calculation of 'simple' property.
+	Fixes GitLab issue #67 "array->vector on array from share-array
+	gives incorrect vector".
+
 2020-03-04  Per Bothner  <per@bothner.com>
 
 	* FlattenedArray.java (flatten): Check for 'simple' array first.

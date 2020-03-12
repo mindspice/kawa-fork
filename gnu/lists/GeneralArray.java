@@ -50,26 +50,18 @@ public class GeneralArray<E> extends TransformedArray<E>
     }
     protected void init(AVector<E> base, int[] dimensions, int[] lowBounds,
                         int[] strides, int offset) {
-        this.base = base;
-        simple = strides == null && offset == 0;
         int d = dimensions.length;
         if (lowBounds == null) {
             lowBounds = zeros;
             if (d > lowBounds.length)
                 lowBounds = new int[d];
         }
-        if (strides == null) {
-            strides = new int[d];
-            int n = 1;
-            for (int i = d;  --i >= 0; ) {
-                strides[i] = n;
-                n *= dimensions[i];
-            }
-        }
         this.strides = strides;
         this.dimensions = dimensions;
         this.lowBounds = lowBounds;
         this.offset = offset;
+        if (base != null)
+            this.setBase(base);
     }
 
     private static int getSize(int[] dimensions) {
@@ -92,15 +84,43 @@ public class GeneralArray<E> extends TransformedArray<E>
         return array;
     }
     public AVector<E> getBase() { return (AVector<E>) base; }
+
+    /** Calculates 'simple' and 'strides' (if defaulted).
+     * Requires 'base' and 'dimensions' to be already set.
+     */
+    void checkSimple() {
+        boolean simple = offset == 0;
+        int d = dimensions.length;
+        int n = 1;
+        if (strides == null) {
+            strides = new int[d];
+            for (int i = d;  --i >= 0; ) {
+                strides[i] = n;
+                n *= dimensions[i];
+            }
+        } else {
+            for (int i = d;  simple && --i >= 0; ) {
+                if (strides[i] != n)
+                    simple = false;
+                n *= dimensions[i];
+            }
+        }
+        this.simple = simple && n == base.getSize();
+    }
+
     public void setBase(AVector<E> base) {
         if (this.base != null)
             throw new IllegalStateException();
         this.base = base;
+        checkSimple();
     }
     public void setBase(E[] data) {
         setBase(new FVector(data));
     }
+    /** Must be called before setBase */
     public void setStrides(int[] strides, int offset) {
+        if (this.base != null)
+            throw new IllegalStateException();
         this.strides = strides;
         this.offset = offset;
     }

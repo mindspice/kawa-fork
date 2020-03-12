@@ -1,5 +1,7 @@
 2020-03-11  Per Bothner  <per@bothner.com>
 
+	* Arrays.java (shareArray): Tweak due to GeneralArray changes.
+
 	* IsEqual.java (match): Fix thinko comparing arrays.
 
 2019-12-24  Per Bothner  <per@bothner.com>

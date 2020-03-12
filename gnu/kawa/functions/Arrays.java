@@ -240,8 +240,8 @@ public class Arrays
     AVector base = array instanceof GeneralArray
         ? ((GeneralArray) array).getBase()
         : (AVector) array;
-    result.setBase(base);
     result.setStrides(offsets, offset0);
+    result.setBase(base);
     return result;
   }
 

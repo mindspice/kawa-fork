@@ -1,3 +1,7 @@
+2020-03-11  Per Bothner  <per@bothner.com>
+
+	* arr-test.scm: Some tests based on GibLab issues #66 and #67.
+
 2019-12-24  Per Bothner  <per@bothner.com>
 
 	* charset1.scm: New tests for GitLab issue #63

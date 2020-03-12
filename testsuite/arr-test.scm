@@ -1,5 +1,5 @@
 ;; -*- coding: utf-8 -*-
-(test-begin "arrays" 234)
+(test-begin "arrays" 244)
 
 ;;; array test
 ;;; 2001 Jussi Piitulainen
@@ -622,4 +622,25 @@
 ║002│003║
 ╚═══╧═══╝}
   (format-array  #2u32@2@3((1 2) (2 3)) "~3,'0d"))      
+
+;; Some tests relating to GitLab issues #66 and #67
+(let* ((v1 (vector 100 101 102 103))
+       (a1a (make-array (shape 0 4) @v1))
+       (a1b (array-reshape v1 (shape 0 4)))
+       (a2a (make-array (shape 0 2 0 2) @v1))
+       (s2b (shape 0 2 1 3))
+       (a2b (array-reshape v1 s2b))
+       (a3 (share-array a1b (shape 0 2) values)))
+  (test-equal a1a a1b)
+  (test-assert (not (equal? a2a a2b)))
+  (test-assert (equal? (array-reshape a2a s2b) a2b))
+  (test-equal v1 (array->vector a1a))
+  (test-eq v1 (array->vector a1b))
+  (test-equal v1 (array->vector a2a))
+  (test-eq v1 (array->vector a2b))
+  (test-equal #(100 101) a3)
+  (test-equal #(100 101) (array->vector a3))
+  (test-equal #(100 101) (array-flatten a3))
+  )
+
 (test-end)
