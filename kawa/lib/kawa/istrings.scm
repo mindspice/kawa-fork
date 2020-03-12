@@ -23,10 +23,10 @@
                         #!optional (start ::int 0) (end ::int (vec:size)))
   (gnu.lists.IString (vector->mstring vec start end)))
 
-(define (list->string (lst ::list)) ::string
+(define (list->string (lst ::list)) ::istring
   (gnu.lists.IString ((list->mstring lst):toString)))
 
-(define (string-append #!rest (args :: java.lang.CharSequence[])) :: gnu.lists.IString
+(define (string-append #!rest (args :: java.lang.CharSequence[])) :: istring
   (let* ((buf (java.lang.StringBuilder))
          (n args:length))
     (let loop ((i::int 0))
@@ -36,20 +36,20 @@
     (gnu.lists.IString buf)))
 
 (define (substring str::string start::int end::int)
-  :: <string>
+  :: istring
   (gnu.lists.IString:valueOf str start (- end start)))
 
 (define (string-map proc str1::string #!rest rst::string[])::string
   (gnu.lists.IString (mstring-map proc str1 @rst)))
 
-(define (string-upcase (str :: string)) :: string
+(define (string-upcase (str :: string)) :: istring
   (gnu.lists.IString ((str:toString):toUpperCase java.util.Locale:ENGLISH)))
 
-(define (string-downcase (str :: string)) :: string
+(define (string-downcase (str :: string)) :: istring
   (gnu.lists.IString ((str:toString):toLowerCase java.util.Locale:ENGLISH)))
 
-(define (string-titlecase (str :: string)) :: string
+(define (string-titlecase (str :: string)) :: istring
   (gnu.lists.IString (gnu.kawa.functions.UnicodeUtils:capitalize str)))
 
-(define (string-foldcase (str :: string)) :: string
+(define (string-foldcase (str :: string)) :: istring
   (gnu.lists.IString (gnu.kawa.functions.UnicodeUtils:foldCase str)))

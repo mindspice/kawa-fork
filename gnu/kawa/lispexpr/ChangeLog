@@ -1,3 +1,7 @@
+2020-03-11  Per Bothner  <per@bothner.com>
+
+	* LispLanguage.java (getTypeMap): Add mapping for 'istring'.
+
 2019-12-24  Per Bothner  <per@bothner.com>
 
 	* LangObjType.java(coercionMethod, coercionOrNullMethod): For gvector.
