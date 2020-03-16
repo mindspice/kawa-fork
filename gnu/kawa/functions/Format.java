@@ -104,18 +104,10 @@ public class Format extends ProcedureN
 
   public Object applyN (Object[] args)
   {
-    /* #ifdef JAVA5 */
     return format(args);
-    /* #else */
-    // return format$V(args);
-    /* #endif */
   }
 
-  /* #ifdef JAVA5 */
   public static Object format (Object... args)
-  /* #else */
-  // public static Object format$V (Object[] args)
-  /* #endif */
   {
     Object port_arg = args[0];
     if (port_arg == Boolean.TRUE)
@@ -128,11 +120,7 @@ public class Format extends ProcedureN
 	return formatToString(1, args);
       }
     else if (port_arg instanceof MessageFormat
-             /* #ifdef use:java.lang.CharSequence */
              || port_arg instanceof CharSequence
-             /* #else */
-             // || port_arg instanceof String || port_arg instanceof CharSeq
-             /* #endif */
 	     || port_arg instanceof ReportFormat)
       {
 	return formatToString(0, args);
