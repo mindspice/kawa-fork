@@ -1,3 +1,10 @@
+2020-03-15  Per Bothner  <per@bothner.com>
+
+	* lang/Translator.java: Change some rewrite procedure to take 'mode'.
+	Instead of passing 'boolean function', pass a more fine-grained
+	'char mode' parameter. 	Better re-factoring.  In the future we
+	might use this report issing-declaration errors at re-write time,
+
 2020-01-15  Per Bothner  <per@bothner.com>
 
 	* repl.java (browseManual): Default to "javafx" rather than "browser".

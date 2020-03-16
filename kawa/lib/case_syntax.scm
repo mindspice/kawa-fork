@@ -18,12 +18,13 @@
 (define (clause-datums->exps datums)
   (if (null? datums) ()
       (let* ((tr ::kawa.lang.Translator (gnu.expr.Compilation:getCurrent))
-             (datum (tr:rewrite_car datums #f)))
+             (dpair ::gnu.lists.Pair datums)
+             (datum (tr:rewrite_car dpair (->char #\Q))))
         (cons 
          (<QuoteExp>:getInstance 
-          (syntax-form->datum (car datums)) 
+          (syntax-form->datum (car dpair))
           datum)
-         (clause-datums->exps (cdr datums))))))
+         (clause-datums->exps (cdr dpair))))))
 
 ;; Creates the case clauses to be passed to the CaseExp
 (define (syntax->case-clauses s-clauses key)

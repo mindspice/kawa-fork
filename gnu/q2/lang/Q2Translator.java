@@ -151,7 +151,8 @@ public class Q2Translator extends SchemeCompilation
     return super.rewrite(exp, function);
   }
 
-  public Expression rewrite_pair (Pair p, boolean function)
+  @Override
+  public Expression rewrite_pair(Pair p, char mode)
   {
     Object partitioned = partition(p, this);
     if (partitioned instanceof Pair) {
@@ -160,9 +161,9 @@ public class Q2Translator extends SchemeCompilation
         if (p_car instanceof Pair
             && ((Pair) p_car).getCar() == LispLanguage.splice_sym)
             return new ApplyExp(MakeSplice.quoteInstance,
-                                rewrite_car((Pair)((Pair) p_car).getCdr(), function));
+                                rewrite_car((Pair)((Pair) p_car).getCdr(), mode));
         else {
-            Expression exp = super.rewrite_pair(pair, function);
+            Expression exp = super.rewrite_pair(pair, mode);
             ApplyExp app;
             if (exp instanceof ApplyExp) {
                 Expression fun = (app = (ApplyExp) exp).getFunction();
@@ -175,7 +176,7 @@ public class Q2Translator extends SchemeCompilation
         }
     }
     else
-      return rewrite(partitioned, function);
+      return rewrite(partitioned, mode);
   }
 
     /** If the argument has zero arguments, should we still apply it? */

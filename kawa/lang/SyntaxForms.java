@@ -158,7 +158,7 @@ public class SyntaxForms {
   public static Expression rewriteCar (Object x)
   {
     Translator tr = (Translator) Compilation.getCurrent();
-    return tr.rewrite_car((Pair) x, false);
+    return tr.rewrite_car((Pair) x, 'N');
   }
 
   public static Expression rewriteBody (Object x)

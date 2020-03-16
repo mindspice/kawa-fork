@@ -131,12 +131,17 @@ public class Translator extends Compilation
 
   public final Expression rewrite_car (Pair pair, boolean function)
   {
-    Object car = pair.getCar();
-    if (pair instanceof PairWithPosition)
-      return rewrite_with_position (car, function, (PairWithPosition) pair);
-    else
-      return rewrite (car, function);
+      return rewrite_car(pair, function ? 'F' : 'N');
   }
+
+    public final Expression rewrite_car(Pair pair, char mode) {
+        Object saved = pushPositionOf(pair);
+        try {
+            return rewrite(pair.getCar(), mode);
+        } finally {
+            popPositionOf(saved);
+        }
+    }
 
     /** Similar to rewrite_car.
      * However, we check for (quasiquote exp) specially, and handle that
@@ -340,7 +345,7 @@ public class Translator extends Compilation
     return obj instanceof Syntax ? (Syntax) obj : null;
   }
 
-  public Expression rewrite_pair (Pair p, boolean function)
+  public Expression rewrite_pair(Pair p, char mode)
   {
     Object p_car = p.getCar();
     Expression func;
@@ -352,7 +357,7 @@ public class Translator extends Compilation
         useHelper = false;
     }
     else
-        func = rewrite_car (p, true);
+        func = rewrite_car(p, 'F');
     Object proc = null;
     if (func instanceof QuoteExp)
       {
@@ -523,7 +528,7 @@ public class Translator extends Compilation
                     firstSpliceArg = i + (applyFunction != null ? 1 : 0);
             }
             else 
-                arg = rewrite_car (cdr_pair, false);
+                arg = rewrite_car(cdr_pair, isNamedPartDecl ? 'R' : 'N');
         }
         i++;
 
@@ -540,7 +545,7 @@ public class Translator extends Compilation
       setPopCurrentScope(save_scope);
 
     if (isNamedPartDecl)
-        return rewrite_lookup(args[0], args[1], function);
+        return rewrite_lookup(args[0], args[1], mode);
 
     ApplyExp app = new ApplyExp(func, args);
     app.firstSpliceArg = firstSpliceArg;
@@ -552,10 +557,10 @@ public class Translator extends Compilation
     return app;
   }
 
-    public Expression rewrite_lookup(Expression part1, Expression part2, boolean function) {
+    public Expression rewrite_lookup(Expression part1, Expression part2, char mode) {
         Symbol sym = namespaceResolve(part1, part2);
         if (sym != null)
-          return rewrite(sym, function);
+          return rewrite(sym, mode);
         // FIXME don't copy the args array in makeExp ...
         return CompileNamedPart.makeExp(part1, part2);
     }
@@ -705,7 +710,7 @@ public class Translator extends Compilation
 	  rewriteInBody(vals[i]);
       }
     else {
-        Expression e = rewrite(exp, false);
+        Expression e = rewrite(exp, 'N');
         setLineOf(e);
         pushForm(e);
     }
@@ -753,7 +758,7 @@ public class Translator extends Compilation
             }
         }
         if (part2 != null) {
-            Expression part1 = rewrite(prefix);
+            Expression part1 = rewrite(prefix, 'R');
             Symbol sym = namespaceResolve(part1, part2);
             if (sym != null)
                 return sym;
@@ -780,7 +785,8 @@ public class Translator extends Compilation
 
     /** Re-write a Scheme expression in S-expression format into internal form.
      * @param mode either 'N' (normal), 'F' (function application context),
-     *  'M' (macro-checking) or 'Q' (colon-form in quote).
+     *  'M' (macro-checking), 'Q' (colon-form in quote),
+     *  or 'R' (namespace-resolve).
      */
     public Expression rewrite(Object exp, char mode) {
         if (exp instanceof SyntaxForm) {
@@ -793,9 +799,9 @@ public class Translator extends Compilation
                 setPopCurrentScope(save_scope);
             }
         }
-        boolean function = mode != 'N';
+        boolean function = mode != 'N' && mode != 'R';
         if (exp instanceof Pair && mode != 'Q') {
-            Expression e = rewrite_pair((Pair) exp, function);
+            Expression e = rewrite_pair((Pair) exp, mode);
             setLineOf(e);
             return e;
         } else if (exp instanceof Symbol && ! selfEvaluatingSymbol(exp)) {
@@ -824,7 +830,7 @@ public class Translator extends Compilation
                 String loc = s.getLocalPart();
                 return rewrite_lookup(rewrite(Symbol.valueOf(s.getPrefix()), false),
                                       QuoteExp.getInstance(Symbol.valueOf(s.getLocalPart())),
-                                      function);
+                                      mode);
             }
             Declaration decl = lexical.lookup(exp, function);
             Declaration cdecl = null;
@@ -1009,6 +1015,12 @@ public class Translator extends Compilation
             ReferenceExp rexp = new ReferenceExp (nameToLookup, decl);
             rexp.setContextDecl(cdecl);
             rexp.setLine(this);
+            /* FUTURE?  do error reporting early
+            if (decl == null && mode != 'M' && mode != 'R' && mode != 'Q') {
+                if (warnUndefinedVariable())
+                    error('w', "no declaration seen for "+nameToLookup);
+            }
+            */
             if (function && separate)
                 rexp.setFlag(ReferenceExp.PREFER_BINDING2);
             return rexp;
@@ -1462,26 +1474,6 @@ public class Translator extends Compilation
       }
   }
 
-  public Expression rewrite_with_position (Object exp, boolean function,
-                                           PairWithPosition pair)
-  {
-    Object saved = pushPositionOf(pair);
-    Expression result;
-    try
-      {
-	if (exp == pair)
-	  result = rewrite_pair(pair, function);  // To avoid a cycle
-	else
-	  result = rewrite (exp, function);
-	setLineOf(result);
-      }
-    finally
-      {
-	popPositionOf(saved);
-      }
-    return result;
-  }
-
   public static Object wrapSyntax (Object form, SyntaxForm syntax)
   {
     if (syntax == null || form instanceof Expression)
@@ -1566,7 +1558,7 @@ public class Translator extends Compilation
                 && p.getCdr() instanceof Pair
                 && (p = (Pair) p.getCdr()).getCdr() instanceof Pair)
               {
-                Expression part1 = rewrite(p.getCar());
+                Expression part1 = rewrite(p.getCar(), 'R');
                 Expression part2 = rewrite_car_for_lookup((Pair) p.getCdr());
                 Object value1 = part1.valueIfConstant();
                 Object value2 = part2.valueIfConstant();
