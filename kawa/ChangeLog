@@ -1,3 +1,9 @@
+2020-03-16  Per Bothner  <per@bothner.com>
+
+	* standard/define_library.java: Handle begin Syntax added by reader.
+	The reader (in readObject) will wrap top-level forms in a begin object
+	so we get position info; deal with those.
+
 2020-03-15  Per Bothner  <per@bothner.com>
 
 	* lang/Translator.java: Change some rewrite procedure to take 'mode'.

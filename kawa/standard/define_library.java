@@ -112,7 +112,9 @@ public class define_library extends Syntax {
                     syntax = Include.includeCi;
                 else if (clauseHead == importSymbol)
                     syntax = ImportFromLibrary.instance;
-                if (clauseHead == includeLibraryDeclarationsSymbol) {
+                if (clauseHead == begin.begin) {
+                    scanModulePass(pclause.getCdr(), defs, tr);
+                } else if (clauseHead == includeLibraryDeclarationsSymbol) {
                     Object forms = Include.includeRelative
                         .process(pclause.getCdr(), tr, null, false);
                     scanModulePass(forms, defs, tr);
