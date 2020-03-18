@@ -9265,7 +9265,7 @@ beyond those matched by required and optional parameters.
 @item
 There may not be any duplicated keyword arguments.
 @item
-All keyowrds in the actual argument list must
+All keywords in the actual argument list must
 match one of the keyword formal parameters.
 @end itemize
 
@@ -9276,7 +9276,7 @@ that match the explicit keyword parameters, as well any that don't,
 though this may change.
 
 On the other hand, it is fine to have both keyword parameters
-and a rest parameter does not accept keywords.  In that case
+and a rest parameter that does not accept keywords.  In that case
 the rest parameter will match any ``postfix'' arguments:
 
 @example
@@ -9337,7 +9337,7 @@ with the element type of the array.
 Keywords are not allowed (even if @var{type} is @code{object[]}).
 
 The generated method will be compiled like a Java varargs
-methods if possible (i.e. no non-trivial patterns or keyword paremeters).
+method if possible (i.e. no non-trivial patterns or keyword paremeters).
 @item
 Using @stxlit{@@}@var{rest-arg} is equivalent to
 @code{#!rest @var{rest-arg}::object[]}:
