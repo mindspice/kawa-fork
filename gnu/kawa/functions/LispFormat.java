@@ -17,15 +17,50 @@ public class LispFormat extends CompoundFormat
   public static final String paramFromList = "<from list>";
   public static final String paramFromCount = "<from count>";
   public static final String paramUnspecified = "<unspecified>";
+    static final int SRFI48_STYLE = 1;
 
     static final DelimitSubstitutionFormat delimitSubstitutionInstance
         = DelimitSubstitutionFormat
         .getInstance(ObjectFormat.getInstance(false));
 
-  public LispFormat(char[] format, int offset, int length)
+    public LispFormat() {
+        super(null, 0);
+    }
+
+    public LispFormat(char[] format)
+        throws ParseException {
+        this();
+        parseFormat(format, 0, format.length, 0);
+    }
+
+    public LispFormat(char[] format, int offset, int length)
+            throws ParseException {
+        this();
+        parseFormat(format, offset, length, 0);
+    }
+
+    public LispFormat(String str)
+        throws ParseException {
+        this();
+        parseFormat(str, 0);
+    }
+
+    public static LispFormat asSrfi48Format(String str)
+            throws ParseException {
+        LispFormat fmt = new LispFormat();
+        fmt.parseFormat(str, SRFI48_STYLE);
+        return fmt;
+    }
+
+    public void parseFormat(String str, int flags)
+        throws ParseException {
+        char[] arr = str.toCharArray();
+        parseFormat(arr, 0, arr.length, flags);
+    }
+
+  public void parseFormat(char[] format, int offset, int length, int flags)
     throws ParseException
   {
-    super(null, 0);
     // The index in spec of the most recent ~{, ~(, ~{ or ~[.
     int start_nesting = -1;
     int choices_seen = 0;  // Number of "~;" seen.
@@ -133,13 +168,13 @@ public class LispFormat extends CompoundFormat
 	    padChar = getParam(stack, argstart+1);
 	    int commaChar = getParam(stack, argstart+2);
 	    int commaInterval = getParam(stack, argstart+3);
-            int flags = 0;
+            int fflags = 0;
             if (seenColon)
-              flags |= IntegerFormat.SHOW_GROUPS;
+              fflags |= IntegerFormat.SHOW_GROUPS;
             if (seenAt)
-              flags |= IntegerFormat.SHOW_PLUS;
+              fflags |= IntegerFormat.SHOW_PLUS;
 	    fmt = IntegerFormat.getInstance(base, minWidth, padChar,
-                                            commaChar, commaInterval, flags);
+                                            commaChar, commaInterval, fflags);
 	    break;
 	  case 'P':
 	    fmt = LispPluralFormat.getInstance(seenColon, seenAt);
@@ -166,7 +201,11 @@ public class LispFormat extends CompoundFormat
 	      }
 	    dfmt.showPlus = seenAt;
 	    dfmt.internalPad = seenColon;
-            fmt = dfmt.resolve(null, 0);
+            if ((flags & SRFI48_STYLE) != 0) {
+                dfmt.style = '4';
+                fmt = dfmt;
+            } else
+                fmt = dfmt.resolve(null, 0);
 	    break;
 	  case 'A':  case 'S':  case 'W':
 	  case 'Y': {// SRFI-48 "yuppify" (pretty-print)
@@ -428,6 +467,12 @@ public class LispFormat extends CompoundFormat
           case 'Q':
               fmt = delimitSubstitutionInstance;
               break;
+          case 'H':
+              if ((flags & SRFI48_STYLE) != 0) {
+                  fmt = new LiteralFormat(srfi48HelpString);
+                  break;
+              }
+              /* ... fall through ... */
           default:
 	    throw new ParseException("unrecognized format specifier ~"+ch, i);
           }
@@ -462,12 +507,6 @@ public class LispFormat extends CompoundFormat
       f = new CompoundFormat(getFormats(vector, start, end));
     vector.setSize(start);
     return f;
-  }
-
-  public LispFormat (String str)
-    throws ParseException
-  {
-    this(str.toCharArray());
   }
 
   /*
@@ -514,12 +553,6 @@ public class LispFormat extends CompoundFormat
     specs[specs_length++] = val;
   }
   */
-
-  public LispFormat(char[] format)
-    throws ParseException
-  {
-    this(format, 0, format.length);
-  }
 
   public static int getParam(java.util.Vector vec, int index)
   {
@@ -581,6 +614,28 @@ public class LispFormat extends CompoundFormat
 	}
     }
 
+
+static final String srfi48HelpString =
+      "(format [<port>] <format-string> [<arg>...]) -- <port> is #t, #f or an output-port\n" +
+      "OPTION  [MNEMONIC]      DESCRIPTION     -- Implementation Assumes ASCII Text Encoding\n" +
+      "~H      [Help]          output this text\n" +
+      "~A      [Any]           (display arg) for humans\n" +
+      "~S      [Slashified]    (write arg) for parsers\n" +
+      "~W      [WriteCircular] like ~s but outputs circular and recursive data structures\n" +
+      "~~      [tilde]         output a tilde\n" +
+      "~T      [Tab]           output a tab character\n" +
+      "~%      [Newline]       output a newline character\n" +
+      "~&      [Freshline]     output a newline character if the previous output was not a newline\n" +
+      "~D      [Decimal]       the arg is a number which is output in decimal radix\n" +
+      "~X      [heXadecimal]   the arg is a number which is output in hexdecimal radix\n" +
+      "~O      [Octal]         the arg is a number which is output in octal radix\n" +
+      "~B      [Binary]        the arg is a number which is output in binary radix\n" +
+      "~w,dF   [Fixed]         the arg is a string or number which has width w and d digits after the decimal\n" +
+      "~C      [Character]     charater arg is output by write-char\n" +
+      "~_      [Space]         a single space character is output\n" +
+      "~Y      [Yuppify]       the list arg is pretty-printed to the output\n" +
+      "~?      [Indirection]   recursive format: next 2 args are format-string and list of arguments\n" +
+      "~K      [Indirection]   same as ~?\n";
 }
 
 /** Add plural suffixes ("s" or "y/ies") of English words.
@@ -1312,4 +1367,5 @@ class LispTabulateFormat extends ReportFormat
       dst.append(padChar);
     return start;
   }
-}
+
+    }

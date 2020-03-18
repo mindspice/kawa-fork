@@ -48,7 +48,7 @@ java_SCM_ALWAYS2 = enums.scm srfi/8.scm srfi/26.scm srfi/95.scm \
   kawa/base.scm
 # The following files may import (kawa base).
 java_SCM_ALWAYS3 = kawa/quaternions.scm kawa/pprint.scm kawa/rotations.scm \
-  kawa/null-5.scm kawa/reflect.scm 
+  kawa/null-5.scm kawa/reflect.scm srfi/48.scm
 
 scm_WITH_SWING = windows.scm kawa/swing.scm
 scm_WITH_AWT = kawa/pictures.scm 

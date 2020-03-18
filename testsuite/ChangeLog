@@ -1,3 +1,7 @@
+2020-03-18  Per Bothner  <per@bothner.com>
+
+	* formatst.scm: New tests, mainly srfi-48.
+
 2020-03-11  Per Bothner  <per@bothner.com>
 
 	* arr-test.scm: Some tests based on GibLab issues #66 and #67.

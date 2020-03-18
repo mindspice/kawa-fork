@@ -14,7 +14,7 @@ import java.text.FieldPosition;
 
 public class FixedRealFormat extends java.text.Format
 {
-  private int i, d;
+  private int i, d = -1;
   public int getMaximumFractionDigits() { return d; }
   public int getMinimumIntegerDigits() { return i; }
   public void setMaximumFractionDigits(int d) { this.d = d; }
@@ -28,7 +28,8 @@ public class FixedRealFormat extends java.text.Format
   public boolean internalPad;
   public char overflowChar;
 
-  public void format(RealNum number, StringBuffer sbuf, FieldPosition fpos)
+  private void format(RealNum number, StringBuffer sbuf,
+                      FieldPosition fpos, boolean showPlus, int width)
   {
     int decimals;
     if (number instanceof RatNum
@@ -51,24 +52,28 @@ public class FixedRealFormat extends java.text.Format
         sbuf.append(string);
         int length = string.length();
         int digits = length - decimals;
-        format(sbuf, fpos, length, digits, decimals, signLen, oldSize);
+        format(sbuf, fpos, length, digits, decimals, signLen, oldSize, width);
       }
     else
-      format(number.doubleValue(), sbuf, fpos);
+        format(number.doubleValue(), sbuf, fpos, showPlus, width);
   }
 
   public StringBuffer format(long num, StringBuffer sbuf, FieldPosition fpos)
   {
-    format(IntNum.make(num), sbuf, fpos);
+      format(IntNum.make(num), sbuf, fpos, this.showPlus, this.width);
     return sbuf;
   }
 
-  public StringBuffer format(double num, StringBuffer sbuf, FieldPosition fpos)
+    public StringBuffer format(double num, StringBuffer sbuf, FieldPosition fpos) {
+        return format(num, sbuf, fpos, this.showPlus, this.width);
+    }
+  public StringBuffer format(double num, StringBuffer sbuf,
+                             FieldPosition fpos, boolean showPlus, int width)
   {
     if (Double.isNaN(num) || Double.isInfinite(num))
       return sbuf.append(num);
     if (getMaximumFractionDigits() >= 0)
-      format(DFloNum.toExact(num), sbuf, fpos);
+        format(DFloNum.toExact(num), sbuf, fpos, showPlus, width);
     else
       {
         boolean negative;
@@ -183,7 +188,7 @@ public class FixedRealFormat extends java.text.Format
 
         format(sbuf, fpos, length, digits, decimals,
                negative ? 1 : 0,
-               oldSize);
+               oldSize, width);
       }
     return sbuf;
   }
@@ -193,23 +198,62 @@ public class FixedRealFormat extends java.text.Format
     RealNum rnum = RealNum.asRealNumOrNull(num);
     if (rnum == null)
       {
-        if (num instanceof Complex)
-          {
-            // Common Lisp says if value is non-real, print as if with ~wD.
-            String str = num.toString();
-            int padding = width - str.length();
-            while (--padding >= 0)
-              sbuf.append(' ');
-            sbuf.append(str);
-            return sbuf;
-          }
-        rnum = (RealNum) num;
+        int decimals;
+        if (num instanceof Quaternion
+            && (decimals = getMaximumFractionDigits()) >= 0) {
+            Quaternion qnum = (Quaternion) num;
+            RealNum re = qnum.re();
+            RealNum im = qnum.im();
+            RealNum jm = qnum.jm();
+            RealNum km = qnum.km();
+            if (! im.isZero() || ! jm.isZero() || ! km.isZero()) {
+                int oldSize = sbuf.length();
+                int startSize = oldSize;
+                boolean reZero = re.isZero();
+                if (! reZero || width > 0) {
+                    format(re, sbuf, null, this.showPlus, -1);
+                    if (reZero)
+                        startSize = sbuf.length();
+                }
+                if (! im.isZero()) {
+                    format(im, sbuf, null, true, -1);
+                    sbuf.append('i');
+                }
+                if (! jm.isZero()) {
+                    format(jm, sbuf, null, true, -1);
+                    sbuf.append('j');
+                }
+                if (! km.isZero()) {
+                    format(km, sbuf, null, true, -1);
+                    sbuf.append('k');
+                }
+                int emitted;
+                if (width > 0) {
+                    int padding = width - (sbuf.length() - oldSize);
+                    if (startSize > oldSize && padding < 0) {
+                        sbuf.delete(oldSize, startSize);
+                        padding += startSize - oldSize;
+                    }
+                    if (padding >= 0) {
+                        int i = oldSize;
+                        while (--padding >= 0)
+                            sbuf.insert(i, padChar);
+                    } else if (overflowChar != '\0') {
+                        sbuf.setLength(oldSize);
+                        for (i = width;  --i >= 0; )
+                            sbuf.append(overflowChar);
+                    }
+                }
+                return sbuf;
+            }
+        }
       }
-    return format(rnum.doubleValue(), sbuf, fpos);
+    format(rnum, sbuf, fpos, this.showPlus, this.width);
+    return sbuf;
   }
 
   /** Do padding and similar adjustments on the converted number. */
-  private void format (StringBuffer sbuf, FieldPosition fpos, int length, int digits, int decimals, int signLen, int oldSize)
+  private void format (StringBuffer sbuf, FieldPosition fpos, int length, int digits, int decimals, int signLen, int oldSize, int width)
   {
     int total_digits = digits + decimals;
     // Number of initial zeros to add.

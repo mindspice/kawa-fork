@@ -1,3 +1,7 @@
+2020-03-18  Per Bothner  <per@bothner.com>
+
+	* standard/ImportFromLibrary.java (SRFI97Map) Support srfi 48.
+
 2020-03-16  Per Bothner  <per@bothner.com>
 
 	* standard/define_library.java: Handle begin Syntax added by reader.

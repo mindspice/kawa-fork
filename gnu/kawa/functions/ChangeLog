@@ -1,3 +1,8 @@
+2020-03-18  Per Bothner  <per@bothner.com>
+
+	* LispRealFormat.java, LispFormat.java:  Support for srfi-48 version
+	of format being different from default.
+
 2020-03-11  Per Bothner  <per@bothner.com>
 
 	* Arrays.java (shareArray): Tweak due to GeneralArray changes.

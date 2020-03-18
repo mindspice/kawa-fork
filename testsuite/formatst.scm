@@ -28,7 +28,7 @@
 ;      (newline)
 ;      (format:abort)))
 
-(test-begin "format" 432)
+(test-begin "format" 454)
 (define-syntax test 
   (syntax-rules ()
     ((test format-args out-str)
@@ -662,8 +662,7 @@ def")
 (test '("~8,3F" 12.3456) "  12.346")
 (test '("~6,3F" 123.3456) "123.346")
 (test '("~4,3F" 123.3456) "123.346")
-(test-expect-fail 1) ; ~F doesn't properly support complex numbers
-(test `("~8,3F" ,(sqrt -3.8)) "0.000+1.949i")
+(test `("~8,3F" ,(sqrt -3.8)) " +1.949i")
 (test '("~6,2F" 32) " 32.00")
 ;; NB: (not (and (exact? 32.) (integer? 32.)))
 #| SRFI-48 results
@@ -695,8 +694,8 @@ def")
 (test '("~12F" 1.2345) "      1.2345")
 (test '("~12,2F" 1.2345) "        1.23")
 (test '("~12,3F" 1.2345) "       1.234")
-(test `("~20,3F" ,(sqrt -3.8)) "+1.9493588689617927i") ; SRFI-48: "        0.000+1.949i"
-(test `("~8,3F" ,(sqrt -3.8)) "+1.9493588689617927i"); SRFI-48: "0.000+1.949i")
+(test `("~20,3F" ,(sqrt -3.8)) "        0.000+1.949i") ; SRFI-48: "        0.000+1.949i"
+(test `("~8,3F" ,(sqrt -3.8)) " +1.949i"); SRFI-48: "0.000+1.949i")
 (test '("~8,2F" 3.4567e11) "345670000000.00") ; SRFI-48: " 3.46e11")
 ; (expect "#1=(a b c . #1#)"
 ;         (format "~w" (let ( (c '(a b c)) ) (set-cdr! (cddr c) c) c)))
@@ -732,6 +731,55 @@ Does not match implementation - or Common Lisp.
 (test '("~10<~a~;~a~;~a~;~a~>" 1 2 3 4) "1  2  3  4")
 (test '("~10<~a~;~a~;~a~>" 1 2 34567) "1 2  34567")
 (test '("~<~a~;~a~;~a~>" 1 2 34567) "1234567")
+
+;; SRFI-48
+
+(import (only (srfi 48) (format format48)))
+(test-assert (string-contains (format48 "~h")
+                              "the arg is a number which"))
+(test-equal "Hello, World!"
+            (format48 "Hello, ~a" "World!"))
+(test-equal "Error, list is too short: (one \"two\" 3)"
+     ; SRFI bogus extra paren: "Error, list is too short: (one \"two\" 3))"
+            (format48 "Error, list is too short: ~s" '(one "two" 3)))
+(test-equal "test me" (format48 "test me"))
+(test-equal "this is a \"test\""
+            (format48 "~a ~s ~a ~s" 'this 'is "a" "test"))
+(test-equal "#d32 #x20 #o40 #b100000\n"
+            (format48 "#d~d #x~x #o~o #b~b~%" 32 32 32 32))
+(test-equal "a new test"
+            (format48 "~a ~? ~a" 'a "~s" '(new) 'test))
+
+(test-expect-fail 1)
+;; SRFI-48 specification and test of "freshline" is questionable.
+(test-equal "\n1\n2\n3\n"
+            (format48 "~&1~&~&2~&~&~&3~%"))
+;; Actual and preferred CL-style result:
+(test-equal "1\n2\n3\n"
+            (format "~&1~&~&2~&~&~&3~%"))
+
+(test-equal "3  2 2  3 \n"
+            (format48 #f "~a ~? ~a ~%" 3 " ~s ~s " '(2 2) 3))
+(let ((r (format48 "~w" (let ( (c (list 'a 'b 'c)) ) (set-cdr! (cddr c) c) c))))
+  (test-assert (or (equal? r "#0=(a b c . #0#)")
+                   (equal? r "#1=(a b c . #1#)"))))
+(test-equal "   32.00" (format48 "~8,2F" 32))
+
+(test-expect-fail 1)
+;; Actual " +1.949i" output is, I think, preferred.
+(test-equal "0.000+1.949i" (format48 "~8,3F" (sqrt -3.8)))
+
+;;(test-equal " 3.45e11" (format48 "~8,2F" 3.4567e11))
+(test-equal " 0.333" (format48 "~6,3F" 1/3))
+(test-equal "  12" (format48 "~4F" 12))
+(test-equal "   12.00" (format48 "~8,2F" 12))
+(test-equal "4321.00" (format48 "~1,2F" 4321))
+(test-equal " 123.346" (format48 "~8,3F" 123.3456))
+(test-equal "123.346" (format48 "~6,3F" 123.3456))
+(test-equal "123.346" (format48 "~2,3F" 123.3456))
+(test-equal "     foo" (format48 "~8,3F" "foo"))
+(test-equal "\n"
+            (format "~a~a~&" (list->string (list #\newline)) ""))
 
 ; inquiry test
 

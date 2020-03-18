@@ -1,3 +1,8 @@
+2020-03-18  Per Bothner  <per@bothner.com>
+
+	* srfi/48.scm: Implement SRFI 48.
+	* Makefile.am: Compile srfi/48.scm.
+
 2020-03-11  Per Bothner  <per@bothner.com>
 
 	* kawa/istrings.scm: Use 'istring' for appropriate return types.

@@ -23,7 +23,7 @@ class LispRealFormat extends ReportFormat {
     /** Twice the number of args consumed; odd if any arg is PARAM_FROM_COUNT. */
     int argsUsed = -1;
 
-    /** 'L': Common Lisp style; 'P' C/Java printf-style.
+    /** 'L': Common Lisp style; 'P' C/Java printf-style; '4' SRFI-48 style.
      * Used for fine points of printing 'g' style. */
     public char style = 'L';
 
@@ -105,7 +105,7 @@ class LispRealFormat extends ReportFormat {
             efmt.exponentChar = getParam(this.arg7, 'E', args, start);
             if (this.arg7 == LispFormat.PARAM_FROM_LIST)  start++;
             efmt.general = op == 'G' || op == 'g';
-            efmt.style = this.style;
+            efmt.style = this.style == '4' ? 'L' : this.style;
             efmt.showPlus = showPlus;
             return efmt;
         }
@@ -113,12 +113,34 @@ class LispRealFormat extends ReportFormat {
 
     public int format(Object[] args, int start, Appendable dst, FieldPosition fpos)
         throws java.io.IOException {
-        StringBuffer sbuf = new StringBuffer(100);
         Format fmt = resolve(args, start);
         start += argsUsed >> 1;
-        Number value = (Number) args[start++];
-        fmt.format(value, sbuf, fpos);
-        dst.append(sbuf);
+        Object arg = args[start++];
+        boolean done = false;
+        // SRFI-48 kludges
+        if (style == '4' && fmt instanceof FixedRealFormat) {
+            FixedRealFormat ffmt = (FixedRealFormat) fmt;
+            IntNum inum;
+            if (ffmt.getMaximumFractionDigits() < 0
+                && (inum = IntNum.asIntNumOrNull(arg)) != null) {
+                arg = inum.toString();
+            }
+            if (arg instanceof CharSequence) {
+                CharSequence carg = (CharSequence) arg;
+                int clen = gnu.lists.Strings.sizeInCodePoints(carg);
+                int w = ffmt.width;
+                while (--w >= clen)
+                    dst.append(' ');
+                dst.append(carg);
+                done = true;
+            }
+        }
+        if (! done) {
+            Number value = (Number) arg;
+            StringBuffer sbuf = new StringBuffer(100);
+            fmt.format(value, sbuf, fpos);
+            dst.append(sbuf);
+        }
         return start;
     }
 }
