@@ -1,3 +1,11 @@
+2020-03-24  Per Bothner  <per@bothner.com>
+
+	* KawaScriptEngine.java (compile): Fix arguments to parse.
+	Specifically, we don't want INTERACTIVE to be set, as that
+	cases compilation errors.
+	Fixes GitLab issue #70 "When evaluated through the javax.script API,
+	define raises a ClassCastException: Cannot cast IntNum to Location".
+
 2019-12-28  Per Bothner  <per@bothner.com>
 
 	* Declaration.java (maybeSourceName): New method.
