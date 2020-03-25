@@ -463,6 +463,10 @@ public class CompileArith implements Inlineable
   {
     if (op >= ASHIFT_GENERAL && op <= LSHIFT_RIGHT)
       return kind1;
+    if (op == DIVIDE_GENERIC
+        && kind1 > 0 && kind1 <= Arithmetic.INTNUM_CODE
+        && kind2 > 0 && kind2 <= Arithmetic.INTNUM_CODE)
+        return Arithmetic.RATNUM_CODE;
     return getReturnKind2(kind1, kind2);
   }
 

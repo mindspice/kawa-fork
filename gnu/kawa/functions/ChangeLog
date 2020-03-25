@@ -1,3 +1,8 @@
+2020-03-24  Per Bothner  <per@bothner.com>
+
+	* CompileArith.java (getReturnKind): Fix for DIVIDE_GENERIC.
+	Fixes GitLab issues #68 "JVM crash with split-at".
+
 2020-03-18  Per Bothner  <per@bothner.com>
 
 	* LispRealFormat.java, LispFormat.java:  Support for srfi-48 version
