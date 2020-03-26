@@ -180,6 +180,15 @@ public abstract class AbstractScriptEngineFactory implements ScriptEngineFactory
                 return super.newLocation(name, property);
         }
 
+        @Override
+        public NamedLocation addLocation(Symbol name, Object property, Location loc) {
+            if (ebindings instanceof KawaScriptBindings)
+                return ((KawaScriptBindings) ebindings).environment
+                    .addLocation(name, property, loc);
+            else
+                return super.addLocation(name, property, loc);
+  }
+
         public NamedLocation lookupDirect (Symbol name, Object property, int hash) {
             NamedLocation loc = super.lookupDirect(name, property, hash);
             if (loc != null && loc.isBound())

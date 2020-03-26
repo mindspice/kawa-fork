@@ -1,6 +1,10 @@
 2020-03-25  Per Bothner  <per@bothner.com>
 
-	* KawaScriptEngine.java: Give name to created Environment.
+	* AbstractScriptEngineFactory.java (addLocation): New method.
+	Fixes GitLab issue #71 "[javax.script] No bindings are created
+	in ScriptEngine's engine scope?".
+
+	* KawaScriptEngine.java (createBindings): Give name to new Environment.
 
 2020-03-24  Per Bothner  <per@bothner.com>
 
