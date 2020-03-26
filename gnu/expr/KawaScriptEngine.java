@@ -14,6 +14,7 @@ public class KawaScriptEngine extends AbstractScriptEngine
   implements Compilable //, Invocable
 {
   AbstractScriptEngineFactory factory;
+  static int envCounter;
 
   public KawaScriptEngine(AbstractScriptEngineFactory factory)
   {
@@ -32,6 +33,7 @@ public class KawaScriptEngine extends AbstractScriptEngine
   public Bindings createBindings()
   {
     SimpleEnvironment env = new SimpleEnvironment();
+    env.setName("script-env-"+(++envCounter));
     Bindings bindings = new KawaScriptBindings(env);
     return bindings;
   }
