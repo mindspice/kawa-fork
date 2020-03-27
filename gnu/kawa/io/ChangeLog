@@ -1,3 +1,8 @@
+2020-03-27  Per Bothner  <per@bothner.com>
+
+	* JLineInPort.java: Set DISABLE_EVENT_EXPANSION JLine option.
+	This fixes GitLab issue #72 "History Expansion".
+
 2019-09-08  Per Bothner  <per@bothner.com>
 
 	* PrettyWriter.java (buffer, bufferFillPointer): Make private.

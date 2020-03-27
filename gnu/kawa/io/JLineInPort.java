@@ -69,6 +69,7 @@ public class JLineInPort extends TtyInPort
             .completer(this)
             .parser(this)
             .build();
+        jlreader.setOpt(LineReader.Option.DISABLE_EVENT_EXPANSION);
         if (CheckConsole.useJLineMouse() > 0)
             jlreader.setOpt(LineReader.Option.MOUSE);
         this.terminal = terminal;
