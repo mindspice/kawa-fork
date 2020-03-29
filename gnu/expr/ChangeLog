@@ -1,3 +1,8 @@
+2020-03-28  Per Bothner  <per@bothner.com>
+
+	* ConsumerTarget.java: Remove redundant stack push.
+	Fixes GitLab issue #74 "JVM crash on (as ulong 1)".
+
 2020-03-25  Per Bothner  <per@bothner.com>
 
 	* AbstractScriptEngineFactory.java (addLocation): New method.

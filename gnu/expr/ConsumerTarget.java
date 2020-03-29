@@ -127,9 +127,9 @@ public class ConsumerTarget extends Target
   /** Write stack value to Consumer.
    * @param consumerPushed if -1, then Consumer has not been pushed;
    *   if 1, Consumer was pushed before value, and value is a known singleton;
-   *   if 0, Consumer was pushed before value, otherwise.
+   *   if 0, Consumer was pushed before value, otherwise (unused case).
    */
-  void compileFromStack(Compilation comp,
+  private void compileFromStack(Compilation comp,
                         Type stackType, int consumerPushed)
   {
     CodeAttr code = comp.getCode();
@@ -232,21 +232,23 @@ public class ConsumerTarget extends Target
 	    return;
 	  }
       }
+    // If methodClass == typeSequences, we need stack to be [value consumer]
+    // otherwise we need [consumer value]
+    // if consumerPushed < 0: stack is [value consumer]
+    // otherwise: stack is [consumer value]
+    // (The latter only happens when methodClass != typeSequences.)
     if (consumerPushed >= 0)
       {
         if (methodClass == typeSequences) throw new InternalError();
       }
-    else if (methodClass == typeSequences)
-      {
-	code.emitLoad(consumer);
-      }
-    else if (islong)
-      {
-        code.emitDupX();  // dup_x2
-        code.emitPop(1);
-      }
-    else
-      code.emitSwap();
+    else if (methodClass != typeSequences) {
+        // need to swap [consumer value] to [value consumer]
+        if (islong) {
+            code.emitDupX();  // dup_x2
+            code.emitPop(1);
+        } else
+            code.emitSwap();
+    }
     code.fixUnsigned(stackType);
     if (methodClass == typeSequences)
       {
@@ -260,7 +262,7 @@ public class ConsumerTarget extends Target
     if (method != null)
       code.emitInvoke(method);
     if (sig == 'C')
-      code.emitPop(1); // Pop consumer result.
+      code.emitPop(1); // Pop consumer result from "append" call.
   }
 
   public boolean compileWrite (Expression exp, Compilation comp)
