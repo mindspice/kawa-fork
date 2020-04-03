@@ -1,3 +1,12 @@
+2020-04-03  Per Bothner  <per@bothner.com>
+
+	* KawaScriptEngine.java (compile): Better fix to parse.
+	The 2020-03-24 change also set the PARSE_CURRENT_NAMES flag,
+	which causes new compiled classes to reference fields in old classes,
+	which is a problem when they have the same class name ...
+	Partially fixes GitLab issue #73 "[javax.script] In lambda,
+	name resolution does not include the EngineManager's global scope".
+
 2020-03-28  Per Bothner  <per@bothner.com>
 
 	* ConsumerTarget.java: Remove redundant stack push.

@@ -104,7 +104,7 @@ public class KawaScriptEngine extends AbstractScriptEngine
     try
       {
         Compilation comp =
-            factory.language.parse(port, messages, Language.PARSE_FOR_EVAL);
+            factory.language.parse(port, messages, Language.PARSE_IMMEDIATE);
         if (messages.seenErrors())
           throw new SyntaxException(messages);
         ModuleExp mexp = comp.getModule();
