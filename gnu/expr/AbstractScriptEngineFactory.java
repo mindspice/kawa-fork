@@ -16,7 +16,9 @@ public abstract class AbstractScriptEngineFactory implements ScriptEngineFactory
     Bindings saveEngineBindings;
     Bindings saveGlobalBindings;
 
-    Environment getEnvironment(ScriptContext ctx) {
+    /** Wrap the scope parts of a ScriptContext as an Environment.
+     */
+    public Environment getEnvironment(ScriptContext ctx) {
         Bindings ebindings = ctx.getBindings(ScriptContext.ENGINE_SCOPE);
         Bindings gbindings = ctx.getBindings(ScriptContext.GLOBAL_SCOPE);
         if (ebindings == saveEngineBindings && gbindings == saveGlobalBindings)

@@ -1,3 +1,8 @@
+2020-04-04  Per Bothner  <per@bothner.com>
+
+	* AbstractScriptEngineFactory.java (getEnvironment): Make public.
+	Make it easier to use script neviorment as dynamic environment.
+
 2020-04-03  Per Bothner  <per@bothner.com>
 
 	* KawaScriptEngine.java (compile): Better fix to parse.
