@@ -1,3 +1,8 @@
+2020-06-15  Per Bothner  <per@bothner.com>
+
+	* standard/make.java: Explicitly import kawa.lang.Record.
+	This avoids class with java.lang.Record introduced in Java 14.
+
 2020-03-18  Per Bothner  <per@bothner.com>
 
 	* standard/ImportFromLibrary.java (SRFI97Map) Support srfi 48.

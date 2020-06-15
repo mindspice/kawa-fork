@@ -1,5 +1,6 @@
 package kawa.standard;
 import kawa.lang.*;
+import kawa.lang.Record; // avoid clash with java.lang.Record in Java 14
 import gnu.mapping.*;
 import gnu.expr.*;
 
