@@ -1,3 +1,7 @@
+2020-06-23  Per Bothner  <per@bothner.com>
+
+	* kawa.texi: Add notes about using slices to construct sequences.
+
 2020-01-15  Per Bothner  <per@bothner.com>
 
 	* kawa.texi (Options): --browse-manual now defaults to javafx.

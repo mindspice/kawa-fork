@@ -2743,6 +2743,25 @@ Sequences have certain common operations, including indexing and iteration.
 interface, but Kawa will also treat strings and native
 Java arrays as sequences.)
 
+@subheading Creating sequences
+
+The general syntax for creating a sequence of type @var{seq-type}
+with values give by expressions @var{a}, @var{b} ... @var{z} is:
+@example
+@code{(}@var{seq-type} @var{a} @var{b} ... @var{z}@code{)}
+@end example
+For example to create a 3-element list of the first 3 natural numbers,
+you can write:
+@example
+(vector 1 (+ 1 1) 3)
+@end example
+
+A ``splice operator'' @code{@@}@var{seq} can be used as one the arguments
+to append or convert sequences:
+@example
+(vector 1 @@lst)
+@end example
+
 @subheading Lists
 
 In traditional Lisp-family languages, the @dfn{list} is the
@@ -20286,7 +20305,16 @@ The above expression is equivalent to:
 Allocating Java arrays (@pxref{Creating-new-Java-arrays}) uses a
 similar pattern:
 @example
-(int[] 2 3 5 7 11)
+(define iarr (int[] 2 3 5 7 11))
+@end example
+
+A value argument can use a ``splice operator'' @code{@@@var{expression}}
+to ``flatten'' a @ref{Sequences,generalized sequence};
+this is a special case of @ref{Application and Arguments Lists,argument list handling}.
+This example converts one type of sequence (Java-array of @code{int})
+into another (Java-array of @code{float}):
+@example
+(define farr (float[] @@iarr))
 @end example
 
 Sometimes you want to set some named property to an initial value.
@@ -20743,7 +20771,7 @@ You can specify the initial elements instead of the length:
 @end example
 This creates a 4-length array, initialized to the given values.
 
-Note this is a variation of the generation object-allocation
+Note this is a variation of the general object-allocation
 (@pxref{Allocating objects}) pattern.  You can explicitly
 use the @code{make} function, if you prefer:
 @example
@@ -20761,6 +20789,12 @@ This creates an array with 100 elements.  Most of them are initialized
 to the default value of zero,
 but elements with indexes 0, 1, 50, 51, 80, 81 are initialized
 to the values 10, 12, 13, 14, 15, 16, respectively.
+
+You can use the ``splice'' operator (@pxref{Application and Arguments Lists,argument list handling})
+to ``flatten'' and convert a @ref{Sequences,generalized sequence}:
+@example
+(float[] @@some-list)
+@end example
 
 @subsection Accessing Java array elements
 
