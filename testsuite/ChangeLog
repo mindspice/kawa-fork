@@ -1,3 +1,7 @@
+2020-06-30  Duncan Mak <duncanmak@gmail.com>
+
+	* match1.scm: Test for match for nested literal.
+
 2020-03-18  Per Bothner  <per@bothner.com>
 
 	* formatst.scm: New tests, mainly srfi-48.

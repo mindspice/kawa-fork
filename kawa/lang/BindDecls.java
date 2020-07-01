@@ -63,7 +63,7 @@ public class BindDecls {
     }
 
     /** Parse a declaration or more generally a pattern.
-     * The actual pattern is an initial sublist (using just the initial
+     * The actual pattern is an initial sublist (usually just the initial
      * car) of the patList.
      * @return A 2-element array, where element 0 is the unused remainder
      *   of patList, while element 1 is a Declaration for that pattern.
@@ -111,6 +111,8 @@ public class BindDecls {
         QuoteExp literal = literalPattern(patval, comp);
         if (literal != null) {
             decl = scope.addDeclaration((Object) null);
+            if (init != null)
+                setInitializer(decl, init, scope, comp);
             addCondition(scope, compareLiteral(decl, literal));
         } else if (patval instanceof Symbol) {
             if (patval == underScoreSymbol) {

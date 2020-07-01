@@ -112,3 +112,6 @@
 (newline)
 ;; Output: match#2: ((double 3.4) (double 0.0) (pos-integer 12) (list (a b)) (other (a c)) (other str) (neg-integer -3) (zero-integer))
 
+(format #t "match-seq-quote <~s>~%"
+        (match '(foo 1 2) (['foo a b] (+ a b))))
+;; Output: match-seq-quote <3>
