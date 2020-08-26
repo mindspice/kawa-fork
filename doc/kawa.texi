@@ -10447,7 +10447,7 @@ notation to represent
 and are therefore commonly found in applications such as computer
 graphics, robotics, and spacecraft engineering.  The Kawa quaternion API
 is modeled after
-@uref{http://www.ccs.neu.edu/home/dorai/squat/squat.html,this} with some
+@uref{https://web.archive.org/web/20190918093656/http://www.ccs.neu.edu/home/dorai/squat/squat.html,this} with some
 additions.
 
 A quaternion is a number that can be expressed in the form
