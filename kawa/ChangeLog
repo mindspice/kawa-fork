@@ -1,3 +1,7 @@
+2020-10-09  Per Bothner  <per@bothner.com>
+
+	* Shell.java (run): Inlining to shorten REPL stack traces.
+
 2020-06-30  Per Bothner  <per@bothner.com>
 
 	* lang/BindDecls.java: Fix match for nested literal.

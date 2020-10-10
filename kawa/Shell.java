@@ -180,8 +180,9 @@ public class Shell
     else
       perr = null; // Non-interactive.
 
-    Throwable ex = run(language, env, inp, OutPort.outDefault(),
-                       perr, messages);
+    Throwable ex = run(language, env, inp,
+                       getOutputConsumer(OutPort.outDefault()),
+                       perr, null, messages);
     if (ex == null)
       return true;
     printError(ex, messages, OutPort.errDefault());
@@ -282,12 +283,22 @@ public class Shell
                   sawError = false;
 		if (comp == null) // ??? end-of-file
 		  break;
+                ModuleExp mexp = comp.getModule();
 		if (sawError) {
-                    comp.lexical.pop(comp.mainLambda);
+                    comp.lexical.pop(mexp);
                     continue;
                 }
-                if (! ModuleExp.evalModule(env, ctx, comp, url, perr))
-		  throw new SyntaxException(messages);
+
+                // Inline ModuleExp.evalModule for shorter stack trace
+                Object inst = ModuleExp.evalModule1(env, comp, url, perr);
+                if (perr != null)
+                    perr.flush();
+                if (inst == null) {
+                    comp.pop(mexp);
+                    throw new SyntaxException(messages);
+                }
+                ModuleExp.evalModule2(env, ctx, language, mexp, inst);
+
                 if (out instanceof Writer)
                   ((Writer) out).flush();
 		if (inp.eofSeen())
