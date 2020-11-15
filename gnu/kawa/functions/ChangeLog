@@ -1,3 +1,9 @@
+2020-11-14  Per Bothner  <per@bothner.com>
+
+	* DisplayFormat.java (schemeDisplayFormat): Set checkSharing.
+	Fixes GitLab issue #78 "Cycles detection in REPL".
+	(schemeDisplaySimpleFormat): New static.
+
 2020-03-24  Per Bothner  <per@bothner.com>
 
 	* CompileArith.java (getReturnKind): Fix for DIVIDE_GENERIC.

@@ -96,6 +96,8 @@ public class DisplayFormat extends GenericFormat
   public static final ThreadLocation outRadix
     = new ThreadLocation("out-radix");
 
+    public static final DisplayFormat schemeDisplaySimpleFormat
+        = new DisplayFormat(false, 'S');
     public static final DisplayFormat schemeDisplayFormat
         = new DisplayFormat(false, 'S');
 
@@ -106,6 +108,7 @@ public class DisplayFormat extends GenericFormat
     public static final DisplayFormat schemeWriteSharedFormat
         = new DisplayFormat(true, 'S');
     static {
+        schemeDisplayFormat.checkSharing = 0;
         schemeWriteFormat.checkSharing = 0;
         schemeWriteSharedFormat.checkSharing = 1;
     }
