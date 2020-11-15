@@ -1,3 +1,7 @@
+2020-11-14  Per Bothner  <per@bothner.com>
+
+	* QuoteExp.java (print): Sanity check if Language isn't set yet.
+
 2020-04-04  Per Bothner  <per@bothner.com>
 
 	* AbstractScriptEngineFactory.java (getEnvironment): Make public.
