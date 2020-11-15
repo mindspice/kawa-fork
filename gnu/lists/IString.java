@@ -128,6 +128,7 @@ public class IString extends AbstractSequence<Char>
     public char charAt(int i) { return str.charAt(i); }
     public String toString() { return str; }
     public int length() { return str.length(); }
+    public boolean isEmpty() { return str.isEmpty(); } // Java 15
 
     /** Substring using offsets in code-units (16-bit chars). */
     public IString subSequence(int from, int to) {

@@ -1,3 +1,7 @@
+2020-11-14  Per Bothner  <per@bothner.com>
+
+	* IString.java (isEmpty): New method, added for Java 15.
+
 2020-03-11  Per Bothner  <per@bothner.com>
 
 	* GeneralArray.java: Fix calculation of 'simple' property.
