@@ -1,3 +1,7 @@
+2020-12-08  Per Bothner  <per@bothner.com>
+
+	* Makefile.am: Refactor some SRFI-64 tests to use a single rule.
+
 2020-11-14  Per Bothner  <per@bothner.com>
 
 	* circlist.scm: Test display of circular list.

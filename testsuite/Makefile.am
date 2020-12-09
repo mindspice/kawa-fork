@@ -29,7 +29,7 @@ check: check2-no-full-tailcalls check1 check2-full-tailcalls check-no-inline \
   check-interpreted-cycle check-interpreted-cycleb check-interpreted-cyclebr \
   $(SERVLET_TESTS) $(SAX2_TESTS) \
   check-inlining check-jmc check-use-slots check-load-require check-sva31180 \
-  check-bridge check-life-grid check-larceny-tests check-numbers-clisp
+  check-life-grid check-larceny-tests check-numbers-clisp
 
 check-anf:
 	$(MAKE) check1 check2 OPTIONS=--enable-anf
@@ -43,11 +43,9 @@ check2-full-tailcalls:
 check-no-inline:
 	$(MAKE) check2 OPTIONS=--no-inline
 
-check1:  check-num check-arr check-java-array check-lazy check-lib \
-  check-srfi-16 check-srfi-38 check-srfi-64 check-srfi-69 \
-  check-srfi-101 check-srfi-108 check-srfi-109 check-resolve-uri \
-  check-format check-ppfile check-system check-strings check-text check-regex \
-  check-xml scribble.class check-run-test-scripts check-moduleM \
+check1:  check-num misc-simple-tests \
+  check-ppfile check-system check-text \
+  scribble.class check-run-test-scripts check-moduleM \
   check-annotations1 check-annotations2\
   check-binarytrees check-chameneosredux check-fannkuch check-fannkuchredux check-fasta \
   check-knucleotide check-mandelbrot check-meteor check-nbody \
@@ -81,59 +79,35 @@ check-num: InliningTest.class
 	$(KAWA) $(OPTIONS) "$(srcdir)/numeric-tests.scm"
 	$(KAWA) $(OPTIONS) "$(srcdir)/quaternion-test.scm"
 
-check-arr:
-	$(KAWA) $(OPTIONS) "$(srcdir)/arr-test.scm"
+MISC_TESTS_WITH_SRFI64 = \
+  bridge.scm \
+  srfi-16-test.scm srfi-38-test.scm srfi-64-test.scm srfi-69-test.scm \
+  srfi-101-test.scm srfi-108-test.scm srfi-109-test.scm resolve-uri.scm
 
-check-java-array:
-	$(KAWA) $(OPTIONS) "$(srcdir)/java-array-test.scm"
+MISC_SIMPLE_TESTS = \
+  $(MISC_TESTS_WITH_SRFI64) \
+  arr-test.scm \
+  java-array-test.scm \
+  lazy-test.scm \
+  lib-test.scm \
+  formatst.scm \
+  strings-test.scm \
+  regex-test.scm \
+  xml-test.scm
 
-check-lazy:
-	$(KAWA) $(OPTIONS) "$(srcdir)/lazy-test.scm"
-
-check-lib:
-	$(KAWA) $(OPTIONS) "$(srcdir)/lib-test.scm"
-
-check-srfi-16:
-	$(KAWA) $(OPTIONS) "$(srcdir)/srfi-16-test.scm"
-
-check-srfi-38:
-	$(KAWA) $(OPTIONS) "$(srcdir)/srfi-38-test.scm"
-
-check-srfi-64:
-	$(KAWA) $(OPTIONS) "$(srcdir)/srfi-64-test.scm"
-
-check-srfi-69:
-	$(KAWA) $(OPTIONS) "$(srcdir)/srfi-69-test.scm"
-
-check-srfi-101:
-	$(KAWA) $(OPTIONS) "$(srcdir)/srfi-101-test.scm"
-
-check-srfi-108:
-	$(KAWA) $(OPTIONS) "$(srcdir)/srfi-108-test.scm"
-
-check-srfi-109:
-	$(KAWA) $(OPTIONS) "$(srcdir)/srfi-109-test.scm"
-
-check-resolve-uri:
-	$(KAWA) $(OPTIONS) "$(srcdir)/resolve-uri.scm"
+misc-simple-tests:
+	for test in $(MISC_SIMPLE_TESTS); do \
+	  echo $(KAWA) $(OPTIONS) \""$(srcdir)/$$test"\"; \
+	  $(KAWA) $(OPTIONS) "$(srcdir)/$$test"; done
 
 check-system:
 	$(KAWA) $(OPTIONS) -e '(set! port-char-encoding "UTF-8")' -f "$(srcdir)/system-test.scm"
 
-check-strings:
-	$(KAWA) $(OPTIONS) -f "$(srcdir)/strings-test.scm"
-
 check-text:
 	$(KAWA) $(OPTIONS) -e '(set! port-char-encoding "UTF-8")' -f "$(srcdir)/text-test.scm"
 
-check-regex:
-	$(KAWA) $(OPTIONS) "$(srcdir)/regex-test.scm"
-
 check-vars:
 	$(KAWA) $(OPTIONS) "$(srcdir)/vars-test.scm"
-
-check-xml:
-	$(KAWA) $(OPTIONS) "$(srcdir)/xml-test.scm"
 
 check-misc: testing.zip moduleFT.class InliningTest.class \
 	    cycle1.class cycle2.class
@@ -150,9 +124,6 @@ check-obj: testing.zip module2.class module3.class classes2.class \
 
 check-polytype:
 	$(KAWA) $(OPTIONS) "$(srcdir)/polytype.scm"
-
-check-format: testing.zip
-	$(KAWA) "$(srcdir)/formatst.scm"
 
 check-ppfile:
 	$(KAWA) -e "(require 'pprint-file)" \
@@ -638,9 +609,6 @@ check-sva31180:
 	  then echo '# check-sva31180 passes'; \
 	  else echo FAIL check-sva31180; fi
 
-check-bridge:
-	$(KAWA) $(OPTIONS) "$(srcdir)/bridge.scm"
-
 check-life-grid:
 	$(KAWA) $(srcdir)/life-grid.scm > life-grid.log 2>&1
 	@if $(DIFF) $(srcdir)/life-grid.expected life-grid.log; \
@@ -758,21 +726,14 @@ SCRIPTS_TO_RUN = case-warnings.scm uninit1.scm \
 AUX_FOR_SCRIPTS_TO_RUN = aux-libs.scm sva46728x.scm sva46728z.scm
 BUILD_BEFORE_SCRIPTS_TO_RUN = sva46728x.class sva46728z.class
 
-MISC_TESTS_WITH_SRFI64 = \
-  srfi-16-test.scm srfi-38-test.scm srfi-64-test.scm srfi-69-test.scm \
-  srfi-101-test.scm srfi-108-test.scm srfi-109-test.scm resolve-uri.scm 
-
 EXTRA_DIST = testing.scm test-utils.scm \
   test.scm case-test.scm num-test.scm numeric-tests.scm quaternion-test.scm \
   mac-test.scm mac1.scm r7rs-tests.scm clisp-number-tests.scm \
-  classes1.scm classes2.scm SimpleB.java obj-test.scm arr-test.scm \
-  lib-test.scm bridge.scm \
-  $(MISC_TESTS_WITH_SRFI64) system-test.scm xml-test.scm \
-  text-test.scm regex-test.scm java-array-test.scm lazy-test.scm \
-  strings-test.scm vars-test.scm \
+  classes1.scm classes2.scm SimpleB.java obj-test.scm \
+  $(MISC_SIMPLE_TESTS) system-test.scm text-test.scm vars-test.scm \
   jmc.scm jmc.expected sva31180.scm use-slots.scm ASupport.scm Base.java \
   MyFunc.java MyModule.java MyDate.java MyTimestamp.java \
-  misc-test.scm polytype.scm formatst.scm scribble.scm moduleFT.scm \
+  misc-test.scm polytype.scm scribble.scm moduleFT.scm \
   module0.scm module1.scm module1a.scm module2.scm module3.scm included-1.scm \
   moduleM.scm moduleM.expected HelloCgiK.krl HelloCgiS.scm HelloCgiX.xql \
   cycleb1.scm cycleb2.scm cycleb.expected \
