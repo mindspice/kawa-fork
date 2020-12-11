@@ -9206,7 +9206,8 @@ This may involve some complex rules and pattern matching.
 @display
 @stxdef{required-or-guard} @stxref{required-arg} | @stxref{guard}
 @stxdef{required-arg} @stxref{pattern}
-  | @stxlit{(} @stxref{pattern} @stxlit{::} @stxref{type}@stxlit{)}
+  | @stxlit{(} @stxref{pattern} @arbno{@stxref{annotation-or-type}} @stxlit{)}
+@stxdef{annotation-or-type} @stxref{annotation} | @stxlit{::} @stxref{type}
 @end display
 
 The @var{required-arg}s are matched against the

@@ -1365,6 +1365,22 @@ public class LambdaExp extends ScopeExp {
     }
 
     void allocParameters(Compilation comp) {
+        //compile parameter annotations
+        Declaration decl = firstDecl();
+        if (decl != null) {
+            decl = decl.nextDecl(); //skip implicit class param
+            int i = 0;
+            while (decl != null) {
+                if (decl.isThisParameter()) {
+                    decl = decl.nextDecl();
+                    continue;
+                }
+                decl.compileParameterAnnotations(comp.method, i);
+                i++;
+                decl = decl.nextDecl();
+            }
+        }
+
         CodeAttr code = comp.getCode();
         Scope sc = getVarScope();
         code.locals.enterScope(sc);

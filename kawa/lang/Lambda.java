@@ -115,6 +115,7 @@ public class Lambda extends Syntax
 	    templateScope = sf.getScope();
 	  }
         Object pccar;
+        Object attrName = Translator.stripSyntax(pair_car);
 	if (pair_car == optionalKeyword)
 	  {
 	    if (opt_args >= 0)
@@ -176,6 +177,9 @@ public class Lambda extends Syntax
 	  }
         pair_car = tr.namespaceResolve(pair_car);
         Declaration decl = null;
+        Object[] paramAndAnnotations = findAnnotationsInParameterDefinition(pair_car, tr);
+        pair_car = paramAndAnnotations[0];
+        ArrayList<LangExp> annotations = (ArrayList<LangExp>) paramAndAnnotations[1];
 	if (pair_car instanceof Symbol
             || pair_car == Special.ifk
             || bindParser.literalPattern(pair_car, tr) != null
@@ -233,6 +237,12 @@ public class Lambda extends Syntax
                 break;
             }
             decl = new Declaration(name);
+        }
+        if (annotations != null && annotations.size() > 0) {
+            for (int i = 0; i < annotations.size(); i++) {
+                decl.addAnnotation(annotations.get(i));
+            }
+            rewriteAnnotations(decl, tr);
         }
         decl.setFlag(Declaration.IS_PARAMETER);
 	if (mode == optionalKeyword || mode == keyKeyword)
@@ -636,6 +646,84 @@ public class Lambda extends Syntax
             decl.setAnnotation(i, ann);
           }
       }
+  }
+
+  /*
+   * Returns [patlist with annotations removed, List of annotations]
+   */
+  public Object[] findAnnotationsInParameterDefinition(Object parameterDef, Translator tr) {
+      //the currently worked on parameter definition only
+      //can have annotations, if it's a list (pair).
+      if (!(parameterDef instanceof Pair)) {
+          return new Object[]{
+              parameterDef,
+              null
+          };
+      }
+      //separate car (== the parameter) into list of annotations and list of general pattern components
+      ArrayList<LangExp> annotations = new ArrayList<>();
+      //use whole pair instead of just car, to preserve position if the actual instance is PairWithPosition
+      ArrayList<Pair> patList = new ArrayList<>();
+      //syntax is defined to be pattern (annotation | typespec)*
+      //thus check that terms are present matching this definition, and error is signaled if they're not
+      boolean typeOrAnnotationSeen = false;
+      boolean typeShouldBeNext = false;
+      Object head = (Pair) parameterDef;
+      while (head != LList.Empty) {
+          Pair p = (Pair) head;
+          Object pairCar = p.getCar();
+          Object attrName = Translator.stripSyntax(pairCar);
+          if ((attrName instanceof Pair && isAnnotationSymbol(((Pair)attrName).getCar()))) {
+              if (typeShouldBeNext) {
+                  tr.syntaxError("Annotation immediately after '::' when type was expected");
+              }
+              typeOrAnnotationSeen = true;
+              annotations.add(new LangExp(p));
+          } else {
+              if (tr.matches(pairCar, "::")) {
+                  typeOrAnnotationSeen = true;
+                  typeShouldBeNext = true;
+              } else if (typeShouldBeNext) {
+                  //term immediately after '::' -- assume this is type definition
+                  typeShouldBeNext = false;
+              } else if (typeOrAnnotationSeen) {
+                  //this term isn't annotation, isn't ::, and isn't term immediately after ::
+                  //assume this declaration pattern in wrong position
+                  tr.syntaxError("Parameter definition pattern after type or annotation");
+              }
+              patList.add(p);
+          }
+          head = p.getCdr();
+      }
+
+      //pattern list shouldn't be empty (all annotations and no parameter binding?)
+      if (patList.size() == 0) {
+          tr.syntaxError("Empty pattern list");
+          return new Object[]{
+              LList.Empty,
+              annotations
+          };
+      }
+
+      //reconstruct list into pair by going backwards from end of list to use as a new car
+      Pair patListResult = null;
+      for (int i = patList.size() - 1; i >= 0; i--) {
+          Object newEntryCdr = patListResult == null? LList.Empty : patListResult;
+          if (patList.get(i) instanceof PairWithPosition) {
+              PairWithPosition pWithPos = (PairWithPosition) patList.get(i);
+              String file = pWithPos.getFileName();
+              int line = pWithPos.getLineNumber();
+              int col = pWithPos.getColumnNumber();
+              patListResult = PairWithPosition.make(pWithPos.getCar(), newEntryCdr, file, line, col);
+          } else {
+              patListResult = new Pair(patList.get(i).getCar(), newEntryCdr);
+          }
+      }
+      //patListResult won't be null, because we checked patList.size > 0 previously
+      return new Object[]{
+          patListResult,
+          annotations
+      };
   }
 
     public Object[] parsePatternCar(Pair patList, TemplateScope templateScope,
