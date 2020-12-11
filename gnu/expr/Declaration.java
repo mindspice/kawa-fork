@@ -995,6 +995,25 @@ public class Declaration extends SourceLocator.Simple
       }
   }
 
+  public void compileParameterAnnotations(AttrContainer container, int parameterIndex) {
+    if (container == null)
+      return;
+    int n = numAnnotations();
+    //whether it has annotations or not, amount of parameter declarations in annotations attribute
+    //should match amount of parameters declared for the method
+    RuntimeParameterAnnotationsAttr.assureParameterSlot(container, parameterIndex);
+    for (int i = 0;  i < n;  i++)
+      {
+        Object ann = getAnnotation(i).valueIfConstant();
+        if (ann != null)
+          {
+            AnnotationEntry ae = (AnnotationEntry) Proxy.getInvocationHandler(ann);
+            if (container != null && ae.hasTarget(ElementType.PARAMETER))
+              RuntimeParameterAnnotationsAttr.maybeAddAnnotation(container, parameterIndex, ae);
+          }
+      }
+  }
+
   Method makeLocationMethod = null;
 
   /** Create a Location object, given that isIndirectBinding().

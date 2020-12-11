@@ -93,7 +93,8 @@ MISC_SIMPLE_TESTS = \
   formatst.scm \
   strings-test.scm \
   regex-test.scm \
-  xml-test.scm
+  xml-test.scm \
+  annotations-on-parameter.scm
 
 misc-simple-tests:
 	for test in $(MISC_SIMPLE_TESTS); do \

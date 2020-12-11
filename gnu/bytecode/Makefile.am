@@ -33,6 +33,7 @@ MiscAttr.java \
 ParameterizedType.java \
 PrimType.java \
 RuntimeAnnotationsAttr.java \
+RuntimeParameterAnnotationsAttr.java \
 Scope.java \
 SignatureAttr.java \
 SourceDebugExtAttr.java \
