@@ -177,9 +177,14 @@ public class Lambda extends Syntax
 	  }
         pair_car = tr.namespaceResolve(pair_car);
         Declaration decl = null;
-        Object[] paramAndAnnotations = findAnnotationsInParameterDefinition(pair_car, tr);
-        pair_car = paramAndAnnotations[0];
-        ArrayList<LangExp> annotations = (ArrayList<LangExp>) paramAndAnnotations[1];
+        ArrayList<LangExp> annotations = null;
+        //annotations can only be part of "normal" arguments,
+        //not keyword, optional, or rest
+        if (mode == null) {
+            Object[] paramAndAnnotations = findAnnotationsInParameterDefinition(pair_car, tr);
+            pair_car = paramAndAnnotations[0];
+            annotations = (ArrayList<LangExp>) paramAndAnnotations[1];
+        }
 	if (pair_car instanceof Symbol
             || pair_car == Special.ifk
             || bindParser.literalPattern(pair_car, tr) != null
