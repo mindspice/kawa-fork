@@ -26,7 +26,6 @@
 ;; This Kawa module exports SRFI-41's (streams derived) library.
 
 ;(import (srfi :41 streams primitive))
-(require 'srfi-41-streams-type)
 (require 'srfi-41-streams-primitive)
 
 (module-compile-options warn-undefined-variable: #t
