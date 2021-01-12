@@ -1366,8 +1366,25 @@ public class LambdaExp extends ScopeExp {
 
     void allocParameters(Compilation comp) {
         //compile parameter annotations
+
+        //first figure if any of parameters even have annotations
         Declaration decl = firstDecl();
+        boolean hasParameterAnnotation = false;
         if (decl != null) {
+            decl = decl.nextDecl(); //skip implicit class param
+            while (decl != null) {
+                if (decl.numAnnotations() > 0) {
+                    hasParameterAnnotation = true;
+                    break;
+                }
+                decl = decl.nextDecl();
+            }
+        }
+
+        //if at least one of params had an annotation, loop again
+        //and compile them
+        decl = firstDecl();
+        if (decl != null && hasParameterAnnotation) {
             decl = decl.nextDecl(); //skip implicit class param
             int i = 0;
             while (decl != null) {

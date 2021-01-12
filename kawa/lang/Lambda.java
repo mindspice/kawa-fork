@@ -671,7 +671,7 @@ public class Lambda extends Syntax
       ArrayList<Pair> patList = new ArrayList<>();
       //syntax is defined to be pattern (annotation | typespec)*
       //thus check that terms are present matching this definition, and error is signaled if they're not
-      boolean typeOrAnnotationSeen = false;
+      boolean annotationSeen = false;
       boolean typeShouldBeNext = false;
       Object head = (Pair) parameterDef;
       while (head != LList.Empty) {
@@ -682,19 +682,18 @@ public class Lambda extends Syntax
               if (typeShouldBeNext) {
                   tr.syntaxError("Annotation immediately after '::' when type was expected");
               }
-              typeOrAnnotationSeen = true;
+              annotationSeen = true;
               annotations.add(new LangExp(p));
           } else {
               if (tr.matches(pairCar, "::")) {
-                  typeOrAnnotationSeen = true;
                   typeShouldBeNext = true;
               } else if (typeShouldBeNext) {
                   //term immediately after '::' -- assume this is type definition
                   typeShouldBeNext = false;
-              } else if (typeOrAnnotationSeen) {
+              } else if (annotationSeen) {
                   //this term isn't annotation, isn't ::, and isn't term immediately after ::
                   //assume this declaration pattern in wrong position
-                  tr.syntaxError("Parameter definition pattern after type or annotation");
+                  tr.syntaxError("Parameter definition pattern after annotation");
               }
               patList.add(p);
           }
