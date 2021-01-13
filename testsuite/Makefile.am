@@ -96,7 +96,7 @@ MISC_SIMPLE_TESTS = \
   xml-test.scm \
   annotations-on-parameter.scm
 
-misc-simple-tests:
+misc-simple-tests: MyAnnotType.class
 	for test in $(MISC_SIMPLE_TESTS); do \
 	  echo $(KAWA) $(OPTIONS) \""$(srcdir)/$$test"\"; \
 	  $(KAWA) $(OPTIONS) "$(srcdir)/$$test"; done

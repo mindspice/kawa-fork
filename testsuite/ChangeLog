@@ -1,5 +1,7 @@
 2021-01-12  Per Bothner  <per@bothner.com>
 
+	* Makefile.am: Fix dependency for annotations-on-parameter.scm.
+
 	* annotations-on-parameter.scm (get-param-annotations): Fix warning.
 
 	* inlining.expected: Update for better type inference of CTYPE:class.
