@@ -114,7 +114,11 @@ public class CompileReflect
       {
         type = language.getTypeFor(arg0);
         int known = checkKnownClass(type, comp);
-        if (known < 0 || "class".equals(name))
+        if ("class".equals(name)){
+            exp.setType(Type.javalangClassType);
+            return exp;
+        }
+        if (known < 0)
           return exp;
         if (type != null)
           {

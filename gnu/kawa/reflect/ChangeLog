@@ -1,3 +1,7 @@
+2021-01-12  Per Bothner  <per@bothner.com>
+
+	* CompileReflect.java (validateApplySlotGet): Infer type of CTYPE:class.
+
 2019-08-29  Per Bothner  <per@bothner.com>
 
 	* ClassMethods.java (getMethod): Only override declared type
