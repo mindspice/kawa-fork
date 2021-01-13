@@ -1,5 +1,7 @@
 2021-01-12  Per Bothner  <per@bothner.com>
 
+	* annotations-on-parameter.scm (get-param-annotations): Fix warning.
+
 	* inlining.expected: Update for better type inference of CTYPE:class.
 
 2020-12-08  Per Bothner  <per@bothner.com>

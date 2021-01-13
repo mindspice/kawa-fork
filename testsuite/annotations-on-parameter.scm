@@ -35,7 +35,7 @@
 ;; returns a vector of by-index corresponding parameter annotations list
 ;; where each annotation is represented by name attribute value
 (define (get-param-annotations procname)
-   (define methods ::object[] (java.lang.Class:getDeclaredMethods MyParameterAnnotatedClass:class))
+   (define methods ::object[] (invoke MyParameterAnnotatedClass:class 'getDeclaredMethods))
    (define methods-lst
      (map (lambda (m ::java.lang.reflect.Method)
             m)
