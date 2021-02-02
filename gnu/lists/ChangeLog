@@ -19,7 +19,7 @@
 	Fixes GitLab issue #66 "array->vector returns non-vector?".
 
 	* GeneralArray1.java: Implement GVector.
-<
+
 2020-01-10  Per Bothner  <per@bothner.com>
 
 	Fix Blob.size method to return number of bytes, not chars.
