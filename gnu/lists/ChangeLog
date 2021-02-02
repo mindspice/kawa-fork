@@ -1,3 +1,8 @@
+2021-02-02  Duncan Mak  <duncanmak@gmail.com>
+
+	* CharSeq.java (isEmpty): New default method was added to
+	CharSequence in JDK 15, add an override here to resolve ambiguity.
+
 2020-11-14  Per Bothner  <per@bothner.com>
 
 	* IString.java (isEmpty): New method, added for Java 15.
@@ -14,7 +19,7 @@
 	Fixes GitLab issue #66 "array->vector returns non-vector?".
 
 	* GeneralArray1.java: Implement GVector.
-
+<
 2020-01-10  Per Bothner  <per@bothner.com>
 
 	Fix Blob.size method to return number of bytes, not chars.

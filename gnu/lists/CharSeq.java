@@ -43,4 +43,7 @@ public interface CharSeq
     throws java.io.IOException;
 
   public String toString();
+
+  @Override
+  public boolean isEmpty();
 }
