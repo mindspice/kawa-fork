@@ -1,3 +1,12 @@
+2021-02-04  Charles Turner  <chturne@gmail.com>
+
+	* EnglishIntegerFormat.java: Change ~R cardinal format for 100s.
+	(format #t "~R" 100) returns "hundred", whereas other Lisps tend to
+	return "one hundred". It's arguable that both are in some sense
+	correct (since this is not an area heavily specified anywhere), but
+	it's not good that we're inconsistent, since we also return (format #t
+	"~R" 1000) as "one thousand".
+
 2016-09-09  Per Bothner  <per@bothner.com>
 
 	* GenericFormat.java: More complex logic to allow handlers to

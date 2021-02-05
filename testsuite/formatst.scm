@@ -28,7 +28,7 @@
 ;      (newline)
 ;      (format:abort)))
 
-(test-begin "format" 454)
+(test-begin "format" 455)
 (define-syntax test 
   (syntax-rules ()
     ((test format-args out-str)
@@ -155,6 +155,7 @@
 (test '("~r" 4) "four")
 (test '("~r" 10) "ten")
 (test '("~r" 19) "nineteen")
+(test '("~r" 101) "one hundred one")
 (test '("~r" 1984) "one thousand, nine hundred eighty-four")
 (test '("~:r" -1984) "minus one thousand, nine hundred eighty-fourth")
 

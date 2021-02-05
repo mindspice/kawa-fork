@@ -78,7 +78,7 @@ public class EnglishIntegerFormat extends java.text.NumberFormat
       {
 	int num100s = num / 100;
 	num = num % 100;
-	if (num100s > 1)
+	if (num100s >= 1)
 	  {
 	    sbuf.append(ones[num100s]);
 	    sbuf.append(' ');
