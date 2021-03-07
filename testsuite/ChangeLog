@@ -1,3 +1,9 @@
+2021-03-06  Alcides Flores  <alcides.fp@gmail.com>
+
+	* srfi-197-test.scm: Add SRFI-197 unit tests for Kawa
+
+	* Makefile.am: Add srfi-197-test.scm to testsuite
+
 2021-01-12  Per Bothner  <per@bothner.com>
 
 	* Makefile.am: Fix dependency for annotations-on-parameter.scm.

@@ -82,7 +82,8 @@ check-num: InliningTest.class
 MISC_TESTS_WITH_SRFI64 = \
   bridge.scm \
   srfi-16-test.scm srfi-38-test.scm srfi-64-test.scm srfi-69-test.scm \
-  srfi-101-test.scm srfi-108-test.scm srfi-109-test.scm resolve-uri.scm
+  srfi-101-test.scm srfi-108-test.scm srfi-109-test.scm resolve-uri.scm \
+  srfi-197-test.scm
 
 MISC_SIMPLE_TESTS = \
   $(MISC_TESTS_WITH_SRFI64) \
