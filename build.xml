@@ -743,6 +743,7 @@
         <file name="kawa/rotations.scm"/>
         <file name="kawa/null-5.scm"/>
         <file name="kawa/reflect.scm"/>
+        <file name="srfi/197.scm"/>
       </filelist>
     </kawac>
   </target>

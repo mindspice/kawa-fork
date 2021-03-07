@@ -116,6 +116,8 @@ public class require extends Syntax
         map("javafx-defs", "gnu.kawa.javafx.defs");
         map("syntax-utils", SLIB_PREFIX + "syntaxutils");
         map("quaternions", "kawa.lib.kawa.quaternions");
+        map("srfi-197", LIB_SRFI_PREFIX + "197");
+        map("pipeline-operators", LIB_SRFI_PREFIX + "197");
     }
 
     public static String mapFeature(String featureName) {

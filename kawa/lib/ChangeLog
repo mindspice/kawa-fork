@@ -1,3 +1,8 @@
+2021-03-06  Alcides Flores  <alcides.fp@gmail.com>
+
+	* srfi/197.scm: Add syntax-case implementation of SRFI 197.
+	* Makefile.am: Compile srfi/197.scm.
+
 2020-03-18  Per Bothner  <per@bothner.com>
 
 	* srfi/48.scm: Implement SRFI 48.
