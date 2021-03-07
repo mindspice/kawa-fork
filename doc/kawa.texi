@@ -17535,7 +17535,7 @@ result of the call.  If @var{destination} is a string,
 then the first argument and the output is returned as a string. If
 @var{destination} is a number, the output is to the current error port
 if available by the implementation. Otherwise @var{destination} must be
-an output port and @code{#!void} is returned.@refill
+an output port and @code{#!void} is returned.
 
 @var{fmt} must be a string or an instance of @code{gnu.text.MessageFormat}
 or @code{java.text.MessageFormat}.  If @var{fmt} is a string,
@@ -17889,17 +17889,17 @@ print @var{n} @code{#\space} characters.
 @item @code{~@var{n}C}
 Takes @var{n} as an integer representation for a character. No arguments
 are consumed. @var{n} is converted to a character by
-@code{integer->char}.  @var{n} must be a positive decimal number.@refill
+@code{integer->char}.  @var{n} must be a positive decimal number.
 @item @code{~:S}
 Print out readproof.  Prints out internal objects represented as
 @code{#<...>} as strings @code{"#<...>"} so that the format output can always
 be processed by @code{read}.
-@refill
+
 @item @code{~:A}
 Print out readproof.  Prints out internal objects represented as
 @code{#<...>} as strings @code{"#<...>"} so that the format output can always
 be processed by @code{read}.
-@refill
+
 @item @code{~F, ~E, ~G, ~$}
 may also print number strings, i.e. passing a number as a string and
 format it accordingly.
@@ -19834,11 +19834,11 @@ new type.  It is an error if the list contains any duplicates.
 @c string.  The @var{field-names} argument is a list of symbols naming the
 @c additional @dfn{fields} to be appended to @var{field-names} of
 @c @var{rtd}.  It is an error if the combinded list contains any
-@c duplicates.@refill
+@c duplicates.
 @c
 @c Record-modifiers and record-accessors for @var{rtd} work for the new
 @c record-sub-type as well.  But record-modifiers and record-accessors for
-@c the new record-sub-type will not neccessarily work for @var{rtd}.@refill
+@c the new record-sub-type will not neccessarily work for @var{rtd}.
 @c @end deffn
 
 @deffn Procedure record-constructor rtd [field-names]
@@ -19874,7 +19874,7 @@ type; it returns a false value otherwise.
 @c @var{rtd} or its parents.  The returned procedure accepts exactly one
 @c argument and returns a true value if the argument is a member of the
 @c indicated record type or its parents; it returns a false value
-@c otherwise.@refill
+@c otherwise.
 @c @end deffn
 
 @deffn Procedure record-accessor rtd field-name
@@ -19914,14 +19914,14 @@ value when passed the given record.
 Returns the type-name associated with the type represented by rtd.  The
 returned value is @code{eqv?} to the @var{type-name} argument given in
 the call to @code{make-record-type} that created the type represented by
-@var{rtd}.@refill
+@var{rtd}.
 @end deffn
 
 @deffn Procedure record-type-field-names rtd
 Returns a list of the symbols naming the fields in members of the type
 represented by @var{rtd}.  The returned value is @code{equal?} to the
 field-names argument given in the call to @code{make-record-type} that
-created the type represented by @var{rtd}.@refill
+created the type represented by @var{rtd}.
 @end deffn
 
 Records are extensions of the class @code{Record}.
