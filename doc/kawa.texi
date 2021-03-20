@@ -2832,7 +2832,7 @@ whether it is a list, vector, any @code{java.util.List},
 native Java array, or string:
 @example
 ((list 'A 'B 'C 'D) 2)  @result{} 'C
-("abcdef" 3)  @result{}  @result{}
+("abcdef" 3)  @result{}  #\d
 (! farr (float[] 1.5 3 4.5))  ;; native Java array
 (farr 2) @result{} 4.5
 @end example
@@ -2933,7 +2933,7 @@ the corresponding named properties:
 @example
 (! button1 (javax.swing.JButton text: "Do it!" tool-tip-text:  "do it"))
 @end example
-This create a new @code{JButton} object (using @code{JButton}'s
+This creates a new @code{JButton} object (using @code{JButton}'s
 default constructor), and sets the @code{text} and @code{tool-tip-text}
 properties (by calling @code{JButton}'s @code{setText}
 and @code{setToolTipText} methods).
@@ -2948,7 +2948,7 @@ This creates a fresh @code{java.util.ArrayList} (using the
 default constructor), and then calls the @code{add} method 3 times.
 
 If you prefer you can use the @code{make} procedure,
-but that only handle simple constructor calls:
+but that only handles simple constructor calls:
 @example
 (make java.io.File "src" "build.xml")
 @end example
@@ -4395,7 +4395,10 @@ with @code{--main} then no names are exported.  (The default
 otherwise is for all names to be exported.)
 
 @node Applet compilation, Compiling to executable, Application compilation, Compiling
-@subsection Compiling to an applet
+@subsection Compiling to an applet (obsolete)
+@strong{Applets are obsolete, not supported by modern browsers,
+and Kawa support may be removed at any time.}
+
 An applet is a Java class that inherits from @code{java.applet.Applet}.
 The applet can be downloaded and run in a Java-capable web-browser.
 To generate an applet from a Scheme program, write the Scheme

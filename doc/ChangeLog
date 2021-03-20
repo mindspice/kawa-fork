@@ -1,3 +1,7 @@
+2021-03-20  Per Bothner  <per@bothner.com>
+
+	* kawa.texi: Typo fixes. Note that applets are obsolete.
+
 2021-03-07  Per Bothner  <per@bothner.com>
 
 	* kawa.texi: Remove obsolete @refill commands.
