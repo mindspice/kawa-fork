@@ -415,7 +415,7 @@ public class Quote extends Syntax {
                 if (! (list instanceof Pair)) {
                     if (list instanceof ErrorExp)
                         return list;
-                    throw new Error("expected list in quasi-quote splicing");
+                    throw new RuntimeException("expected list in quasi-quote splicing - got "+list);
                 }
                 Pair list_pair = (Pair) list;
                 Object car = list_pair.getCar();

@@ -1,3 +1,7 @@
+2021-03-25  Per Bothner  <per@bothner.com>
+
+	* lang/Quote.java (append$V): Throw RuntimeException rather than Error.
+
 2020-10-09  Per Bothner  <per@bothner.com>
 
 	* Shell.java (run): Inlining to shorten REPL stack traces.
