@@ -23,7 +23,7 @@ public interface Sequence<E>
   /** Special magic end-of-file marker. */
   public static final Object eofValue = EofClass.eofValue;
 
-  /** True is this sequence contains no elements. */
+  /** True if this sequence contains no elements. */
   public boolean isEmpty();
 
   /** See java.util.List. */
