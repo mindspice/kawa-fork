@@ -410,6 +410,8 @@ The @code{read-with-shared-structure} is missing, but subsumed by @code{read}.
 @uref{http://srfi.schemers.org/srfi-163/srfi-163.html, SRFI-163}: Enhanced array literals.
 @item
 @uref{http://srfi.schemers.org/srfi-164/srfi-164.html, SRFI-164}: Enhanced multi-dimensional Arrays
+@item
+@uref{http://srfi.schemers.org/srfi-197/srfi-197.html, SRFI-197}: Pipeline Operators.
 @end itemize
 
 @node Compatibility
