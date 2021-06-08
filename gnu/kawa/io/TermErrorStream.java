@@ -48,6 +48,13 @@ public class TermErrorStream extends PrintStream {
     };
     byte[] startErrMarker;
     byte[] endErrMarker;
+    int mextra; // max(startErrMarker.length,endErrMarker.length)+1
+    byte[] buffer;
+    int bsize = 0;
+    int blimit = 0;
+    boolean inError;
+    private static int INIT_BUFSIZE = 1024;
+    private static int SHRINK_BUFSIZE = 5000;
 
     private PrintStream out;
 
@@ -61,6 +68,9 @@ public class TermErrorStream extends PrintStream {
             startErrMarker = DOMTERM_START_ERR_MARKER;
             endErrMarker = DOMTERM_END_ERR_MARKER;
         }
+        int slen = startErrMarker.length;
+        int elen = endErrMarker.length;
+        mextra = (slen > elen ? slen : elen) + 1;
     }
     public boolean isDomTerm() {
         return startErrMarker == DOMTERM_START_ERR_MARKER;
@@ -75,46 +85,76 @@ public class TermErrorStream extends PrintStream {
             System.setErr(new TermErrorStream(System.out, ansi));
     }
 
+    private void writeRaw(byte b) {
+        if (bsize >= blimit) {
+            byte[] nbuffer = new byte[buffer == null ? INIT_BUFSIZE
+                                      : (3 * buffer.length) >> 1];
+            if (bsize > 0)
+                System.arraycopy(buffer, 0, nbuffer, 0, bsize);
+            blimit = nbuffer.length - mextra;
+            buffer = nbuffer;
+        }
+        if (b == '\r' || b == '\n') {
+            if (inError) {
+                int elen = endErrMarker.length;
+                System.arraycopy(endErrMarker, 0, buffer, bsize, elen);
+                bsize += elen;
+                inError = false;
+            }
+            buffer[bsize++] = b;
+            if (b == '\n') {
+                out.write(buffer, 0, bsize);
+                bsize = 0;
+                if (buffer.length > SHRINK_BUFSIZE) {
+                    buffer = new byte[INIT_BUFSIZE];
+                    blimit = INIT_BUFSIZE - mextra;
+                }
+            }
+        } else {
+            if (! inError) {
+                int slen = startErrMarker.length;
+                System.arraycopy(startErrMarker, 0, buffer, bsize, slen);
+                bsize += slen;
+                inError = true;
+            }
+            buffer[bsize++] = b;
+        }
+    }
+
     @Override
     public void write(int b) {
         synchronized (out) {
-            boolean escape = b != '\r' && b != '\n';
-            if (escape)
-                out.write(startErrMarker, 0, startErrMarker.length);
-            out.write(b);
-            if (escape)
-                out.write(endErrMarker, 0, endErrMarker.length);
-            if (b == '\n')
-                out.flush();
+            writeRaw((byte) b);
         }
     }
 
     @Override
     public void write(byte buf[], int off, int len) {
-        while (len > 0) {
-            int i;
-            for (i = 0; i < len; i++) {
-                byte b = buf[off+i];
-                if (b == '\r' || b == '\n') {
-                    break;
-                }
+        synchronized (out) {
+            while (--len >= 0) {
+                writeRaw(buf[off++]);
             }
-            synchronized (out) {
-                if (i == 0) {
-                    i = 1;
-                    if (len >= 2 && buf[off] == '\r'
-                        && buf[off+1] == '\n')
-                        i = 2;
-                    out.write(buf, off, i);
-                } else {
-                    out.write(startErrMarker, 0, startErrMarker.length);
-                    out.write(buf, off, i);
-                    out.write(endErrMarker, 0, endErrMarker.length);
-                }
-                out.flush();
-            }
-            off += i;
-            len -= i;
         }
+    }
+
+    public void flush() {
+        if (inError) {
+            int elen = endErrMarker.length;
+            System.arraycopy(endErrMarker, 0, buffer, bsize, elen);
+            bsize += elen;
+        }
+        if (bsize > 0)
+            out.write(buffer, 0, bsize);
+        out.flush();
+        bsize = 0;
+        if (blimit > SHRINK_BUFSIZE) {
+            buffer = null;
+            blimit = 0;
+        }
+    }
+
+    public void close() {
+        super.close();
+        buffer = null;
     }
 }
