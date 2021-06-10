@@ -90,6 +90,7 @@ MISC_SIMPLE_TESTS = \
   arr-test.scm \
   java-array-test.scm \
   lazy-test.scm \
+  proc-test.scm \
   lib-test.scm \
   formatst.scm \
   strings-test.scm \

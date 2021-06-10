@@ -1,8 +1,10 @@
 package gnu.mapping;
 
+import java.lang.invoke.*;
 import gnu.lists.Pair;
 import java.util.List;
 import java.util.Map;
+import gnu.expr.Keyword;
 
 public class ArgListImpl implements ArgList, ArgListBuilder {
     /*
@@ -200,11 +202,18 @@ public class ArgListImpl implements ArgList, ArgListBuilder {
     }
 
     public void addSequence(Object args) {
-        // FIXME optimize
+        while (args instanceof Pair) {
+            Pair pair = (Pair) args;
+            add(pair.getCar());
+            args = pair.getCdr();
+        }
+        if (args == gnu.lists.LList.Empty)
+            return;
         List list = gnu.lists.Sequences.coerceToSequence(args);
         for (Object v : list)
             add(v);
     }
+
     public void addArgList(Object args) {
         for (;;) {
             if (args instanceof ArgList) {
@@ -217,14 +226,27 @@ public class ArgListImpl implements ArgList, ArgListBuilder {
             } else if (args instanceof Map) {
                 Map map = (Map) args;
                 for (Object k : map.keySet()) {
-                    addKey(k.toString(), map.get(k));
+                    String ks = Keyword.isKeyword(k) ? ((Keyword) k).getName()
+                        : k.toString();
+                    CallContext ctx = CallContext.getInstance();
+                    Object vv;
+                    if (ctx != this)
+                        vv = map.get(k);
+                    else {
+                        ctx.pushArgState();
+                        try { vv = map.get(k);
+                        } finally { ctx.popArgState(); }
+                    }
+                    addKey(ks, vv);
                 }
+                break;
             } else {
                 addSequence(args);
                 break;
             }
         }
     }
+
     public void addAll(List<?> args) {
         int sz = args.size();
         int n = count;
@@ -276,7 +298,7 @@ public class ArgListImpl implements ArgList, ArgListBuilder {
 
     /** For the i'th keyword in alphabethical order,
      * keywords[sortedKeywords[i]] is the actual keyword.
-     * This array is never modified - it is normally statically allocacted.
+     * This array is never modified - it is normally statically allocated.
      */
     short[] sortedKeywords;
 

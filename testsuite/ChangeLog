@@ -1,3 +1,8 @@
+2021-06-10  Per Bothner  <per@bothner.com>
+
+	* proc-test.scm: New file. Some tests for splice with hashtable.
+	* lib-test-scm: Move arglist tests to new file.
+
 2021-03-06  Alcides Flores  <alcides.fp@gmail.com>
 
 	* srfi-197-test.scm: Add SRFI-197 unit tests for Kawa

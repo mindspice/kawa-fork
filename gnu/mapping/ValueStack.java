@@ -3,6 +3,11 @@
 
 package gnu.mapping;
 import gnu.lists.*;
+/* #ifdef use:java.lang.invoke */
+import java.lang.invoke.*;
+/* #else */
+// import gnu.mapping.CallContext.MethodHandle;
+/* #endif */
 
 class ValueStack extends TreeList {
     int gapStartOnPush;
@@ -47,13 +52,14 @@ class ValueStack extends TreeList {
         writeIntForce32(ctx.nextKeyword);
         writeIntForce32(ctx.matchState);
         ctx.consumerOnPushArgState = saveGap;
-        int ogrow = ctx.count+2;
+        int ogrow = ctx.count+4;
         reserveObjects(ogrow);
         System.arraycopy(ctx.values, 0, objects, oindex,
                          ctx.count);
-        // Should we save applyMethod and/or proc fields?
         objects[oindex+ctx.count] = ctx.keywords;
         objects[oindex+ctx.count+1] = ctx.sortedKeywords;
+        objects[oindex+ctx.count+2] = ctx.proc;
+        objects[oindex+ctx.count+3] = ctx.applyMethod;
         oindex += ogrow;
         ctx.next = 0;
         ctx.count = 0;
@@ -74,12 +80,14 @@ class ValueStack extends TreeList {
         ctx.nextKeyword = getIntN(start+16);
         ctx.matchState = getIntN(start+19);
         gapStart = start;
-        int ogrow = ctx.count+2;
+        int ogrow = ctx.count+4;
         oindex -= ogrow;
         System.arraycopy(objects, oindex,
                          ctx.values, 0, ctx.count);
         ctx.keywords = (String[]) objects[oindex+ctx.count];
         ctx.sortedKeywords = (short[]) objects[oindex+ctx.count+1];
+        ctx.proc = (Procedure) objects[oindex+ctx.count+2];
+        ctx.applyMethod = (MethodHandle) objects[oindex+ctx.count+3];
         for (int i = 0;  i < ogrow; i++)
             objects[oindex+1] = null;
     }

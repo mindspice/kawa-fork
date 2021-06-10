@@ -1,3 +1,12 @@
+2021-06-10  Per Bothner  <per@bothner.com>
+
+	* ArgListImpl.java (addArgList): Fix handling of Map.
+	Note these may be implemented in Scheme and thus use the CallContext.
+	Also fix infinite loop due to missing 'break'.
+	(addSequence): Minor optimization.
+	* ValueStack.java (pushArgState): Also save proc and applyMethod.
+	(popArgState): Restore themm.
+
 2019-10-25  Per Bothner  <per@bothner.com>
 
 	* Procedure.java (getApplyMethod): New method.
