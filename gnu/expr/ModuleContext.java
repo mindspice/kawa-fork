@@ -73,7 +73,9 @@ public class ModuleContext
                         // Not a static module - create a new instance.
                         inst = clas.newInstance();
                     }
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
+                    if (ex instanceof ExceptionInInitializerError)
+                        ex = ex.getCause();
                     throw new WrappedException
                         ("exception while initializing module " + clas.getName(), ex);
                 }

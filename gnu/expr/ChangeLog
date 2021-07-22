@@ -1,3 +1,10 @@
+2021-07-22  Per Bothner  <per@bothner.com>
+
+	* ModuleContext.java (findInstance): Catch ExceptionInInitializerError.
+	Actually, catch general Throwable in initialization.
+	Fixes Gitab issue #97
+	"Kawa crashes instead of signaling error (define-syntax)".
+
 2020-11-14  Per Bothner  <per@bothner.com>
 
 	* QuoteExp.java (print): Sanity check if Language isn't set yet.
