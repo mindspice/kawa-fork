@@ -8,20 +8,20 @@
   ((noParams) :: String "ok")
 
   ((singleParamNoAnnotation
-     (a :: String)) ::String
+     (a1 :: String)) ::String
    "ok")
 
   ((singleParamSingleAnnotation
-     (a (@MyAnnotType name: "name") :: String)) ::String
+     (a2 (@MyAnnotType name: "name") :: String)) ::String
    "ok")
 
   ((singleParamMultipleAnnotation
      ;put one annotation after the type to test
-     (a (@MyAnnotType name: "name1") :: String (@MyAnnotType name: "name2"))) ::String
+     (a3 (@MyAnnotType name: "name1") :: String (@MyAnnotType name: "name2"))) ::String
    "ok")
 
   ((multiParamEachSingleAnnotation
-     (a (@MyAnnotType name: "name1") :: String)
+     (a4 (@MyAnnotType name: "name1") :: String)
      (b (@MyAnnotType name: "name2") :: String)) ::String
    "ok")
 

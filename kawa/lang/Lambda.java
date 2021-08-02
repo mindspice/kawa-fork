@@ -177,37 +177,15 @@ public class Lambda extends Syntax
 	  }
         pair_car = tr.namespaceResolve(pair_car);
         Declaration decl = null;
-        ArrayList<LangExp> annotations = null;
-        //annotations can only be part of "normal" arguments,
-        //not keyword, optional, or rest
-        if (mode == null) {
-            Object[] paramAndAnnotations = findAnnotationsInParameterDefinition(pair_car, tr);
-            pair_car = paramAndAnnotations[0];
-            annotations = (ArrayList<LangExp>) paramAndAnnotations[1];
-        }
-	if (pair_car instanceof Symbol
-            || pair_car == Special.ifk
-            || bindParser.literalPattern(pair_car, tr) != null
-            || (pair_car instanceof Pair
-                && (mode == null
-                    || (pccar = ((Pair) pair_car).getCar()) == LispLanguage.splice_sym
-                    || pccar == LispLanguage.splice_colon_sym)
-                && (Translator.listLength(pair_car) != 3
-                    || ! tr.matches(((Pair) ((Pair) pair_car).getCdr()).getCar(), "::"))))
-        {
-            Object[] r = parsePatternCar(pair, templateScope, lexp, tr);
-            next = r[0];
-            decl = (Declaration) r[1];
-            if (decl == null)
-                decl = new Declaration("<error>");
-            if (decl.getFlag(Declaration.IS_REST_PARAMETER)) {
-                if (rest_args > 0)
-                    tr.syntaxError("multiple rest arguments in parameter list");
-                rest_args = 1;
-            }
-            name = decl == null ? null : decl.getSymbol();
-        }
-	else if (pair_car instanceof Pair)
+        Object cadr;
+        if (pair_car instanceof Pair
+            && (pccar = ((Pair) pair_car).getCar()) != LispLanguage.splice_sym
+            && pccar != LispLanguage.splice_colon_sym
+            && (mode != null
+                || (Translator.listLength(pair_car) >= 2
+                    && (tr.matches((cadr = ((Pair) ((Pair) pair_car).getCdr()).getCar()), "::")
+                        || (cadr instanceof Pair
+                            && isAnnotationSymbol(((Pair) cadr).getCar()))))))
         {
             Object[] r = parsePatternCar((Pair) pair_car, templateScope, lexp, tr);
             Object xrest = r[0];
@@ -235,6 +213,18 @@ public class Lambda extends Syntax
                 decl = new Declaration("<error>");
             name = decl == null ? null : decl.getSymbol();
             next = pair.getCdr();
+        } else {
+            Object[] r = parsePatternCar(pair, templateScope, lexp, tr);
+            next = r[0];
+            decl = (Declaration) r[1];
+            if (decl == null)
+                decl = new Declaration("<error>");
+            if (decl.getFlag(Declaration.IS_REST_PARAMETER)) {
+                if (rest_args > 0)
+                    tr.syntaxError("multiple rest arguments in parameter list");
+                rest_args = 1;
+            }
+            name = decl == null ? null : decl.getSymbol();
         }
         if (decl == null) {
             if (name == null) {
@@ -242,12 +232,6 @@ public class Lambda extends Syntax
                 break;
             }
             decl = new Declaration(name);
-        }
-        if (annotations != null && annotations.size() > 0) {
-            for (int i = 0; i < annotations.size(); i++) {
-                decl.addAnnotation(annotations.get(i));
-            }
-            rewriteAnnotations(decl, tr);
         }
         decl.setFlag(Declaration.IS_PARAMETER);
 	if (mode == optionalKeyword || mode == keyKeyword)
@@ -653,87 +637,10 @@ public class Lambda extends Syntax
       }
   }
 
-  /*
-   * Returns [patlist with annotations removed, List of annotations]
-   */
-  public Object[] findAnnotationsInParameterDefinition(Object parameterDef, Translator tr) {
-      //the currently worked on parameter definition only
-      //can have annotations, if it's a list (pair).
-      if (!(parameterDef instanceof Pair)) {
-          return new Object[]{
-              parameterDef,
-              null
-          };
-      }
-      //separate car (== the parameter) into list of annotations and list of general pattern components
-      ArrayList<LangExp> annotations = new ArrayList<>();
-      //use whole pair instead of just car, to preserve position if the actual instance is PairWithPosition
-      ArrayList<Pair> patList = new ArrayList<>();
-      //syntax is defined to be pattern (annotation | typespec)*
-      //thus check that terms are present matching this definition, and error is signaled if they're not
-      boolean annotationSeen = false;
-      boolean typeShouldBeNext = false;
-      Object head = (Pair) parameterDef;
-      while (head != LList.Empty) {
-          Pair p = (Pair) head;
-          Object pairCar = p.getCar();
-          Object attrName = Translator.stripSyntax(pairCar);
-          if ((attrName instanceof Pair && isAnnotationSymbol(((Pair)attrName).getCar()))) {
-              if (typeShouldBeNext) {
-                  tr.syntaxError("Annotation immediately after '::' when type was expected");
-              }
-              annotationSeen = true;
-              annotations.add(new LangExp(p));
-          } else {
-              if (tr.matches(pairCar, "::")) {
-                  typeShouldBeNext = true;
-              } else if (typeShouldBeNext) {
-                  //term immediately after '::' -- assume this is type definition
-                  typeShouldBeNext = false;
-              } else if (annotationSeen) {
-                  //this term isn't annotation, isn't ::, and isn't term immediately after ::
-                  //assume this declaration pattern in wrong position
-                  tr.syntaxError("Parameter definition pattern after annotation");
-              }
-              patList.add(p);
-          }
-          head = p.getCdr();
-      }
-
-      //pattern list shouldn't be empty (all annotations and no parameter binding?)
-      if (patList.size() == 0) {
-          tr.syntaxError("Empty pattern list");
-          return new Object[]{
-              LList.Empty,
-              annotations
-          };
-      }
-
-      //reconstruct list into pair by going backwards from end of list to use as a new car
-      Pair patListResult = null;
-      for (int i = patList.size() - 1; i >= 0; i--) {
-          Object newEntryCdr = patListResult == null? LList.Empty : patListResult;
-          if (patList.get(i) instanceof PairWithPosition) {
-              PairWithPosition pWithPos = (PairWithPosition) patList.get(i);
-              String file = pWithPos.getFileName();
-              int line = pWithPos.getLineNumber();
-              int col = pWithPos.getColumnNumber();
-              patListResult = PairWithPosition.make(pWithPos.getCar(), newEntryCdr, file, line, col);
-          } else {
-              patListResult = new Pair(patList.get(i).getCar(), newEntryCdr);
-          }
-      }
-      //patListResult won't be null, because we checked patList.size > 0 previously
-      return new Object[]{
-          patListResult,
-          annotations
-      };
-  }
-
     public Object[] parsePatternCar(Pair patList, TemplateScope templateScope,
                                     LambdaExp lexp, Translator comp) {
         return bindParser.parsePatternCar(patList, null, templateScope, 0,
-                                          lexp, comp);
+                                          lexp, comp, true);
     }
 
     static class LambdaBindDecls extends BindDecls {
