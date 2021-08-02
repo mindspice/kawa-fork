@@ -5,6 +5,7 @@ import gnu.lists.*;
 import gnu.text.Char;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.ArrayList;
 import gnu.mapping.Environment;
 import gnu.mapping.Symbol;
 import gnu.kawa.functions.Convert;
@@ -77,11 +78,28 @@ public class BindDecls {
                                     TemplateScope templateScope,
                                     int scanNesting, ScopeExp scope,
                                     Translator comp) {
+        return parsePatternCar(patList, init, templateScope, scanNesting, scope, comp, false);
+    }
+    public Object[] parsePatternCar(Pair patList, Expression init,
+                                    TemplateScope templateScope,
+                                    int scanNesting, ScopeExp scope,
+                                    Translator comp,
+                                    boolean functionParameterContext) {
         Object next = patList.getCdr();
         Type type = null;
-        if (next instanceof Pair) {
+        ArrayList<LangExp> annotations = null;
+        while (next instanceof Pair) {
             Pair nextPair = (Pair) next;
-            if (comp.matches(nextPair.getCar(), "::")) {
+            boolean typeNext = comp.matches(nextPair.getCar(), "::");
+            Object maybeAnnotationDef = Translator.stripSyntax(nextPair.getCar());
+            boolean annotationNext = (maybeAnnotationDef instanceof Pair) &&
+                Lambda.isAnnotationSymbol(((Pair) maybeAnnotationDef).getCar());
+            boolean shouldContinue =
+                (type == null && typeNext) ||
+                (functionParameterContext && annotationNext);
+            if (!shouldContinue)
+                break;
+            if (typeNext) {
                 Object nextCdr = nextPair.getCdr();
                 if (nextCdr instanceof Pair) {
                     Pair nextCdrPair = (Pair) nextCdr;
@@ -93,7 +111,13 @@ public class BindDecls {
                     comp.error('e', "missing type after '::'");
                     comp.popPositionOf(saveLoc);
                     next = nextCdr;
+                    break;
                 }
+            } else if (annotationNext) {
+                if (annotations == null)
+                    annotations = new ArrayList<LangExp>();
+                annotations.add(new LangExp(nextPair));
+                next = nextPair.getCdr();
             }
         }
         Object pattern = patList.getCar();
@@ -191,6 +215,12 @@ public class BindDecls {
             if (type != null) {
                 decl.setType(MappedArrayType.maybe(type, scanNesting));
                 decl.setFlag(Declaration.TYPE_SPECIFIED);
+            }
+            if (annotations != null && annotations.size() > 0) {
+                for (int i = 0; i < annotations.size(); i++) {
+                    decl.addAnnotation(annotations.get(i));
+                }
+                Lambda.rewriteAnnotations(decl, comp);
             }
         }
         comp.popPositionOf(saveLoc);
