@@ -1,3 +1,10 @@
+2021-08-02  Arvydas Silanskas <nma.arvydas.silanskas@gmail.com>
+            Per Bothner  <per@bothner.com>
+
+	* lang/Lambda.java, lang/BindDecls.java:
+	Refactor parameter annotations processing.
+	See merge request kashell/Kawa!33
+
 2021-03-25  Per Bothner  <per@bothner.com>
 
 	* lang/Quote.java (append$V): Throw RuntimeException rather than Error.
