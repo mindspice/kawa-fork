@@ -1,3 +1,7 @@
+2021-08-30  Per Bothner  <per@bothner.com>
+
+	* kawa.texi (Ideas and tasks): Update from Will Speak.
+
 2021-03-20  Per Bothner  <per@bothner.com>
 
 	* kawa.texi: Typo fixes. Note that applets are obsolete.

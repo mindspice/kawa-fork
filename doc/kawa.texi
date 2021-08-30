@@ -1180,8 +1180,8 @@ low-level data-structures, along with lots of profiling and testing.)
 
 @subsection Asynchronous evaluation
 
-C# recently added @code{async} and @code{await} keywords
-for @uref{http://msdn.microsoft.com/en-us/vstudio/gg316360,asynchronous programming}.  Kawa's recently improved support for lazy programming
+C# has @code{async} and @code{await} keywords
+for @uref{https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/,asynchronous programming}.  Kawa's recently improved support for lazy programming
 seems like a good framework for equivalent functionality:
 Instead of an @code{async} method that returns a @code{Task<T>},
 the Kawa programmer would write a function that returns a @code{lazy[T]}.
