@@ -106,7 +106,7 @@ public class Lexer extends gnu.text.Lexer
 	    else // FIXME - do we want to use gnu.math??
 	      dval = gnu.math.IntNum.valueOf(port.buffer, i, port.pos - i,
 					     radix, false).doubleValue();
-	    return new Double(dval);
+	    return Double.valueOf(dval);
 	  }
       }
     if (radix != 10)
@@ -162,7 +162,7 @@ public class Lexer extends gnu.text.Lexer
 	str.append('e');
 	str.append(exp);
       }
-    return new Double(str.toString ());
+    return Double.valueOf(str.toString ());
   }
 
   public String getStringLiteral (char quote)

@@ -153,13 +153,6 @@ public class Method implements AttrContainer, Member {
         code.pushScope();
     }
 
-    /**
-     * @deprecated Use startCode instead
-     */
-    public void init_param_slots(){
-        startCode();
-    }
-
     /** Recommended method to create a new CodeAttr for this Method. */
     public CodeAttr startCode() {
         initCode();
@@ -198,13 +191,6 @@ public class Method implements AttrContainer, Member {
         if (type != stack_type)  // FIXME rather simple-minded, but safe.
             code.emitCheckcast(type);
     }
-
-    /**
-     * Comple code to push the contents of a local variable onto the statck.
-     * @param var The variable whose contents we want to push.
-     * @deprecated
-     */
-    public void push_var(Variable var) { code.emitLoad (var); }
 
     @Deprecated
     public void compile_push_value(Variable var) { code.emitLoad(var); }

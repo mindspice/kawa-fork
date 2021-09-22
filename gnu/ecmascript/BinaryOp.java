@@ -17,7 +17,7 @@ public class BinaryOp extends Procedure2
 	return Convert.toNumber(arg1) < Convert.toNumber(arg2)
 	  ? Boolean.TRUE : Boolean.FALSE;
       }
-    return new Double(apply(Convert.toNumber(arg1), Convert.toNumber(arg2)));
+    return Double.valueOf(apply(Convert.toNumber(arg1), Convert.toNumber(arg2)));
   }
   
   public double apply (double arg1, double arg2)

@@ -14,7 +14,7 @@ public class RangeTable implements Cloneable // extends map
   {
     if ((key & 127) == key)
       return index[key];
-    return hash.get(new Integer(key));
+    return hash.get(key);
   }
 
   public void set(int lo, int hi, Object value)
@@ -26,7 +26,7 @@ public class RangeTable implements Cloneable // extends map
 	if ((i & 127) == i)
 	  index[i] = value;
 	else
-	  hash.put(new Integer(i), value);
+	  hash.put(i, value);
 	if (i == hi)
 	  break;
       }
@@ -46,7 +46,7 @@ public class RangeTable implements Cloneable // extends map
 	if ((i & 127) == i)
 	  index[i] = null;
 	else
-	  hash.remove(new Integer(i));
+	  hash.remove(i);
 	if (i == hi)
 	  break;
       }

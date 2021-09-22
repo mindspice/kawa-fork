@@ -61,7 +61,7 @@ public class CompileInvoke {
                 }
             }
             if (sizeArg == null)
-                sizeArg = QuoteExp.getInstance(new Integer(args.length-1));
+                sizeArg = QuoteExp.getInstance(Integer.valueOf(args.length-1));
             sizeArg = visitor.visit(sizeArg, Type.intType);
             Object constantValue = null;
             if (visitor.processingAnnotations()
@@ -122,7 +122,7 @@ public class CompileInvoke {
                     begin.add(new ApplyExp(new ArraySet(elementType),
                                            new Expression[] {
                                                new ReferenceExp(adecl),
-                                               QuoteExp.getInstance(new Integer(index)),
+                                               QuoteExp.getInstance(index),
                                                arg}));
                 index++;
             }

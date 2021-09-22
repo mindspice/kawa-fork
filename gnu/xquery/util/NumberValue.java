@@ -13,7 +13,7 @@ public class NumberValue extends Procedure1
 {
   public static final NumberValue numberValue = new NumberValue();
  
-  public static final Double NaN = new Double(Double.NaN);
+  public static final Double NaN = Double.valueOf(Double.NaN);
 
   public static boolean isNaN (Object arg)
   {

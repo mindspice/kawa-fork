@@ -89,7 +89,7 @@ public class Options
         }
         if ((info.kind & INT_OPTION) != 0) {
             try {
-                return new Integer(argument);
+                return Integer.valueOf(argument);
             } catch (Throwable ex) {
                 return null;
             }

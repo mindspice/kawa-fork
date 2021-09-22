@@ -1,3 +1,8 @@
+2021-09-22  Per Bothner  <per@bothner.com>
+
+	* gnu/**/*.java, kawa/**/*.java: Fix Java17 depreciation warnings.
+	Mostly like 'new Double(x)' -> 'Double.valueOf(x)'.
+
 2020-01-15  Per Bothner  <per@bothner.com>
 
 	* configure.in (AC_INIT): Set version to 3.1.1.

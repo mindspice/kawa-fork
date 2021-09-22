@@ -39,7 +39,7 @@ public class Convert
 
   public Object charToObject(char ch)
   {
-    return new Character(ch);
+    return Character.valueOf(ch);
   }
 
   public char objectToChar(Object obj)
@@ -59,7 +59,7 @@ public class Convert
 
   public Object byteToObject(byte value)
   {
-    return new Byte(value);
+    return Byte.valueOf(value);
   }
 
   public byte objectToByte(Object obj)
@@ -79,7 +79,7 @@ public class Convert
 
   public Object byteToObjectUnsigned(byte value)
   {
-    return new Integer(value & 0xFF);
+    return Integer.valueOf(value & 0xFF);
   }
 
   public byte objectToByteUnsigned(Object obj)
@@ -99,7 +99,7 @@ public class Convert
 
   public Object shortToObject(short value)
   {
-    return new Short(value);
+    return Short.valueOf(value);
   }
 
   public short objectToShort(Object obj)
@@ -119,7 +119,7 @@ public class Convert
 
   public Object shortToObjectUnsigned(short value)
   {
-    return new Integer(value & 0xFFFF);
+    return Integer.valueOf(value & 0xFFFF);
   }
 
   public short objectToShortUnsigned(Object obj)
@@ -139,7 +139,7 @@ public class Convert
 
   public Object intToObject(int value)
   {
-    return new Integer(value);
+    return Integer.valueOf(value);
   }
 
   public int objectToInt(Object obj) 
@@ -160,9 +160,9 @@ public class Convert
   public Object intToObjectUnsigned(int value)
   {
     if (value >= 0)
-      return new Integer(value);
+      return Integer.valueOf(value);
     else
-      return new Long((long) value & 0xffffffffL);
+      return Long.valueOf((long) value & 0xffffffffL);
   }
 
   public int objectToIntUnsigned(Object obj)
@@ -182,7 +182,7 @@ public class Convert
 
   public Object longToObject(long value)
   {
-    return new Long(value);
+    return Long.valueOf(value);
   }
 
   public long objectToLong(Object obj)
@@ -202,7 +202,7 @@ public class Convert
 
   public Object longToObjectUnsigned(long value)
   {
-    return new Long(value);  // FIXME use BigInteger?
+    return Long.valueOf(value);  // FIXME use BigInteger?
   }
 
   public long objectToLongUnsigned(Object obj)
@@ -222,7 +222,7 @@ public class Convert
 
   public Object floatToObject(float value)
   {
-    return new Float(value);
+    return Float.valueOf(value);
   }
 
   public float objectToFloat(Object obj)
@@ -242,7 +242,7 @@ public class Convert
 
   public Object doubleToObject(double value)
   {
-    return new Double(value);
+    return Double.valueOf(value);
   }
 
   public double objectToDouble(Object obj)

@@ -167,7 +167,7 @@ public class LangPrimType extends PrimType
         case 'Z':
             return language.isTrue(obj) ? Boolean.TRUE : Boolean.FALSE;
         case 'C':
-            return new Character(((Char) obj).charValue());
+            return Character.valueOf(((Char) obj).charValue());
         case 'V':
             return Values.empty;
         }

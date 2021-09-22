@@ -87,17 +87,17 @@ public class MultiplyOp extends ArithOp
 	  case Arithmetic.FLOAT_CODE:
 	    float f1 = Arithmetic.asFloat(result);
 	    float f2 = Arithmetic.asFloat(arg2);
-	    result = new Float(f1 * f2);
+	    result = Float.valueOf(f1 * f2);
 	    break;
 	  case Arithmetic.DOUBLE_CODE:
 	    double d1 = Arithmetic.asDouble(result);
 	    double d2 = Arithmetic.asDouble(arg2);
-	    result = new Double(d1 * d2);
+	    result = Double.valueOf(d1 * d2);
 	    break;
 	  case Arithmetic.FLONUM_CODE:
 	    d1 = Arithmetic.asDouble(result);
 	    d2 = Arithmetic.asDouble(arg2);
-	    result = new DFloNum(d1 * d2);
+	    result = DFloNum.valueOf(d1 * d2);
 	    break;
 	  default:
 	    result = Arithmetic.asNumeric(result)

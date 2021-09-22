@@ -121,13 +121,13 @@ public class ArithOp extends Procedure1or2
           }
         else if (code == Arithmetic.FLOAT_CODE)
           {
-            return new Float(((Number) arg1).floatValue()
-                             / ((Number) arg2).floatValue());
+            return Float.valueOf(((Number) arg1).floatValue()
+                                 / ((Number) arg2).floatValue());
           }
         else if (code == Arithmetic.DOUBLE_CODE)
           {
-            return new Double(((Number) arg1).doubleValue()
-                             / ((Number) arg2).doubleValue());
+            return Double.valueOf(((Number) arg1).doubleValue()
+                                  / ((Number) arg2).doubleValue());
           }
         else if (arg1 instanceof Duration && arg2 instanceof Duration)
           {

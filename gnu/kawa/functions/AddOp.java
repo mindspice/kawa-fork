@@ -72,11 +72,11 @@ public class AddOp extends ArithOp
       case Arithmetic.FLOAT_CODE:
 	float f1 = Arithmetic.asFloat(arg1);
 	float f2 = Arithmetic.asFloat(arg2);
-	return new Float(plusOrMinus > 0 ? f1 + f2 : f1 - f2);
+	return Float.valueOf(plusOrMinus > 0 ? f1 + f2 : f1 - f2);
       case Arithmetic.DOUBLE_CODE:
 	double d1 = Arithmetic.asDouble(arg1);
 	double d2 = Arithmetic.asDouble(arg2);
-	return new Double(plusOrMinus > 0 ? d1 + d2 : d1 - d2);
+	return Double.valueOf(plusOrMinus > 0 ? d1 + d2 : d1 - d2);
       case Arithmetic.FLONUM_CODE:
 	d1 = Arithmetic.asDouble(arg1);
 	d2 = Arithmetic.asDouble(arg2);
@@ -120,11 +120,11 @@ public class AddOp extends ArithOp
       case Arithmetic.RATNUM_CODE:
 	return RatNum.neg(Arithmetic.asRatNum(arg1));
       case Arithmetic.FLOAT_CODE:
-	return new Float(- Arithmetic.asFloat(arg1));
+	return Float.valueOf(- Arithmetic.asFloat(arg1));
       case Arithmetic.DOUBLE_CODE:
-	return new Double(- Arithmetic.asDouble(arg1));
+	return Double.valueOf(- Arithmetic.asDouble(arg1));
       case Arithmetic.FLONUM_CODE:
-	return new DFloNum(- Arithmetic.asDouble(arg1));
+	return DFloNum.valueOf(- Arithmetic.asDouble(arg1));
       default:
         return Arithmetic.asNumeric(arg1).neg();
       }

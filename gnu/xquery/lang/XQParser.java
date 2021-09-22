@@ -516,7 +516,7 @@ public class XQParser extends Lexer
     int next;
     for (;;)
       {
-	next = readUnicodeChar();
+	next = readCodePoint();
 	if (next < 0)
 	  return setToken(EOF_TOKEN, 0);
 	if (next == '\n' || next == '\r')
@@ -602,7 +602,7 @@ public class XQParser extends Lexer
 	char saveReadState = pushNesting ((char) next);
 	for (;;)
 	  {
-	    next = readUnicodeChar();
+	    next = readCodePoint();
 	    if (next < 0)
 	      eofError("unexpected end-of-file in string starting here");
 	    if (next == '&')
@@ -2986,7 +2986,7 @@ public class XQParser extends Lexer
             if (token == DECIMAL_TOKEN)
               val = new java.math.BigDecimal(str);
             else
-              val = new java.lang.Double(str);
+              val = Double.valueOf(Double.parseDouble(str));
             exp = new QuoteExp(val);
           }
         catch (Exception ex)

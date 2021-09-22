@@ -25,18 +25,18 @@ public class ConstantValueAttr extends Attribute
 	value = ((CpoolString) entry).getString().getString();
 	break;
       case ConstantPool.INTEGER:
-	value = new Integer(((CpoolValue1) entry).value);
+	value = Integer.valueOf(((CpoolValue1) entry).value);
 	break;
       case ConstantPool.LONG:
-	value = new Long(((CpoolValue2) entry).value);
+	value = Long.valueOf(((CpoolValue2) entry).value);
 	break;
       case ConstantPool.FLOAT:
 	float f = Float.intBitsToFloat(((CpoolValue1) entry).value);
-	value = new Float(f);
+	value = Float.valueOf(f);
 	break;
       case ConstantPool.DOUBLE:
 	double d = Double.longBitsToDouble(((CpoolValue2) entry).value);
-	value = new Double(d);
+	value = Double.valueOf(d);
 	break;
       }
     return value;

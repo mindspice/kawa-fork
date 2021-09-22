@@ -152,42 +152,42 @@ public class LitTable extends GeneralHashTable<Object,Object>
 
   public void writeBoolean(boolean v)
   {
-    push(new Boolean(v), Type.booleanType);
+    push(Boolean.valueOf(v), Type.booleanType);
   }
 
   public void writeChar(int v)
   {
-    push(new Character((char) v), Type.charType);
+    push(Character.valueOf((char) v), Type.charType);
   }
 
   public void writeByte(int v)
   {
-    push(new Byte((byte) v), Type.byteType);
+    push(Byte.valueOf((byte) v), Type.byteType);
   }
 
   public void writeShort(int v)
   {
-    push(new Short((short) v), Type.shortType);
+    push(Short.valueOf((short) v), Type.shortType);
   }
 
   public void writeInt(int v)
   {
-    push(new Integer(v), Type.intType);
+    push(Integer.valueOf(v), Type.intType);
   }
 
   public void writeLong(long v)
   {
-    push(new Long(v), Type.longType);
+    push(Long.valueOf(v), Type.longType);
   }
 
   public void writeFloat(float v)
   {
-    push(new Float(v), Type.floatType);
+    push(Float.valueOf(v), Type.floatType);
   }
 
   public void writeDouble(double v)
   {
-    push(new Double(v), Type.doubleType);
+    push(Double.valueOf(v), Type.doubleType);
   }
 
   public void writeUTF(String v) 

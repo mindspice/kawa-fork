@@ -159,7 +159,7 @@ public class LetExp extends ScopeExp
 	      {
 		// Typically created by letrec.
 		if (varType instanceof PrimType)
-		  init = new QuoteExp(new Byte((byte) 0));
+		  init = new QuoteExp(Byte.valueOf((byte) 0));
 		else if (varType != null && varType != Type.pointer_type)
 		  init = QuoteExp.nullExp;
 	      }
