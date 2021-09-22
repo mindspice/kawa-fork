@@ -113,6 +113,7 @@ HTML_TARGET_DIRECTORY = $(builddir)/web
 
 DOCBOOK_XSL_DIR = @DOCBOOK_STYLESHEETS_PATH@
 
+if WITH_DOCBOOK
 $(HTML_TARGET_DIRECTORY)/index.html: kawa.xml Makefile
 	sed \
 	  -e '/<title>Kawa Scheme Tutorial/,/<title>Reference Documentation/s|<imagedata fileref="images/|<imagedata fileref="../images/|' \
@@ -136,8 +137,12 @@ $(HTML_TARGET_DIRECTORY)/index.html: kawa.xml Makefile
 	  --stringparam chunk.tocs.and.lots 1 \
 	  kawa.xsl -
 	mv $(HTML_TARGET_DIRECTORY)/bk01-toc.html $(HTML_TARGET_DIRECTORY)/ToC.html
+else
+$(HTML_TARGET_DIRECTORY)/index.html: $(srcdir)/kawa.texi Makefile
+	$(MAKEINFO) -I=doc --html --split=section --no-number-sections -c INFO_JS_DIR=style -c JS_WEBLABELS=omit -c EXTRA_HEAD='<script src="style/kawa-txinfo.js" type="text/javascript"></script>' --css-ref=style/kawa.css $(srcdir)/kawa.texi -o $(HTML_TARGET_DIRECTORY)/
+endif
 	mkdir -p $(HTML_TARGET_DIRECTORY)/style
-	cp $(srcdir)/style/kawa-logo.png $(srcdir)/style/*.css \
+	cp $(srcdir)/style/kawa-logo.png $(srcdir)/style/kawa-txinfo.js $(srcdir)/style/*.css \
 	  $(HTML_TARGET_DIRECTORY)/style
 	mkdir -p $(HTML_TARGET_DIRECTORY)/images
 	cp $(DOC_IMAGES) $(HTML_TARGET_DIRECTORY)/images/

@@ -226,6 +226,7 @@ DOCBOOK_STYLESHEETS_PATH='$(TOP_BUILDDIR)/docbook-xsl'
 else
 DOCBOOK_STYLESHEETS_PATH="${with_docbook_stylesheets}"
 fi
+AM_CONDITIONAL(WITH_DOCBOOK, test "$with_docbook_stylesheets" != "no")
 
 if test "$with_jline3" != "" -a "$with_jline3" != "no"
 then WITH_JLINE_PATH="${with_jline3}"

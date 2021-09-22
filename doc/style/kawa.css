@@ -32,7 +32,7 @@ a:visited {
   color: #238} 
 h1, h3, h4 {
   color: #000 }
-h1, h2, h3 {
+h1, h2, h3, h4 {
   color: #114;
   font-weight: bold;
   border: thin solid;
@@ -144,7 +144,7 @@ html {
 
 span.ignore { display: none }
 
-div.navcol { 
+div.navcol, div.toc-sidebar {
   background: #F4FCFF;
 }
 
@@ -153,7 +153,7 @@ div.navcol {
 div.navcol hr {			// Hide the HR inside the menu
   display: none }
 
-div.navcol li {
+div.navcol li, div.toc-sidebar li {
   display: block;
   font-size: medium;
   text-indent: 0;
@@ -162,29 +162,27 @@ div.navcol li {
   border-width: 1px 0px 0px 1px;
   border-color: #AAA #666 #666 #AAA;
   list-style: none }		// Remove triangle from H2
-div.navbar > ul {
+div.navbar > ul, div.toc > ul {
   padding: 0 }
 div#Menu p.navhead {
   font-weight: bold }
 
-div.navcol ul
+div.navcol ul, div.toc-sidebar ul
 {
 margin: 0;
 padding: 0;
 list-style-type: none;
 }
 
-div.navcol li { margin: 0 ; }
-div.navbar ul ul, div.navcol ul ul { margin-left: 0.6em; }
+div.navcol li, div.toc-sidebar li { margin: 0 ; }
+div.navbar ul ul, div.navcol ul ul, nav div.toc-sidebar ul ul { margin-left: 0.6em; }
 
-div.navbar li { padding: 0px 4px;}
+div.navbar li, div.toc li { padding: 0px 4px;}
 div.navbar a { display: block; }
 
-div.navcol a {  text-decoration: none; }
-/* The following is redundant, but is needed for IE 6.0. */
-div.navheader ul a {  text-decoration: none; }
+div.navcol a, div.toc-sidebar a {  text-decoration: none; }
 
-div.navcol a:hover
+div.navcol a:hover, div.toc-sidebar a:hover
 {
 color: #fff;
 background-color: #69C;
@@ -228,7 +226,7 @@ div.logo img {
 code[class="literal"] strong { color: purple }
 p[class="synopsis"] code strong { color: purple }
 /* Kludge to work around weird texinfo formatting for e.g. &P[x y] */
-p.synopsis span.type span.bold strong { color: purple; font-family: monospace }
+p.synopsis span.type span.bold strong, dl.def > dt > span > strong { color: purple; font-family: monospace }
 p[class="synopsis"] code[class="function"] { color: purple }
 p[class="synopsis"] code[class="varname"] { color: purple }
 
@@ -243,14 +241,15 @@ p[class="synopsis"][kind="Procedure"]:after,
   p[class="synopsis"][kind="Syntax"]:after
 { content: ")"; font-weight: bold; font-family: monospace; color: purple }
 
-p.synopsis span.kind { float: right; padding-left: 2em }
-p.synopsis span.kind:before { content: "[" }
-p.synopsis span.kind:after { content: "]" }
+p.synopsis span.kind, dl.def span.category { float: right; padding-left: 2em }
+p.synopsis span.kind:before, dl.def span.category:before { content: "[" }
+p.synopsis span.kind:after, dl.def span.category:after { content: "]" }
 p.synopsis > code { font-weight: bold; }
 blockquote { margin-left: 40px; margin-right: 40px }
 
 div[class="navcol"] div > ul > li { font-size: larger }
 
+pre.example kbd,
 strong.userinput { background-color: #FFFFD0 } /* a pale yellow */
 span.userinput { background-color: #FFFFD0 } /* a pale yellow */
 span.prompt { background-color: #E0FFE0 } /* a pale green */
