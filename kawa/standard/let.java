@@ -100,7 +100,12 @@ public class let extends Syntax {
                     tr.popPositionOf(saveLoc2);
                 }
             } else {
-                tr.error('e', "let has no initializer");
+                String msg = "let has no initializer";
+                if (decl != null) {
+                    decl.setInitValue(new ErrorExp(msg));
+                    decl.noteValueFromLet(let);
+                }
+                tr.error('e', msg);
             }
             tr.popPositionOf(saveLoc1);
             bindings = bind_pair.getCdr();

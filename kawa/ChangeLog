@@ -1,3 +1,9 @@
+2022-02-24  Per Bothner  <per@bothner.com>
+
+	* standard/let.java (rewrite): If let initializer is missing,
+	use ErrorExp.  Fixes GitLab issues #100 "Weird behavior of calling
+	let without initalizer".
+
 2021-08-02  Arvydas Silanskas <nma.arvydas.silanskas@gmail.com>
             Per Bothner  <per@bothner.com>
 
