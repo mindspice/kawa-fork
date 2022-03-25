@@ -293,11 +293,12 @@ public class CompileReflect
       {
         Member part = (Member) val1;
         name = part.getName();
-        ClassType ctype = part.getDeclaringClass();
+        ObjectType rtype = ! part.getStaticFlag() && type instanceof ObjectType
+            ? (ObjectType) type : null;
         if (caller != null
-            && ! caller.isAccessible(part, ctype))
+            && ! caller.isAccessible(part, rtype))
                   return new ErrorExp("slot '"+name
-                                      +"' in "+ctype.getName()
+                                      +"' in "+part.getDeclaringClass().getName()
                                       +" not accessible here", comp);
         if (part instanceof Field)
           {

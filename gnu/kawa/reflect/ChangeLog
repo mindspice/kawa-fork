@@ -1,3 +1,8 @@
+2022-03-25  Per Bothner  <per@bothner.com>
+
+	* CompileReflect.java (validateApplySlotSet): Fix call to
+	isAccessible.
+
 2021-01-12  Per Bothner  <per@bothner.com>
 
 	* CompileReflect.java (validateApplySlotGet): Infer type of CTYPE:class.
