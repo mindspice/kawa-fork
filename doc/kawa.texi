@@ -21353,7 +21353,7 @@ and the ending @var{QName} must match exactly:
 
 As a convenience, you can leave out the ending tag(s):
 @example
-This is a paragraph in <emphasis>DocBook</> syntax.</>
+#<p>This is a paragraph in <emphasis>DocBook</> syntax.</>
 @end example
 
 You can use an expression to compute the element tag at runtime -
