@@ -413,6 +413,9 @@ public class ModuleInfo {
         } else if (className != null) {
             sbuf.append("class-name: ");
             sbuf.append(className);
+        } else if (sourceAbsPathname != null) {
+            sbuf.append("source: ");
+            sbuf.append(sourceAbsPathname);
         }
         sbuf.append(']');
         return sbuf.toString();
