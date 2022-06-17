@@ -32,9 +32,12 @@ public class CompileFile
       }
   }
 
-  public static final Compilation read (InPort port, SourceMessages messages)
-    throws java.io.IOException, gnu.text.SyntaxException
-  {
-    return Language.getDefaultLanguage().parse(port, messages, 0);
-  }
+    public static final Compilation read (InPort port, SourceMessages messages)
+        throws java.io.IOException, gnu.text.SyntaxException
+    {
+        String fname = port.getName();
+        ModuleInfo minfo = fname == null ? new ModuleInfo()
+            : ModuleManager.getInstance().findWithSourcePath(fname);
+        return Language.getDefaultLanguage().parse(port, messages, 0, minfo);
+    }
 }

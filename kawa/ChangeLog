@@ -1,3 +1,10 @@
+2022-06-17  Per Bothner  <per@bothner.com>
+
+	* lang/CompileFile.java (read): Set ModuleInfo of module.
+	Fixes GitLab issue #102 "Can't use `compile-file` if the files
+	import R7RS-style library from .kawarc.scm". (Though note
+	resulting .zip ile won't load because of unfixed classpath issues.)
+
 2022-02-24  Per Bothner  <per@bothner.com>
 
 	* standard/let.java (rewrite): If let initializer is missing,
