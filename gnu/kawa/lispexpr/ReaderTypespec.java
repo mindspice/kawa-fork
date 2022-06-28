@@ -46,8 +46,11 @@ public class ReaderTypespec extends ReaderConstituent
 
 	    if (port.pos < port.limit && prev != '\n')
 	      c = port.buffer[port.pos++];
-	    else
+	    else {
 	      c = port.read();
+              if (c < 0)
+                  break;
+            }
 	    if (c == '\\')
 	      {
                 in.tokenBufferAppend(LispReader.TOKEN_ESCAPE_CHAR);

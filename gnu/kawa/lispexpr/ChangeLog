@@ -1,3 +1,9 @@
+2022-06-28  Per Bothner  <per@bothner.com>
+
+	* ReaderTypespec.java (read): Check for end-of-line.
+	Fixes GitLab issue #103 'call-with-input-string breaks on
+	symbols that begin with "<"'.
+
 2020-03-11  Per Bothner  <per@bothner.com>
 
 	* LispLanguage.java (getTypeMap): Add mapping for 'istring'.
