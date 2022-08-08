@@ -1,3 +1,8 @@
+2022-08-08  Per Bothner  <per@bothner.com>
+
+	* configure.ac: Remove duplicate callreference to AM_INIT_AUTOMAKE.
+	Reported by Ronald Blaschke.
+
 2019-12-16  Michael Zucchi  <notzed@gmail.com>
 
     * kawa.sh.in (JAVAFX_HOME, JVM_FLAGS): If JAVAFX_HOME is defined
