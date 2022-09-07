@@ -54,6 +54,10 @@ public class LazyType extends ObjectType
         return getInstance(promiseType, valueType);
     }
 
+    public void emitCoerceFromObject (CodeAttr code) {
+        // defer to to run-time checking
+    }
+
     public String toString() {
         return rawType.toString()+'['+valueType.toString()+']'; // FIXME
     }

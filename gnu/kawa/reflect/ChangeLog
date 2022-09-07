@@ -1,3 +1,8 @@
+2022-09-07  Per Bothner  <per@bothner.com>
+
+	* LazyType.java (LazyType): Add no-op emitCoerceFromObject method.
+	This allows using Promize[Xx] as an argument type.
+
 2022-03-25  Per Bothner  <per@bothner.com>
 
 	* CompileReflect.java (validateApplySlotSet): Fix call to
