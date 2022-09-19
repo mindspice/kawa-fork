@@ -256,7 +256,7 @@ public class ModuleExp extends LambdaExp
 
                 mexp.body = null;
                 mexp.thisVariable = null;
-                if (msg != null ? messages.checkErrors(msg, 20)
+                if (msg != null ? messages.checkErrors(msg, Compilation.maxErrors())
                     : messages.seenErrors())
                     return null;
                 return clas;

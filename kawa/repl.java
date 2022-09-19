@@ -776,7 +776,7 @@ public class repl extends Procedure0or1 {
             }
             if (messages.seenErrorsOrWarnings()) {
                 System.err.println("(compiling "+arg+')');
-                if (messages.checkErrors(System.err, 20))
+                if (messages.checkErrors(System.err, Compilation.maxErrors()))
                     System.exit(1);
             }
         }
