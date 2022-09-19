@@ -40,6 +40,7 @@ public class object extends Syntax
       return tr.syntaxError("missing superclass specification in object");
     Pair pair = (Pair) form.getCdr();
     ObjectExp oexp = new ObjectExp();
+    Translator.setLine(oexp, form);
     if (pair.getCar() instanceof FString)
       {
         // oexp.setName(pair.getCar().toString());

@@ -642,11 +642,13 @@ public class ClassExp extends LambdaExp
                         if (impl != null) {
                             generateBridgeMethod(comp, impl, ptypes, rtype);
                         } else {
-                            // FIXME - need better error message!
-                            String msg = vec.size() == 0
-                                ? "missing implementation for "
-                                : "ambiguous implementation for ";
-                            comp.error('e', msg+meth);
+                            String msg = this instanceof ObjectExp
+                                ? "non-abstract object"
+                                : "non-abstract class "+getName();
+                            msg += vec.size() == 0
+                                ? " is missing implementation for "
+                                : " has ambiguous implementation for ";
+                            comp.error('e', msg+meth, this);
                         }
                     } else {
                         Method impl

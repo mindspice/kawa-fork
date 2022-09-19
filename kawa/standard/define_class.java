@@ -61,6 +61,7 @@ public class define_class extends Syntax
     if (p instanceof PairWithPosition)
       decl.setLocation((PairWithPosition) p);
     ClassExp oexp = new ClassExp(isSimple, null);
+    Translator.setLine(oexp, st);
     decl.noteValue(oexp);
     decl.setFlag(Declaration.IS_CONSTANT|Declaration.EARLY_INIT);
     decl.setType(isSimple ? Compilation.typeClass : Compilation.typeClassType);
