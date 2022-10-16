@@ -2,8 +2,9 @@
 // This is free software;  for terms and warranty disclaimer see ./COPYING.
 
 package gnu.bytecode;
+import java.io.*;
 
-public class ParameterizedType extends ObjectType
+public class ParameterizedType extends ObjectType implements Externalizable
 {
     ClassType rawType;
     Type[] typeArgumentTypes;
@@ -145,5 +146,28 @@ public class ParameterizedType extends ObjectType
     public ParameterizedType(ClassType rawType, Type... typeArgumentTypes) {
         this.rawType = rawType;
         this.typeArgumentTypes = typeArgumentTypes;
+    }
+    public static final ParameterizedType make(ClassType rawType,
+                                               Type[] typeArgumentTypes,
+                                               char[] typeArgumentBounds) {
+        ParameterizedType ptype =
+            new ParameterizedType(rawType, typeArgumentTypes);
+        ptype.typeArgumentBounds = typeArgumentBounds;
+        return ptype;
+    }
+
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeObject(rawType);
+        out.writeObject(typeArgumentTypes);
+        out.writeObject(typeArgumentBounds);
+    }
+
+    public void readExternal(ObjectInput in)
+        throws IOException, ClassNotFoundException
+    {
+        rawType = (ClassType) in.readObject();
+        typeArgumentTypes = (Type[]) in.readObject();
+        typeArgumentBounds = (char[]) in.readObject();
     }
 }

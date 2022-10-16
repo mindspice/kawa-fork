@@ -1,3 +1,7 @@
+2022-10-16  Per Bothner  <per@bothner.com>
+
+	* ParameterizedType.java: Implement Externalizable.
+
 2019-12-28  Per Bothner  <per@bothner.com>
 
 	* Member.java (getAnnotation): New method.
