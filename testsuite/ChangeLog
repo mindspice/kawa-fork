@@ -1,3 +1,8 @@
+2022-10-17  Arvydas Silanskas  <nma.arvydas.silanskas@gmail.com>
+
+	* strings-test.scm: Group test asserts under test-group as to not exceed
+	JVM method max size limit.
+
 2021-06-10  Per Bothner  <per@bothner.com>
 
 	* proc-test.scm: New file. Some tests for splice with hashtable.
