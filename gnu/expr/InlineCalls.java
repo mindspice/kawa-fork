@@ -687,6 +687,7 @@ public class InlineCalls extends ExpExpVisitor<Type> {
     }
 
     protected Expression visitLambdaExp(LambdaExp exp, Type required) {
+        validateParameterAnnotations(exp);
         setCanAccess(exp, required);
         if (exp.getCallConvention() == Compilation.CALL_WITH_UNSPECIFIED)
             exp.setCallConvention(getCompilation());
@@ -758,6 +759,22 @@ public class InlineCalls extends ExpExpVisitor<Type> {
             }
         }
         return exp;
+    }
+
+    /**
+     * Validate that given LambdaExp (must be LambdaExp and not its subclasses) only has annotations
+     * in case this lambda represents a top level procedure in a module or is a member of a class declaration.
+     */
+    private void validateParameterAnnotations(LambdaExp exp) {
+        if (exp.getClass() != LambdaExp.class)
+            return;
+        if (exp.nameDecl != null && (exp.nameDecl.context instanceof ModuleExp || exp.nameDecl.context instanceof ClassExp))
+            return;
+        for (Declaration d = exp.decls; d != null; d = d.nextDecl()) {
+            if (d.numAnnotations() > 0) {
+                comp.error('e', "Parameter annotation not on a parameter in module top level procedure or class member", exp);
+            }
+        }
     }
 
     public void visitDefaultArgs (LambdaExp exp, Type required) {

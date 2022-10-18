@@ -9238,6 +9238,10 @@ The @var{pattern} may be enclosed in parentheses for clarify
 (just like for optional parameters), but in that case the
 type specifier is required to avoid ambiguity.
 
+It is an error if the parameter annotation is provided on a
+parameter in a procedure that is neither a class member nor a top
+level procedure in a module.
+
 @subsubheading Optional parameters
 
 @display
