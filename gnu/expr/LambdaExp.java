@@ -1370,8 +1370,9 @@ public class LambdaExp extends ScopeExp {
         //first figure if any of parameters even have annotations
         Declaration decl = firstDecl();
         boolean hasParameterAnnotation = false;
-        if (decl != null) {
-            decl = decl.nextDecl(); //skip implicit class param
+        if (!this.isModuleBody() && decl != null) {
+            if (this.isClassMethod())
+                decl = decl.nextDecl(); //skip implicit class param
             while (decl != null) {
                 if (decl.numAnnotations() > 0) {
                     hasParameterAnnotation = true;
@@ -1385,7 +1386,8 @@ public class LambdaExp extends ScopeExp {
         //and compile them
         decl = firstDecl();
         if (decl != null && hasParameterAnnotation) {
-            decl = decl.nextDecl(); //skip implicit class param
+            if (this.isClassMethod())
+                decl = decl.nextDecl(); //skip implicit class param
             int i = 0;
             while (decl != null) {
                 if (decl.isThisParameter()) {

@@ -1782,7 +1782,7 @@ public class Compilation implements SourceLocator
                 dout.println(']');
                 dout.flush();
             }
-            PushApply.pushApply(mexp, this);  
+            PushApply.pushApply(mexp, this);
             setState(PRE_WALKED);
           }
 

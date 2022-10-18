@@ -1,3 +1,12 @@
+2022-10-17 Arvydas Silanskas <nma.arvydas.silanskas@gmail.com>
+
+	* LambdaExp.java (allocParameters): Skip parameter annotation parsing logic
+	in case the LambdaExp actually represents a Module (and thus its decls are
+	eg. procedures and not parameters).
+
+	* InlineCalls.java (visitLambdaExp): add validation as part of InlineCalls pass,
+	and check that only top level procedures / class methods have parameter annotations.
+
 2022-09-18  Per Bothner  <per@bothner.com>
 
 	* ClassExp.java (compileMembers): Better error message.
