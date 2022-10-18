@@ -1,3 +1,7 @@
+2022-10-18  Per Bothner  <per@bothner.com>
+
+	* PrettyWriter.java (finishIDHash): Don't call flush.
+
 2021-06-08  Per Bothner  <per@bothner.com>
 
 	* TermErrorStream.java: Do line-based buffering.

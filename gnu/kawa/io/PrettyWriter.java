@@ -185,7 +185,6 @@ public class PrettyWriter extends PrintConsumer
         idhash.clear();
         writeEndOfExpression();
         resolveBackReferences();
-        flush();
         idhash = null;
     }
 
