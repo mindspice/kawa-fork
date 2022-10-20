@@ -1,12 +1,17 @@
 image: fedora:latest
 
+before_script:
+    - dnf update -y
+    - dnf -y install glibc-locale-source glibc-langpack-en
+    - localedef -c -f UTF-8 -i en_US en_US.UTF-8
+    - export LC_ALL=en_US.UTF-8
+
 stages:
     - build_and_test
 
 build_script:
     stage: build_and_test
     script:
-        - dnf update -y
         - dnf -y install make gcc findutils texinfo automake
         - dnf -y install java-1.8.0-openjdk-devel
         - ./autogen.sh
