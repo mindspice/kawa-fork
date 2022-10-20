@@ -22,6 +22,8 @@ $(srcdir)/char-tables.iscm:
 	  $(top_srcdir)/gnu/kawa/util/generate-charsets.scm \
 	  > $(srcdir)/char-tables.iscm
 
+EXTRA_CLEAN = $(srcdir)/char-tables.iscm
+
 scm-classes.stamp: $(srcdir)/char-tables.iscm
 
 # NOTE if this list is changed, also update build.xml.

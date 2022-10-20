@@ -1,3 +1,8 @@
+2022-10-21  Arvydas Silanskas  <nma.arvydas.silanskas@gmail.com>
+
+	* generate-charsets.scm: Refactor charset generation and remove the
+	circular dependency with the SRFI 14.
+
 2019-12-24  Per Bothner  <per@bothner.com>
 
 	* RunTestScript.java: When matching, ignore initial spaces in output.
