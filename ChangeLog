@@ -1,3 +1,8 @@
+2022-10-21  Per Bothner  <per@bothner.com>
+
+	* Makefile.am: Fix --with-android used with --with-java-source.
+	Regardless, force +Android as a PreProcess argument.
+
 2021-09-22  Per Bothner  <per@bothner.com>
 
 	* gnu/**/*.java, kawa/**/*.java: Fix Java17 depreciation warnings.
