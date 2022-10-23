@@ -9,12 +9,15 @@
     ((i ::int #x10FFFF (- i 1)) ;; codepoint to check
      (last-matched #f) ;; if (+ i 1) was a match
      (col ::int 0)) ;; printed column; wrap every 10th number
-    ((< i 0) (when last-matched (display "0")))
+    ((< i 0) (when last-matched (display "0" out)))
     (let* ((matched (predicate i))
            (print (not (boolean=? last-matched matched))))
       (set! last-matched matched)
       (when print
-        (display i out)
+        ;; +1, because the actual value that should be printed
+        ;; is the one that was the last in sequence of matches / not-matches in a row
+        ;; meanwhile the current i is the beginning of new sequence
+        (display (+ i 1) out)
         (set! col (modulo (+ 1 col) 10))
         (if (= 0 col)
             (display nl out)

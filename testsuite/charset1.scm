@@ -21,3 +21,21 @@
   (display (char-set-size (char-set #\a #\b #\c)))
   (newline))
 ;; Output: #(#t #f) #f 3
+
+(let ()
+  ;; test if generated charset table
+  ;; matches the logic (using char-set:digit as an example)
+  (import (scheme base)
+          (scheme write)
+          (only (srfi 14)
+                char-set-contains? char-set:digit))
+  (let loop ((codepoint #x10FFFF))
+    (cond
+      ((< codepoint 0)
+       (display #t))
+      ((not (boolean=? (char-set-contains? |char-set:digit| (integer->char codepoint))
+                       (java.lang.Character:digit? codepoint)))
+       (display #f))
+      (else (loop (- codepoint 1)))))
+  (newline))
+;; Output: #t
