@@ -4,29 +4,36 @@
 (define prog-name (regex-replace (regex "^.*/") (car (command-line)) ""))
 (define out ::output-port (current-output-port))
 
-(define (print-matching-codepoints predicate nl out)
-  (do 
-    ((i ::int #x10FFFF (- i 1)) ;; codepoint to check
-     (last-matched #f) ;; if (+ i 1) was a match
-     (col ::int 0)) ;; printed column; wrap every 10th number
-    ((< i 0) (when last-matched (display "0" out)))
-    (let* ((matched (predicate i))
-           (print (not (boolean=? last-matched matched))))
-      (set! last-matched matched)
-      (when print
-        ;; +1, because the actual value that should be printed
-        ;; is the one that was the last in sequence of matches / not-matches in a row
-        ;; meanwhile the current i is the beginning of new sequence
-        (display (+ i 1) out)
-        (set! col (modulo (+ 1 col) 10))
-        (if (= 0 col)
-            (display nl out)
-            (display " " out))))))
+(define-syntax print-matching-codepoints
+  (syntax-rules ()
+    ((_ predicate nl out)
+     (do
+         ((i ::int #x10FFFF (- i 1)) ;; codepoint to check
+          (last-matched ::boolean #f) ;; if (+ i 1) was a match
+          (col ::int 0)) ;; printed column; wrap every 10th number
+         ((< i 0) (when last-matched (display "0" out)))
+       (let* ((matched ::boolean (predicate i))
+              (print (not (= (as int last-matched) (as int matched)))))
+         (set! last-matched matched)
+         (when print
+           ;; +1, because the actual value that should be printed is the one
+           ;; that was the last in sequence of matches / non-matches in a row;
+           ;; meanwhile the current i is the beginning of new sequence.
+           (display (+ i 1) out)
+           (set! col (+ col 1))
+           (cond ((= col 10)
+                  (display nl)
+                  (set! col 0))
+                 (else
+                  (display " " out)))))))))
 
-(define (print-list name predicate #!optional (out (current-output-port)))
-  (format out "(define-early-constant %~a ::int[]~%    (constant-fold int[] " name)
-  (print-matching-codepoints predicate          "\n                         " out)
-  (format out "))~%~%"))
+(define-syntax print-list
+  (syntax-rules ()
+    ((_ name predicate)
+     (let ((out (current-output-port)))
+       (format out "(define-early-constant %~a ::int[]~%    (constant-fold int[] " name)
+       (print-matching-codepoints predicate          "\n                         " out)
+       (format out "))~%~%")))))
 
 (define-syntax define-union
   (syntax-rules ()
@@ -34,11 +41,11 @@
      (define (name codepoint ::int) ::boolean
        (or (pred codepoint) ...)))))
 
-(define (is-blank? codepoint ::int) ::boolean
+(define-private (is-blank? codepoint ::int) ::boolean
   (or (= codepoint #x0009)
       (= (java.lang.Character:get-type codepoint) java.lang.Character:SPACE_SEPARATOR)))
 
-(define (is-whitespace? codepoint ::int) ::boolean
+(define-private (is-whitespace? codepoint ::int) ::boolean
   ;; The set of whitespace characters is all the characters in
   ;; Unicode categories Zs, Zl or Zp, along with points 9-13.
   (or (= codepoint #x0009)
@@ -51,7 +58,7 @@
             (= type java.lang.Character:LINE_SEPARATOR)
             (= type java.lang.Character:PARAGRAPH_SEPARATOR)))))
 
-(define (is-punctuation? codepoint ::int) ::boolean
+(define-private (is-punctuation? codepoint ::int) ::boolean
   (let ((type ::byte (java.lang.Character:get-type codepoint)))
     (or (= type java.lang.Character:CONNECTOR_PUNCTUATION)
         (= type java.lang.Character:DASH_PUNCTUATION)
@@ -61,7 +68,7 @@
         (= type java.lang.Character:FINAL_QUOTE_PUNCTUATION)
         (= type java.lang.Character:OTHER_PUNCTUATION))))
 
-(define (is-symbol? codepoint ::int) ::boolean
+(define-private (is-symbol? codepoint ::int) ::boolean
   (let ((type ::byte (java.lang.Character:get-type codepoint)))
     (or (= type java.lang.Character:MATH_SYMBOL)
         (= type java.lang.Character:CURRENCY_SYMBOL)

@@ -1,3 +1,11 @@
+2022-10-24  Per Bothner  <per@bothner.com>
+
+	* generate-charsets.scm: Various optimizations.
+	(print-matching-codepoints, print-list): Change from procedures to
+	macros, which enables better inlining.
+	(is-blanl?, is-whitespace?, is-punctuation?, is-symbol?): Make private.
+	(print-matching-codepoints): Eliminate call to modulo.
+
 2022-10-21  Arvydas Silanskas  <nma.arvydas.silanskas@gmail.com>
 
 	* generate-charsets.scm: Refactor charset generation and remove the
