@@ -1,3 +1,7 @@
+2023-02-26  Per Bothner  <per@bothner.com>
+
+	* PrimType.java (numberHierarchy): Fix typo.
+
 2022-10-16  Per Bothner  <per@bothner.com>
 
 	* ParameterizedType.java: Implement Externalizable.

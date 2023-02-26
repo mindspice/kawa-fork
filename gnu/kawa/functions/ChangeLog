@@ -1,3 +1,7 @@
+2023-02-26  Per Bothner  <per@bothner.com>
+
+	* CompileArith.java (validateApplyNot): Fix typo.
+
 2020-11-14  Per Bothner  <per@bothner.com>
 
 	* DisplayFormat.java (schemeDisplayFormat): Set checkSharing.

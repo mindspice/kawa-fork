@@ -610,7 +610,7 @@ public class CompileArith implements Inlineable
         if (kind == Arithmetic.INTNUM_CODE)
           cname = "gnu.math.BitOps";
         else if (kind == Arithmetic.BIGINTEGER_CODE)
-          cname = "java.meth.BigInteger";
+          cname = "java.math.BigInteger";
         else
           cname = null;
         if (cname != null)
