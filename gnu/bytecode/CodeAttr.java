@@ -2440,6 +2440,8 @@ public class CodeAttr extends Attribute implements AttrContainer
                                                          exit.initialTryState);
                 if (nextTry == exit.initialTryState) // Optimization
                   {
+                    if (exit.endLabel == null)
+                      exit.endLabel = new Label(this);
                     sw.addCaseGoto(exit.switchCase, this, exit.endLabel);
                   }
                 else

@@ -34,7 +34,7 @@ public class ExitableBlock
   CodeAttr code;
   Type resultType;
   TryState initialTryState;
-  Label endLabel;
+  Label endLabel; // allocated lazily
   ExitableBlock outer;
   // The innermost current TryState which contains an exit to the block.
   TryState currentTryState;
@@ -58,25 +58,24 @@ public class ExitableBlock
         code.emitStoreDefaultValue(var);
         switchCase = ++code.exitableBlockLevel;
       }
-    endLabel = new Label(code);
   }
 
-  void finish ()
-  {
-    boolean reachable = code.reachableHere();
-    if (resultVariable != null && reachable)
-      code.emitStore(resultVariable);
-    endLabel.define(code);
-    if (! reachable && ! endLabel.needsStackMapEntry)
-      code.setUnreachable();
-    else if (resultVariable != null)
-      code.emitLoad(resultVariable);
-    if (resultVariable != null)
-      {
-        code.popScope();
-        --code.exitableBlockLevel;
-      }
-  }
+    void finish ()
+    {
+        boolean reachable = code.reachableHere();
+        if (resultVariable != null && reachable)
+            code.emitStore(resultVariable);
+        if (endLabel != null) {
+            endLabel.define(code);
+            if (resultVariable != null)
+                code.emitLoad(resultVariable);
+        }
+        if (resultVariable != null)
+        {
+            code.popScope();
+            --code.exitableBlockLevel;
+        }
+    }
 
   /** Exit this surrounding block, executing finally blocks as needed.
    * Return a value as the result of this ExitableBlock. */
@@ -85,17 +84,6 @@ public class ExitableBlock
     if (resultVariable != null)
       code.emitStore(resultVariable);
     exit(TryState.outerHandler(code.try_stack, initialTryState));
-  }
-
-  /** If an exit is simple, return the label for block end.
-   * The exit is simple if there is no intervening finally blocks.
-   */
-  public Label exitIsGoto ()
-  {
-    if (TryState.outerHandler(code.try_stack, initialTryState) == initialTryState)
-      return endLabel;
-    else
-      return null;
   }
 
     private void popStack(CodeAttr code) {
@@ -124,6 +112,8 @@ public class ExitableBlock
     if (! code.reachableHere())
       return;
     popStack(code);
+    if (endLabel == null)
+      endLabel = new Label(code);
     if (activeTry == initialTryState)
       code.emitGoto(endLabel);
     else if (code.useJsr())

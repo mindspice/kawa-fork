@@ -1,5 +1,8 @@
 2023-02-26  Per Bothner  <per@bothner.com>
 
+	* ExitableBlock.java (endLabel): Allocate lazily.
+	This avoids need to use not-quite-appropriate needsStackMapEntry field.
+
 	* PrimType.java (numberHierarchy): Fix typo.
 
 2022-10-16  Per Bothner  <per@bothner.com>
