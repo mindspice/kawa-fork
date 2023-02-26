@@ -518,10 +518,6 @@ the list.)
 You can browse the @uref{http://sourceware.org/ml/kawa/,
 archive of past messages}.
 
-There are separate mailing lists for
-@uref{http://mail.gnu.org/mailman/listinfo/qexo-general, Qexo}
-and @uref{http://lists.sourceforge.net/mailman/listinfo/jemacs-info,JEmacs}.
-
 @node Acknowledgements
 @section Acknowledgements and thanks
 
@@ -785,14 +781,14 @@ integration with a large number of Java libraries.
 
 JEmacs is included in the Kawa distribution.  It is a project to
 re-implement Emacs, allowing a mix of Java, Scheme, and Emacs Lisp.
-It has its own @uref{http://jemacs.sourceforge.net/,home-page}.
+It has its own @uref{https://jemacs.sourceforge.net/,home-page}.
 
 BRL (``the Beautiful Report Language") is a database-oriented language
 to embed in HTML and other markup.
-@uref{http://brl.sourceforge.net/, BRL} allows you to embed Scheme in
+@uref{https://brl.sourceforge.net/, BRL} allows you to embed Scheme in
 an HTML file on a web server.
 
-The @uref{http://schemeway.sourceforge.net,SchemeWay Project} is a set of
+The @uref{https://schemeway.sourceforge.net,SchemeWay Project} is a set of
 @uref{http://www.eclipse.org,Eclipse} plug-ins for professional Scheme
 programming. The first plugin released, SchemeScript, is a fully-featured
 Scheme
