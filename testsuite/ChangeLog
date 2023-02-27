@@ -1,3 +1,9 @@
+2023-02-26  Per Bothner  <per@bothner.com>
+	    Robby Zambito (@zambyte)
+
+	* gl110.scm: New test for GitLab issue #110.
+	"Inconsistent stack length when raising an exception from a parameterized procedure".
+
 2022-10-17  Arvydas Silanskas  <nma.arvydas.silanskas@gmail.com>
 
 	* strings-test.scm: Group test asserts under test-group as to not exceed

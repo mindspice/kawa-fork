@@ -142,9 +142,6 @@ public class CodeAttr extends Attribute implements AttrContainer
 
   final void fixupAdd (int kind, int offset, Label label)
   {
-    if (label != null && kind != FIXUP_DEFINE && kind != FIXUP_DEFINE_UNREACHABLE
-        && kind != FIXUP_SWITCH && kind != FIXUP_TRY)
-      label.needsStackMapEntry = true;
     int count = fixup_count;
     if (count == 0)
       {
@@ -2602,7 +2599,9 @@ public class CodeAttr extends Attribute implements AttrContainer
             break;
 	  case FIXUP_LINE_PC:
 	    i++;
+            break;
 	  case FIXUP_CASE:
+            break;
 	  case FIXUP_DELETE3:
 	    break;
           case FIXUP_DEFINE_UNREACHABLE:
@@ -2619,7 +2618,6 @@ public class CodeAttr extends Attribute implements AttrContainer
               if (i + 1 < fixup_count && fixupKind(i+1) == FIXUP_GOTO
                   && fixupOffset(i+1) == offset) {
                   for (int j = i; ; j--) {
-                      fixup_labels[j].needsStackMapEntry = false;
                       if (fixupKind(j) == FIXUP_DEFINE_UNREACHABLE)
                           break;
                   }
@@ -2698,7 +2696,9 @@ public class CodeAttr extends Attribute implements AttrContainer
             break;
 	  case FIXUP_LINE_PC:
 	    i++;
+            break;
 	  case FIXUP_CASE:
+            label.needsStackMapEntry = true;
 	    break;
 	  case FIXUP_DELETE3:
 	    delta -= 3;
@@ -2717,6 +2717,7 @@ public class CodeAttr extends Attribute implements AttrContainer
 	  case FIXUP_JSR:
 	  case FIXUP_TRANSFER:
 	    int rel = label.position - (offset+delta);
+            label.needsStackMapEntry = true;
 	    if ((short) rel == rel)
 	      {
                 fixupSet(i, FIXUP_TRANSFER2, offset);
@@ -2758,7 +2759,6 @@ public class CodeAttr extends Attribute implements AttrContainer
     int new_pc = 0;
     int next_fixup_index = 0;
     int next_fixup_offset = fixupOffset(0);
-    int oldPC = -1;
     Label pendingStackMapLabel = null;
   loop3:
     for (int old_pc = 0;  ;  )
@@ -3011,17 +3011,20 @@ public class CodeAttr extends Attribute implements AttrContainer
             else if (kind == FIXUP_CASE)
                 pc = prev_pc;
             disAssemble(dst, prev_pc, pc);
+            prev_pc = pc;
 
             dst.print("fixup#");  dst.print(i);
             dst.print(" @");  dst.print(offset);
-            prev_pc = pc;
             switch (kind) {
             case FIXUP_DEFINE:
             case FIXUP_DEFINE_UNREACHABLE:
                 dst.print(" DEFINE ");
                 if (kind == FIXUP_DEFINE_UNREACHABLE)
                     dst.print("(unreachable) ");
-                dst.println(label);
+                dst.print(label);
+                if (! label.isUsed())
+                    dst.print(" (not used)");
+                dst.println();
                 break;
             case FIXUP_SWITCH:
                 dst.println(" SWITCH");

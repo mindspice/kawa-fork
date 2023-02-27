@@ -15,7 +15,6 @@ public class Label {
   int first_fixup;
 
   /** The PC of where the label is, or -1 if not yet defined.
-   * The value -2 means don't generate a StackMapTable entry.
    * This PC may be tentative if we later run processFixups.
    * The offset in the code array is cattr.fixupOffset(first_fixup). */
   int position;

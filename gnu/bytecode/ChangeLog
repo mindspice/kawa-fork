@@ -1,5 +1,10 @@
 2023-02-26  Per Bothner  <per@bothner.com>
 
+	* CodeAttr.java (fixupAdd); Don't set Label's needsStackMapEntry here.
+	(processFixups): Instead set it here, during pass 2.
+	This fixes GitLab issue #110,
+	"Inconsistent stack length when raising an exception from a parameterized procedure".
+
 	* ExitableBlock.java (endLabel): Allocate lazily.
 	This avoids need to use not-quite-appropriate needsStackMapEntry field.
 

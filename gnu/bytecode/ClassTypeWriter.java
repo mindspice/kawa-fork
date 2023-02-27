@@ -315,7 +315,8 @@ public class ClassTypeWriter extends PrintWriter
 
   public final void printOptionalIndex(CpoolEntry entry)
   {
-    printOptionalIndex(entry.index);
+    if (entry != null)
+      printOptionalIndex(entry.index);
   }
 
   void printName(String name)
