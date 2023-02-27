@@ -877,9 +877,8 @@ public class Translator extends Compilation
                     } else {
                         gnu.expr.SourceName snameAnn =
                             part.getAnnotation(gnu.expr.SourceName.class);
-                        String pname = snameAnn == null ? part.getName()
-                            : snameAnn.name();
-                        if (! dname.equals(pname))
+                        // If SourceName annotation, require exact match.
+                        if (snameAnn != null && ! dname.equals(snameAnn.name()))
                             continue;
                     }
                     Expression part1;
