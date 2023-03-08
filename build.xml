@@ -455,6 +455,13 @@
 
   </target>
 
+  <target name="make-char-tables" depends="java-classes">
+      <java classname="kawa.repl" output="${src.dir}/gnu/kawa/slib/char-tables.iscm" fork="true">
+          <classpath location="${build.classes}"/>
+          <arg value="${src.dir}/gnu/kawa/util/generate-charsets.scm"/>
+      </java>
+  </target>
+
   <target name="-make-primvector-source">
     <java classname="gnu.kawa.util.PreProcess">
       <classpath location="${build.tools}"/>
@@ -764,7 +771,7 @@
     </kawac>
   </target>
 
-  <target name="slib-scm-classes" depends="java-classes">
+  <target name="slib-scm-classes" depends="java-classes, make-char-tables">
     <kawac failonerror="true" destdir="${build.classes}"
 	   prefix="gnu.kawa.slib." modulestatic="run"
 	   language="scheme">
